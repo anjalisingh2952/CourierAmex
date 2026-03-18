@@ -1,0 +1,214 @@
+<div class="package-details pre-study">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'ManiFestReports.Title' | translate }} <small>{{ 'ManiFestReports.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+    <form class="package-form" #form="ngForm" autocomplete="off">
+        <div class="row mb-4" >
+            <div class="col-12 ">
+                <div class="mb-12" *ngIf="!isGatewayUser">
+                    <ng-container *ngIf="companies$ | async as entities">
+                        <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' |
+                            translate }}</label>
+                        <select [(ngModel)]="selectedCompany"
+                            minValueValidator="1" class="form-select" name="companyId"
+                            required>
+                            <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                            <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                        </select>
+                    </ng-container>
+                </div>
+                </div>
+                <div class="col-12 ">
+                <div class="mb-12">
+                    <ng-container *ngIf="companies$ | async as entities">
+                        <label class="form-label" for="ManifestID">* {{ 'ManifestDetails.NumberPlaceholder' |
+                            translate }}</label>
+                         <input type="text" [(ngModel)]="selectedManifestNumber"
+                            [placeholder]="'ManifestDetails.NumberPlaceholder' | translate"
+                             class="form-control" name="SelectedManifest"
+                            (keyup.enter)="OnManifestNumberChange()">
+                        
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <ng-container #reportContainer></ng-container>
+
+        <!-- <div class="reportContent">
+            <p style="margin-top:32.1pt; margin-right:347.8pt; text-indent:56pt; line-height:10pt"><span
+                    style="font-family:Calibri; font-size:8pt">a</span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:37.75pt"> </span><span
+                    style="font-family:Calibri; font-size:8pt">Me </span><span
+                    style="font-family:Calibri; font-size:10pt">AMERICAN</span><span
+                    style="font-family:Calibri; font-size:10pt; letter-spacing:10.8pt"> </span><span
+                    style="font-family:Calibri; font-size:10pt">EXPORT</span></p>
+            <p style="margin-top:4.1pt; text-align:justify; line-height:12.2pt"><span
+                    style="font-family:Calibri; font-size:10pt">SHIPMENT</span><span
+                    style="font-family:Calibri; font-size:10pt; letter-spacing:9.3pt"> </span><span
+                    style="font-family:Calibri; font-size:10pt">MANIFEST</span></p>
+            <p style="margin-top:4.75pt; text-align:justify; line-height:9.75pt"><span
+                    style="font-family:Calibri; font-size:8pt">AWB#:</span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:26.55pt"> </span><span
+                    style="font-family:Calibri; font-size:8pt">SJO</span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:4.15pt"> </span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:0.1pt">5091593DGD</span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:79.65pt"> </span><span
+                    style="font-family:Calibri; font-size:8pt">DATE:</span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:41.35pt"> </span><span
+                    style="font-family:Calibri; font-size:8pt">2/14/2025</span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:1.55pt"> </span><span
+                    style="font-family:Calibri; font-size:8pt">9:56:38</span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:1.95pt"> </span><span
+                    style="font-family:Calibri; font-size:8pt">AM</span></p>
+            <p style="margin-left:50pt; text-align:justify; line-height:9.75pt"><span
+                    style="font-family:Calibri; font-size:8pt">ALTO</span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:4.5pt"> </span><span
+                    style="font-family:Calibri; font-size:8pt">VOLUMEN</span><span
+                    style="font-family:Calibri; font-size:8pt; letter-spacing:4.9pt"> </span><span
+                    style="font-family:Calibri; font-size:8pt">17-02</span></p>
+            <p style="margin-left:50.6pt; text-align:justify; line-height:9.75pt"><span
+                    style="font-family:Calibri; font-size:8pt">-2025</span></p>
+            <p style="margin-top:0.75pt; margin-right:190.55pt; line-height:9pt"><span
+                    style="font-family:Calibri; font-size:9pt">GENERAL</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:13.8pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">AMERICAN</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:2.25pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">EXPORT</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:3.95pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">IMPORT</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:0.05pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">AND</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:0.7pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">PURCHASING</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:3.35pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">SA, ADDRESS:</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:12.3pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">3KMAL</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:4.55pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">OESTE</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:5.4pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">DEL</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:3.5pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">AEROPUERTO</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:7.7pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">JUAN</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:2.4pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">SANTAMARIA</span></p>
+            <p style="margin-top:0.05pt; margin-left:50.6pt; text-align:justify; line-height:10.95pt"><span
+                    style="font-family:Calibri; font-size:9pt">ENTRADAA</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:6.7pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">EMBUTIDOS</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:3.5pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">ZAR</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:2.95pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">,EL</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:4.4pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">ROBLE,</span><span
+                    style="font-family:Calibri; font-size:9pt; letter-spacing:3.1pt"> </span><span
+                    style="font-family:Calibri; font-size:9pt">ALAJUELA.</span></p>
+            <table cellspacing="0" cellpadding="0"
+                style="border:0.75pt solid #000000; -aw-border:0.5pt single; -aw-border-insideh:0.5pt single #000000; -aw-border-insidev:0.5pt single #000000; border-collapse:collapse">
+                <tr style="height:9.05pt; -aw-height-rule:exactly">
+                    <td
+                        style="width:121.1pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-right:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">Tracking Chente</span></p>
+                    </td>
+                    <td
+                        style="width:72.9pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">(Courier</span></p>
+                    </td>
+                    <td
+                        style="width:61.5pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">|Procedencia</span></p>
+                    </td>
+                    <td
+                        style="width:33.15pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">Nombre Couner</span></p>
+                    </td>
+                    <td
+                        style="width:68.1pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">|Descnpcion</span></p>
+                    </td>
+                    <td
+                        style="width:13.9pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">[Peso</span></p>
+                    </td>
+                    <td
+                        style="width:16.9pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">Volumen</span></p>
+                    </td>
+                </tr>
+                <tr style="height:13.85pt; -aw-height-rule:exactly">
+                    <td
+                        style="width:121.1pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-right:0.5pt single; -aw-border-top:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">3054527 JUAN CARLOS GONZALEZ</span></p>
+                        <p style="font-size:8pt"><span style="font-family:Calibri">|BOLAIOS</span></p>
+                    </td>
+                    <td
+                        style="width:72.9pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">....... F0344058757</span></p>
+                    </td>
+                    <td
+                        style="width:61.5pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">ICON V</span></p>
+                    </td>
+                    <td
+                        style="width:33.15pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">UPS</span></p>
+                    </td>
+                    <td
+                        style="width:68.1pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">AMORTIGU ADOR DE GAS PARA</span></p>
+                        <p style="font-size:8pt"><span style="font-family:Calibri">VEHICULO</span></p>
+                    </td>
+                    <td
+                        style="width:13.9pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">1500</span></p>
+                    </td>
+                    <td
+                        style="width:16.9pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-bottom:0.5pt single; -aw-border-left:0.5pt single; -aw-border-top:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">11.00</span></p>
+                    </td>
+                </tr>
+                <tr style="height:9.65pt; -aw-height-rule:exactly">
+                    <td
+                        style="width:121.1pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-right:0.5pt single; -aw-border-top:0.5pt single">
+                        <p style="font-size:12pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                    </td>
+                    <td
+                        style="width:72.9pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single; -aw-border-top:0.5pt single">
+                        <p style="font-size:12pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                    </td>
+                    <td
+                        style="width:61.5pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single; -aw-border-top:0.5pt single">
+                        <p style="font-size:12pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                    </td>
+                    <td
+                        style="width:33.15pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single; -aw-border-top:0.5pt single">
+                        <p style="font-size:12pt"><span style="-aw-import:ignore">&#xa0;</span></p>
+                    </td>
+                    <td
+                        style="width:68.1pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single; -aw-border-top:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">Peso Parcat</span></p>
+                    </td>
+                    <td
+                        style="width:13.9pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-left:0.5pt single; -aw-border-right:0.5pt single; -aw-border-top:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">1500</span></p>
+                    </td>
+                    <td
+                        style="width:16.9pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top; -aw-border-left:0.5pt single; -aw-border-top:0.5pt single">
+                        <p style="font-size:8pt"><span style="font-family:Calibri">14.00</span></p>
+                    </td>
+                </tr>
+            </table>
+            <p><span style="-aw-import:ignore">&#xa0;</span></p>
+        </div> -->
+        
+    </div>
+</div>

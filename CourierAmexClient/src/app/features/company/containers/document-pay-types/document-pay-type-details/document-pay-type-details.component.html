@@ -1,0 +1,35 @@
+<div class="Document-pay-type-details" 
+*ngIf="{ 
+  entity: entity$ | async, 
+  companies: companies$ | async, 
+  currencies: currencies$ | async, 
+  banks: banks$ | async, 
+  brands: brands$ | async, 
+  paymentTypes: paymentTypes$ | async, 
+  modules: modules$ | async, 
+  templates: templates$ | async
+} as data">
+    <ng-container *ngIf="data.entity && data.companies">
+      <shared-breadcrumb></shared-breadcrumb>
+  
+      <h1 class="page-header">{{ 'DocumentPayTypeDetails.Title' | translate }} <small>{{ 'DocumentPayTypeDetails.SubTitle'
+          | translate }}</small>
+      </h1>
+  
+      <document-pay-type-form 
+        [entity]="data.entity" 
+        [companies]="data.companies" 
+        [currencies]="data.currencies || []"  
+        [banks]="data.banks || []" 
+        [brands]="data.brands || []" 
+        [paymentTypes]="data.paymentTypes || [] " 
+        [modules]="data.modules || [] "
+        [templates]="data.templates || [] "  
+        (onSave)="save($event)"
+        (onCompanyChange)="onCompanyChange($event)" 
+        (onPaymentTypeChange)="onPaymentTypeChange($event)" 
+        (onModuleChange)="onModuleChange($event)" 
+        (onGoBack)="goBack()"></document-pay-type-form>
+  
+    </ng-container>
+  </div>

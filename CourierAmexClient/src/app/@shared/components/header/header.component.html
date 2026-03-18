@@ -1,0 +1,62 @@
+<!-- BEGIN #header -->
+<div id="header" class="app-header" [ngClass]="{ 'app-header-inverse': this.appSettings.appHeaderInverse}">
+  <!-- BEGIN navbar-header -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-mobile-toggler" *ngIf="this.appSidebarTwo"
+      (click)="toggleAppSidebarEndMobile()">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a href="/" class="navbar-brand"><span class="navbar-logo"></span> <b>Courier</b>Amex</a>
+    <button type="button" class="navbar-mobile-toggler" (click)="toggleAppTopMenuMobile()"
+      *ngIf="this.appSettings.appTopMenu && !this.appSettings.appSidebarNone">
+      <span class="fa-stack fa-lg text-inverse">
+        <i class="far fa-square fa-stack-2x"></i>
+        <i class="fa fa-cog fa-stack-1x"></i>
+      </span>
+    </button>
+    <button type="button" class="navbar-mobile-toggler" (click)="toggleAppSidebarMobile()"
+      *ngIf="!this.appSettings.appSidebarNone">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <button type="button" class="navbar-mobile-toggler" (click)="toggleAppTopMenuMobile()"
+      *ngIf="this.appSettings.appTopMenu && this.appSettings.appSidebarNone">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+  </div>
+  <!-- END navbar-header -->
+
+  <!-- BEGIN nav -->
+  <div class="navbar-nav">
+    <div class="navbar-item navbar-user dropdown" ngbDropdown>
+      <a href="javascript:;" class="navbar-link dropdown-toggle d-flex align-items-center" ngbDropdownToggle>
+        <div class="image image-icon bg-gray-800 text-gray-600">
+          <i class="fa fa-user"></i>
+          <!-- <img src="../assets/img/user/no-photo.jpeg" alt=""> -->
+        </div>
+        <span>
+          <span class="d-none d-md-inline">{{userName}}</span>
+          <b class="caret"></b>
+        </span>
+      </a>
+      <div class="dropdown-menu dropdown-menu-end me-1" ngbDropdownMenu>
+        <a href="javascript:;" (click)="profile()" class="dropdown-item">{{ 'Labels.EditProfile' | translate }}</a>
+        <div class="dropdown-divider"></div>
+        <a href="javascript:;" (click)="logout()" class="dropdown-item">{{ 'Labels.Logout' | translate }}</a>
+      </div>
+    </div>
+    <div class="navbar-divider d-none d-md-block" *ngIf="this.appSidebarTwo"></div>
+    <div class="navbar-item d-none d-md-block" *ngIf="this.appSidebarTwo">
+      <a href="javascript:;" (click)="toggleAppSidebarEnd()" class="navbar-link icon">
+        <i class="fa fa-th"></i>
+      </a>
+    </div>
+  </div>
+  <!-- END nav -->
+</div>
+<!-- END #header -->

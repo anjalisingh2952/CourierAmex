@@ -1,0 +1,26 @@
+.col-md-3.float-left,.col-md-2.float-left {
+    float: left;
+    padding: 5px;
+}
+.col-md-5.float-left,.col-md-6.float-left {
+    float: left;
+    padding: 8px;
+    //border: 1px solid #ccd4da;
+    //height: 35px;
+    //border-radius: 5px;
+    margin-left:1px ;
+    label{
+        padding-left: 5px;
+    }
+}
+/* Hide the default date picker icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+/* Optional: Add some padding so the text is aligned properly */
+input[type="date"] {
+    position: relative;
+    padding-right: 30px; /* Adjust if necessary */
+}

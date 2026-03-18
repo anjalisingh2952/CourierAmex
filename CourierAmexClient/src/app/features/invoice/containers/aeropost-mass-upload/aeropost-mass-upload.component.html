@@ -1,0 +1,81 @@
+<div class="package-details summary">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">
+        {{ 'AeropostMassUpload.Title' | translate }}
+        <small>{{ 'AeropostMassUpload.SubTitle' | translate }}</small>
+    </h1>
+
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{ 'CreditPending.SubTitle' | translate }}</h4>
+        </div>
+
+        <div class="panel-body">
+            <form #reportForm="ngForm" (ngSubmit)="generateReport(reportForm)">
+                <div class="row g-3 align-items-end">
+
+                    <!-- Company Dropdown -->
+                    <div class="col-md-3" *ngIf="!isGatewayUser">
+                        <label class="form-label">*{{ 'CreditPending.CompanyName' | translate }}</label>
+                        <ng-container *ngIf="companies as entities">
+                            <select class="form-select" name="companyId" [(ngModel)]="selectedCompanyId"
+                                #companySelect="ngModel"
+                                [ngClass]="{ 'is-invalid': companySelect.invalid && companySelect.touched }"
+                                (ngModelChange)="onCompanyChange($event)" minValueValidator="1" required>
+                                <option [ngValue]="0">{{ 'CreditPending.Company' | translate }}</option>
+                                <option *ngFor="let c of entities" [ngValue]="c.id">{{ c.name }}</option>
+                            </select>
+
+                            <div class="invalid-feedback" *ngIf="companySelect.invalid && companySelect.touched">
+                                {{ 'Labels.FieldRequired' | translate }}
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="col-md-2">
+                        <label class="form-label">*{{ 'CreditPending.From' | translate }}</label>
+                        <div class="input-group">
+                            <input #dateInputFromval="ngModel" name="startDate" #dateInputFrom type="date"
+                                class="form-control" [(ngModel)]="startDate"
+                                [ngClass]="{ 'is-invalid': dateInputFromval.invalid && dateInputFromval.touched }"
+                                required />
+                            <span class="input-group-text" (click)="openDatePickerFrom()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="dateInputFromval.invalid && dateInputFromval.touched">
+                            {{ 'Labels.FieldRequired' | translate }}
+                        </div>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="col-md-2">
+                        <label class="form-label">*{{ 'CreditPending.To' | translate }}</label>
+                        <div class="input-group">
+                            <input #dateInputToval="ngModel" name="endDate" #dateInputTo type="date"
+                                class="form-control" [(ngModel)]="endDate"
+                                [ngClass]="{ 'is-invalid': dateInputToval.invalid && dateInputToval.touched }"
+                                required />
+                            <span class="input-group-text" (click)="openDatePickerTo()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="dateInputToval.invalid && dateInputToval.touched">
+                            {{ 'Labels.FieldRequired' | translate }}
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="col-md-2">
+                        <button type="submit"  class="btn btn-primary">
+                            {{ 'CreditPending.Report' | translate }}
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

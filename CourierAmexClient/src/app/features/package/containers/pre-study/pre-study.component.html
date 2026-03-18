@@ -1,0 +1,296 @@
+<div class="package-details pre-study">
+    <ng-container >
+      <shared-breadcrumb></shared-breadcrumb>
+      <h1 class="page-header">{{ 'PackagePreStudy.Title' | translate }} <small>{{ 'PackagePreStudy.SubTitle' |
+          translate
+          }}</small>
+      </h1>
+    </ng-container>
+    <p-tabView  class="custom-tab-view">
+      <p-tabPanel header="Package Pre Study">
+        <form class="package-form" #form="ngForm" autocomplete="off">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-inverse">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <i class="fa fa-boxes fa-lg fa-fw me-1"></i>  {{ 'PackageDetails.Title' |
+                                translate }} 
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+
+                                <div class="col-2">
+                                  <div class="mb-2" *ngIf="!isGatewayUser">
+                                    <ng-container *ngIf="companies$ | async as entities">
+                                        <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' | translate }}</label>
+                                        <select  [disabled]="isGatewayUser" (ngModelChange)="selectCompany($event)" [(ngModel)]="selectedCompany"                                minValueValidator="1" class="form-select" name="companyId" required>
+                                        <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                                        <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                                    </select>
+                                    </ng-container>
+                                  </div>  
+                                  <div class="mb-2" >
+                                    <label class="form-label" for="number">Package Number</label>
+                                    <input type="text" class="form-control" name="number"  maxlength="200"
+                                      required (keyup.enter)="onPackageNumberChange($event)">
+                                  </div>
+                                  
+                                  <div class="mb-2" >
+                                    <div class="ms-md-0 mt-md-4 mt-2">
+                                        <button type="button" class="btn btn-primary btn-sm" (click)="additems()">
+                                          {{ 'Labels.AddNewItem' | translate }}</button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="mb-2" >
+                                        <label class="form-label" for="clientId">#Client</label>
+                                        <input type="text" readonly class="form-control" name="clientId"  maxlength="200" [(ngModel)]="package.customerCode">
+                                      </div>
+                                    <div class="mb-2" >
+                                      <label class="form-label" for="clienName">Client Name</label>
+                                      <input type="text" readonly class="form-control" name="clienName"  maxlength="200" [(ngModel)]="package.customerName">
+                                    </div>
+
+                                  </div>
+                                  <div class="col-6">
+                                    <div class="mb-2" >
+                                      <label class="form-label" for="description">Description</label>
+                                      <input type="text" class="form-control" name="description"  maxlength="500"
+                                        required [(ngModel)]="package.description">
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-2" >
+                                          <label class="form-label" for="price">Price</label>
+                                          <input type="number" class="form-control" name="price"  maxlength="10"
+                                            required [(ngModel)]="package.price">
+                                        </div>
+                                        <div class="mb-2" >
+                                            <input type="checkbox" [(ngModel)]="isDocument"  name="isDocument" required> 
+                                            <label class="form-label px-2" for="isDocument"> Is a document?</label>
+                                          </div>
+                                          <div class="mb-2" >
+                                            <input type="checkbox" [(ngModel)]="isPermission"  name="isPermission"  required>  
+                                            <label class="form-label px-2" for="isPermission"> Requires permission?</label>
+
+                                          </div>
+                                          <div class="mb-2" >
+                                            <input type="checkbox" [(ngModel)]="isHighPrice" name="isHighPrice" required> 
+                                            <label class="form-label px-2" for="isHighPrice"> Has a price greater than $100?</label>
+
+                                          </div>
+                                      </div>
+                                      <div class="col-2">
+                                            <div class="ms-md-0 mt-md-4 mt-2">
+                                                <button (click)="UpdatePrice()" type="button" class="btn btn-secondary btn-sm">
+                                                  {{ 'Labels.UpdatePermission' | translate }}</button>
+                                            </div>
+                                      </div>
+                                      
+                
+                                      </div>
+                                  </div>
+                            </div>    
+
+                        
+                        </div>    
+                    </div>    
+                </div>
+            </div>
+        </form>         
+
+        <ng-container >
+            
+            <app-entity-list [showHeader]="false" [columns]="columns" [rows]="packageItemList" [hasPagination]="false" [activeSearch]="false" >
+              
+            </app-entity-list>
+        </ng-container>
+        
+      <ng-template #actionTemplate let-params="params">
+        <i
+          class="fa fa-edit text-primary fs-15px me-2 pointer"
+          ngbTooltip="{{ 'Tooltips.Edit' | translate }}"
+          (click)="editrow(params.row, 'edit')"
+        ></i>
+        <i
+          class="fa fa-trash text-danger fs-15px me-2 pointer"
+          ngbTooltip="{{ 'Tooltips.Delete' | translate }}"
+          (click)="deleterow(params.row, 'delete')"
+        ></i>
+      </ng-template>
+
+      <!-- <ng-template #editCellTemplate let-params="params">
+        <ng-container>          
+            <button type="button" class="btn btn-primary btn-sm"
+                (click)="editrow(params.row, 'edit')">{{ 'PackagePreStudy.edit' | translate }}</button>
+        </ng-container>     
+    </ng-template>
+    <ng-template #deleteCellTemplate let-params="params">
+      <ng-container>          
+          <button type="button" class="btn btn-secondary btn-sm"
+              (click)="deleterow(params.row, 'delete')">{{ 'PackagePreStudy.delete' | translate }}</button>
+      </ng-container>     
+  </ng-template>  -->
+    
+      </p-tabPanel>
+      <p-tabPanel header="Previous Report">
+          <app-modify-pre-study></app-modify-pre-study>
+      </p-tabPanel>
+      <p-tabPanel header="PreAlert Report">
+          <app-prealert-pre-study></app-prealert-pre-study>
+      </p-tabPanel>
+  </p-tabView>
+    <!-- <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li ngbNavItem="1">
+          <button ngbNavLink>Package Pre Study</button>
+          <ng-template ngbNavContent>
+          <form class="package-form" #form="ngForm" autocomplete="off">
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="panel panel-inverse">
+                          <div class="panel-heading">
+                              <h4 class="panel-title">
+                                  <i class="fa fa-boxes fa-lg fa-fw me-1"></i>  {{ 'PackageDetails.Title' |
+                                  translate }} 
+                              </h4>
+                          </div>
+                          <div class="panel-body">
+                              <div class="row">
+
+                                  <div class="col-2">
+                                    <div class="mb-2" *ngIf="!isGatewayUser">
+                                      <ng-container *ngIf="companies$ | async as entities">
+                                          <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' | translate }}</label>
+                                          <select  [disabled]="isGatewayUser" (ngModelChange)="selectCompany($event)" [(ngModel)]="selectedCompany"                                minValueValidator="1" class="form-select" name="companyId" required>
+                                          <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                                          <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                                      </select>
+                                      </ng-container>
+                                    </div>  
+                                    <div class="mb-2" >
+                                      <label class="form-label" for="number">Package Number</label>
+                                      <input type="text" class="form-control" name="number"  maxlength="200"
+                                        required (keyup.enter)="onPackageNumberChange($event)">
+                                    </div>
+                                    
+                                    <div class="mb-2" >
+                                      <div class="ms-md-0 mt-md-4 mt-2">
+                                          <button type="button" class="btn btn-primary btn-sm" (click)="additems()">
+                                            {{ 'Labels.AddNewItem' | translate }}</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-4">
+                                      <div class="mb-2" >
+                                          <label class="form-label" for="clientId">#Client</label>
+                                          <input type="text" readonly class="form-control" name="clientId"  maxlength="200" [(ngModel)]="package.customerCode">
+                                        </div>
+                                      <div class="mb-2" >
+                                        <label class="form-label" for="clienName">Client Name</label>
+                                        <input type="text" readonly class="form-control" name="clienName"  maxlength="200" [(ngModel)]="package.customerName">
+                                      </div>
+
+                                    </div>
+                                    <div class="col-6">
+                                      <div class="mb-2" >
+                                        <label class="form-label" for="description">Description</label>
+                                        <input type="text" class="form-control" name="description"  maxlength="500"
+                                          required [(ngModel)]="package.description">
+                                      </div>
+                                      <div class="row">
+                                      <div class="col-6">
+                                          <div class="mb-2" >
+                                            <label class="form-label" for="price">Price</label>
+                                            <input type="number" class="form-control" name="price"  maxlength="10"
+                                              required [(ngModel)]="package.price">
+                                          </div>
+                                          <div class="mb-2" >
+                                              <input type="checkbox" [(ngModel)]="isDocument"  name="isDocument" required> 
+                                              <label class="form-label px-2" for="isDocument"> Is a document?</label>
+                                            </div>
+                                            <div class="mb-2" >
+                                              <input type="checkbox" [(ngModel)]="isPermission"  name="isPermission"  required>  
+                                              <label class="form-label px-2" for="isPermission"> Requires permission?</label>
+
+                                            </div>
+                                            <div class="mb-2" >
+                                              <input type="checkbox" [(ngModel)]="isHighPrice" name="isHighPrice" required> 
+                                              <label class="form-label px-2" for="isHighPrice"> Has a price greater than $100?</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                              <div class="ms-md-0 mt-md-4 mt-2">
+                                                  <button (click)="UpdatePrice()" type="button" class="btn btn-secondary btn-sm">
+                                                    {{ 'Labels.UpdatePermission' | translate }}</button>
+                                              </div>
+                                        </div>
+                                        
+                  
+                                        </div>
+                                    </div>
+                              </div>    
+
+                          
+                          </div>    
+                      </div>    
+                  </div>
+              </div>
+          </form>         
+
+          <ng-container >
+              
+              <app-entity-list [showHeader]="false" [columns]="columns" [rows]="packageItemList" [hasPagination]="false" [activeSearch]="false" >
+                
+              </app-entity-list>
+          </ng-container>
+          
+        <ng-template #actionTemplate let-params="params">
+          <i
+            class="fa fa-edit text-primary fs-15px me-2 pointer"
+            ngbTooltip="{{ 'Tooltips.Edit' | translate }}"
+            (click)="editrow(params.row, 'edit')"
+          ></i>
+          <i
+            class="fa fa-trash text-danger fs-15px me-2 pointer"
+            ngbTooltip="{{ 'Tooltips.Delete' | translate }}"
+            (click)="deleterow(params.row, 'delete')"
+          ></i>
+        </ng-template>
+
+        < !-- <ng-template #editCellTemplate let-params="params">
+          <ng-container>          
+              <button type="button" class="btn btn-primary btn-sm"
+                  (click)="editrow(params.row, 'edit')">{{ 'PackagePreStudy.edit' | translate }}</button>
+          </ng-container>     
+      </ng-template>
+      <ng-template #deleteCellTemplate let-params="params">
+        <ng-container>          
+            <button type="button" class="btn btn-secondary btn-sm"
+                (click)="deleterow(params.row, 'delete')">{{ 'PackagePreStudy.delete' | translate }}</button>
+        </ng-container>     
+    </ng-template>  -- >
+      
+        </ng-template>
+      </li>
+      <li ngbNavItem="2">
+        <button ngbNavLink>Previous Report</button>
+        <ng-template ngbNavContent>
+          <app-modify-pre-study></app-modify-pre-study>
+        </ng-template>
+      </li>
+      <li ngbNavItem="3">
+        <button ngbNavLink>PreAlert Report</button>
+        <ng-template ngbNavContent>
+          <app-prealert-pre-study></app-prealert-pre-study>
+        </ng-template>
+      </li>
+  </ul> -->
+
+  <!-- <div [ngbNavOutlet]="nav" class="mt-2"></div> -->
+
+</div>
+

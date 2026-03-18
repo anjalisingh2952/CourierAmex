@@ -1,0 +1,33 @@
+<div class="panel panel-inverse">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <i class="fa-solid fa-file-invoice fa-lg fa-fw me-1"></i>
+      {{ 'GenerateReport.InvoicesCreditsPending' | translate }}
+    </h4>
+  </div>
+  <div class="bg-white rounded" style="overflow-y:scroll; max-height: 350px;">
+    <div class="overflow-x-auto rounded-b-md">
+      <ng-container>
+        <app-entity-list [title]="'Packages.Title' | translate" [state]="state" [columns]="columns"
+          [hasPagination]="false" [pagination]="pagination" [activeSearch]="false" [showHeader]="false"
+          [rows]="entities">
+        </app-entity-list>
+      </ng-container>
+
+      <ng-template #actionTemplate let-params="params">
+        <input type="checkbox" class="form-check-input me-2" [id]="'factura-' + params.row.id"
+          [(ngModel)]="params.row.selected" (change)="onCheckboxChange(params.row)">
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.status">
+    <span *ngSwitchCase="0" class="badge bg-warning text-white">{{ 'Status.PENDING' | translate }}</span>
+    <span *ngSwitchCase="1" class="badge bg-danger text-white">{{ 'Status.CANCELLED' | translate }}</span>
+    <span *ngSwitchCase="2" class="badge bg-success text-white">{{ 'Status.PAID' | translate }}</span>
+    <span *ngSwitchCase="3" class="badge bg-secondary text-white">{{ 'Status.PENDINGCREDIT' | translate }}</span>
+    <span *ngSwitchDefault class="badge bg-info text-white">{{ 'Manifests.Unknown' | translate }}</span>
+  </ng-container>
+</ng-template>

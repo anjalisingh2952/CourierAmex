@@ -1,0 +1,496 @@
+<div class="package-details pre-study">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'PackageScanning.Title' | translate }} <small>{{ 'PackageScanning.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+    <form class="package-form" #form="ngForm" autocomplete="off">
+        <div class="row mb-4" *ngIf="!isGatewayUser">
+
+            <div class="col-12 ">
+                <div class="mb-12">
+                    <ng-container *ngIf="companies$ | async as entities">
+                        <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' |
+                            translate }}</label>
+                        <select (ngModelChange)="selectCompany($event)" [(ngModel)]="selectedCompany"
+                            minValueValidator="1" class="form-select" name="companyId"
+                            required>
+                            <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                            <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                        </select>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-boxes fa-lg fa-fw me-1"></i> {{ 'PackageScanning.ManifestDetails' |
+                            translate }}
+                        </h4>
+                        <div class="panel-heading-btn">
+
+                            <button class="btn btn-xs btn-icon btn-warning" (click)="isCollapsed1 = !isCollapsed1">
+                                <i class="fa" [ngClass]="isCollapsed1 ? 'fa-minus' : 'fa-plus'"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-body" *ngIf="isCollapsed1">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-12">
+                                    <ng-container *ngIf="entities$ | async as entities">
+                                        <app-entity-list [showHeader]="false" [state]="state" [pagination]="pagination"
+                                            [columns]="columns" [rows]="entities" [hasPagination]="true"
+                                            [activeSearch]="false" (stateChange)="onStateChange($event)"
+                                            [selectedItem]="selectedManifestRow">
+                                        </app-entity-list>
+                                    </ng-container>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa-solid fa-expand fa-lg fa-fw me-1"></i> {{ 'PackageScanning.BagDetails' |
+                            translate }}
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-12">
+                                    <div class="row mb-2">
+                                        <div class="col-8">
+                                            <label class="form-label">Bag Number</label>
+                                            <input #bagNumberInput type="text" [(ngModel)]="scannedBagInfo.bag"
+                                                class="form-control" name="BagNumber"
+                                                (keydown.enter)="onBagNumberChange(); packageNumberInput.focus();"
+                                                [disabled]="!startScanningBag || (startScanningBag && scannedBagNumber != '')">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label">Total Packages</label>
+                                            <input type="text" disabled [(ngModel)]="scannedBagInfo.total"
+                                                class="form-control" name="BagTotalPackages" maxlength="200">
+                                        </div>
+                                    </div>
+                                    <!-- <hr class="mb-4 mt-4"> -->
+                                    <div class="row mt-4">
+                                        <div class="mb-2 col-4">
+                                            <label class="form-label">Normal Packages</label>
+                                            <input type="text" disabled [(ngModel)]="scannedBagInfo.normal"
+                                                class="form-control" name="BagNormalPackages" maxlength="200">
+                                        </div>
+                                        <div class="mb-2 col-4">
+                                            <label class="form-label">Customs Packages</label>
+                                            <input type="text" disabled [(ngModel)]="scannedBagInfo.customs"
+                                                class="form-control" name="BagCustomsPackages" maxlength="200">
+                                        </div>
+                                        <div class="mb-2 col-4">
+                                            <label class="form-label">Pending Packages</label>
+                                            <input type="text" disabled [(ngModel)]="scannedBagInfo.pending"
+                                                class="form-control" name="BagPendingPackages" maxlength="200">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-boxes fa-lg fa-fw me-1"></i> {{ 'PackageScanning.ManifestProgress' |
+                            translate }}
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-12">
+                                    <div class=" row mb-2">
+                                        <div class="col-9 input-container">
+                                            <label class="form-label" for="Invoice">Selected Manifest Number</label>
+                                            <input type="text" [(ngModel)]="selectedManifestNumber"
+                                                [placeholder]="'PackageScanning.SelectedManifestNumber' | translate"
+                                                readonly class="form-control" name="SelectedManifest">
+                                            <div *ngIf="startScanning || startScanningBag" class="spinner-container">
+                                                <span class="spinner-border spinner-border-sm text-success mt-4"
+                                                    role="status" aria-hidden="true"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" [disabled]="!selectedManifestNumber"
+                                                class="btn btn-primary btn-sm float-end mt-4" (click)="ViewPending()">
+                                                {{ 'PackageScanning.ViewPending' | translate }}</button>
+                                        </div>
+                                    </div>
+                                    <!-- <hr class="mb-4 mt-4"> -->
+                                    <div class="row mt-5">
+                                        <div class="mb-2 col-3">
+                                            <label class="form-label">Total Packages</label>
+                                            <input type="text" disabled [(ngModel)]="countManifestScanner.total"
+                                                class="form-control" name="TotalPackages" maxlength="200">
+                                        </div>
+                                        <div class="mb-2 col-3">
+                                            <label class="form-label">Normal Packages</label>
+                                            <input type="text" disabled [(ngModel)]="countManifestScanner.normal"
+                                                class="form-control" name="NormalPackages" maxlength="200">
+                                        </div>
+                                        <div class="mb-2 col-3">
+                                            <label class="form-label">Customs Packages</label>
+                                            <input type="text" disabled [(ngModel)]="countManifestScanner.customs"
+                                                class="form-control" name="CustomsPackages" maxlength="200">
+                                        </div>
+                                        <div class="mb-2 col-3">
+                                            <label class="form-label">Pending Packages</label>
+                                            <input type="text" disabled [(ngModel)]="countManifestScanner.pending"
+                                                class="form-control" name="PendingPackages" maxlength="200">
+                                        </div>
+                                    </div>
+                                    <hr class="mb-3 mt-4">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <button type="button" [disabled]="!selectedManifestNumber"
+                                                class="btn btn-sm btn-primary" [ngClass]="{
+                                                'startManifest-hover': startScanning                                              
+                                              }" (click)="StartManifest()"
+                                                [attr.data-text]="'PackageScanning.StartManifest' | translate">
+                                                <span *ngIf="startScanning"
+                                                    class="spinner-grow spinner-grow-sm align-middle" role="status"
+                                                    aria-hidden="true"></span>
+                                                <span class="align-middle btntext" *ngIf="startScanning">&nbsp;{{
+                                                    'PackageScanning.ManifestInProgress'
+                                                    | translate }}</span>
+                                                <span class="align-middle btntext" *ngIf="!startScanning">{{
+                                                    'PackageScanning.StartManifest'
+                                                    | translate }}</span>
+                                            </button>
+
+                                            &nbsp;&nbsp;&nbsp;
+
+                                            <button type="button" [disabled]="!selectedManifestNumber"
+                                                class="btn btn-sm btn-primary" [ngClass]="{
+                                                'startBag-hover': startScanningBag                                              
+                                              }" (click)="StartBag()"
+                                                [attr.data-text]="'PackageScanning.StartBag' | translate">
+                                                <span *ngIf="startScanningBag"
+                                                    class="spinner-grow spinner-grow-sm align-middle" role="status"
+                                                    aria-hidden="true"></span>
+                                                <span class="align-middle btntext" *ngIf="startScanningBag">&nbsp;{{
+                                                    'PackageScanning.BagInProgress'
+                                                    | translate }}</span>
+                                                <span class="align-middle btntext" *ngIf="!startScanningBag">{{
+                                                    'PackageScanning.StartBag'
+                                                    | translate }}</span>
+                                            </button>
+
+                                            &nbsp;&nbsp;&nbsp;
+
+                                            <button type="button" class="btn btn-sm btn-primary" [ngClass]="{
+                                                'startPackage-hover': startScanningPackage                                              
+                                              }" (click)="StartPackage()"
+                                                [attr.data-text]="'PackageScanning.StartPackage' | translate">
+                                                <span *ngIf="startScanningPackage"
+                                                    class="spinner-grow spinner-grow-sm align-middle" role="status"
+                                                    aria-hidden="true"></span>
+                                                <span class="align-middle btntext" *ngIf="startScanningPackage">&nbsp;{{
+                                                    'PackageScanning.PackageInProgress'
+                                                    | translate }}</span>
+                                                <span class="align-middle btntext" *ngIf="!startScanningPackage">{{
+                                                    'PackageScanning.StartPackage'
+                                                    | translate }}</span>
+                                            </button>
+
+                                        </div>
+                                        <div class="col-4 d-flex justify-content-end gap-2 position-relative">
+                                            <div class="position-relative">
+                                                <button type="button" data-bs-toggle="dropdown"
+                                                    *ngIf="historyScannedPackages.length > 0"
+                                                    class="btn btn-secondary btn-sm" (click)="OpenHistory()">
+                                                    <i class="fa fa-history" aria-hidden="true"></i>
+                                                    <span class="px-1">History</span>
+                                                </button>
+                                                <div *ngIf="showBox" class="box">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Package Number</th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let item of historyScannedPackages">
+                                                                <td>{{ item.packageNumber }}</td>
+
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                            <!--  -->
+                                            <button type="button" *ngIf="startScanningBag || startScanning || startScanningPackage"
+                                                class="btn btn-secondary btn-sm float-end"
+                                                (click)="ClearBagAndPackage()">
+                                                {{ 'PackageScanning.ClearBagAndPackage' | translate }}</button>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa-solid fa-expand fa-lg fa-fw me-1"></i> {{ 'PackageScanning.PackageDetails' |
+                            translate }}
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-12">
+                                    <div class="row mb-2">
+                                        <div class="col-12">
+                                            <label class="form-label">Package Number</label>
+                                            <input #packageNumberInput type="text" [(ngModel)]="scannedPackageNumber"
+                                                class="form-control" name="scannedPackageNumber"
+                                                (keyup.enter)="onPackageNumberChange()"
+                                                [disabled]="!(startScanning || (startScanningBag && scannedBagNumber != '' || startScanningPackage))">
+                                        </div>
+                                    </div>
+
+                                    <div class="card">
+                                        <div class="card-header">
+                                            {{ 'PackageScanning.CustomerInfo' | translate }}
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="mb-2 col-6">
+                                                    <label class="form-label">customer</label>
+                                                    <input type="text" disabled [(ngModel)]="scannedPackageInfo.client"
+                                                        class="form-control" name="scanPackageCustomer">
+                                                </div>
+                                                <div class="mb-2 col-6">
+                                                    <label class="form-label">Name</label>
+                                                    <input type="text" disabled
+                                                        [(ngModel)]="scannedPackageInfo.fullName" class="form-control"
+                                                        name="scanPackageName">
+                                                </div>
+                                                <div class="mb-2 col-12">
+                                                    <label class="form-label">Description</label>
+                                                    <input type="text" disabled
+                                                        [(ngModel)]="scannedPackageInfo.description"
+                                                        class="form-control" name="scanPackageDescription">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-2">
+                                        <div class="card-header">
+                                            {{ 'PackageScanning.PackageInfo' | translate }}
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="mb-2 col-6">
+                                                    <label class="form-label">weight</label>
+                                                    <input type="text" disabled [(ngModel)]="scannedPackageInfo.weight"
+                                                        class="form-control" name="scanPackageWeight">
+                                                </div>
+                                                <div class="mb-2 col-6">
+                                                    <label class="form-label">volume</label>
+                                                    <input type="text" disabled [(ngModel)]="scannedPackageInfo.volume"
+                                                        class="form-control" name="scanPackageVolume">
+                                                </div>
+                                                <div class="mb-2 col-6">
+                                                    <label class="form-label">zone</label>
+                                                    <input type="text" disabled [(ngModel)]="scannedPackageInfo.zone"
+                                                        class="form-control" name="scanPackageZone">
+                                                </div>
+                                                <div class="mb-2 col-6">
+                                                    <label class="form-label">route</label>
+                                                    <input type="text" disabled [(ngModel)]="scannedPackageInfo.route"
+                                                        class="form-control" name="scanPackageRoute">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <ng-template #actionTemplate let-params="params">
+        <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"
+            (click)="viewDetail(params.row)">
+        </i>
+    </ng-template>
+
+
+    <style>
+        .input-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .spinner-container {
+            position: absolute;
+            top: 50%;
+            left: 95%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+            /* Prevent the spinner from blocking input if not disabled */
+            color: white;
+            font-weight: bold;
+        }
+
+        .startManifest-hover {
+            display: inline-block;
+            min-width: max-content;
+            /* Ensures the button adapts to content size */
+            padding: 5px 10px;
+            /* Adjust as needed */
+            position: relative;
+            transition: width 0.3s ease, padding 0.3s ease;
+            /* Smooth transition */
+            overflow: hidden;
+            /* Prevents sudden content change issues */
+        }
+
+        .startManifest-hover:hover {
+            width: auto;
+            /* Ensures it expands to fit new content */
+            min-width: max-content;
+            /* Avoids sudden shrinkage */
+        }
+
+        .startManifest-hover span.btntext {
+            display: inline-block;
+            opacity: 1;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .startManifest-hover:hover span.btntext {
+            opacity: 0;
+            /* Fade out instead of removing instantly */
+        }
+
+        .startManifest-hover::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 20px;
+            right: 0;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            top: 6px;
+        }
+
+        .startManifest-hover:hover::after {
+            opacity: 1;
+            /* Smooth fade-in for better UX */
+        }
+
+
+        /*--------------------------------------------------*/
+
+        .startBag-hover {
+            display: inline-block;
+            min-width: max-content;
+            /* Ensures the button adapts to content size */
+            padding: 5px 10px;
+            /* Adjust as needed */
+            position: relative;
+            transition: width 0.3s ease, padding 0.3s ease;
+            /* Smooth transition */
+            overflow: hidden;
+            /* Prevents sudden content change issues */
+        }
+
+        .startBag-hover:hover {
+            width: auto;
+            /* Ensures it expands to fit new content */
+            min-width: max-content;
+            /* Avoids sudden shrinkage */
+        }
+
+        .startBag-hover span.btntext {
+            display: inline-block;
+            opacity: 1;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .startBag-hover:hover span.btntext {
+            opacity: 0;
+            /* Fade out instead of removing instantly */
+        }
+
+        .startBag-hover::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 20px;
+            right: 0;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            top: 6px;
+        }
+
+        .startBag-hover:hover::after {
+            opacity: 1;
+            /* Smooth fade-in for better UX */
+        }
+
+        .box {
+            position: absolute;
+            top: 100%;
+            /* Position below the button */
+            left: 50%;
+            transform: translateX(-50%);
+            /* Center horizontally */
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            min-width: 200px;
+            /* Adjust width */
+        }
+
+        /* Triangle pointer */
+        .box::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent white transparent;
+            /* Triangle pointing to button */
+        }
+    </style>
+</div>

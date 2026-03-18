@@ -1,0 +1,10 @@
+
+.modal-max-height .modal-dialog {
+    height: 90vh; 
+    max-height: 100vh;
+  }
+  
+  .modal-max-height .modal-content {
+    height: 100%; 
+    overflow-y: auto; 
+  }

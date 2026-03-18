@@ -1,0 +1,49 @@
+.custom-tab-view ::ng-deep .p-tabview-nav{
+    padding: 1px !important;
+    margin: 0px !important;            /* Space between tabs */
+    margin-bottom: 10px !important;
+    border-radius: 5px;
+  }
+  .custom-tab-view ::ng-deep .p-tabview-nav a {
+    text-decoration: none;
+    border-width: 0 0 3px 0;
+    color: #2d353c;
+
+    /* Space between tabs */
+  }
+
+  .custom-tab-view ::ng-deep .p-tabview-nav li.p-highlight {
+    background-color: #fff;      /* Active tab color */
+  }
+  .custom-tab-view ::ng-deep .p-tabview-panels {
+   padding: 0px;
+  }
+
+
+
+  button.btn.btn-xs {
+    margin-right: 2px !important;
+}
+
+.primeng-table .p-datatable-tbody > tr:hover {
+    color: rgb(75, 85, 99);
+    background: rgb(243, 244, 246);
+}
+thead, tbody, tfoot, tr, td, th {
+    font-size: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+    border-width: 0 0 1px 0 !important;
+    padding: 5px !important;
+}
+
+::ng-deep .highlight-row {
+    background-color: #d0ebff !important;
+    transition: background-color 0.5s ease;
+  }
+::ng-deep .highlight-row {
+    background-color: #d0ebff !important; /* Light blue highlight */
+}
+::ng-deep .selectedRow {
+    background-color: #dee2e6 !important;
+}

@@ -1,0 +1,39 @@
+<ng-container *ngIf="entities$ | async as entities">
+  <app-entity-list [title]="'Manifests.Title' | translate" [subTitle]="'Manifests.SubTitle' | translate"
+    [addLabel]="'Labels.New' | translate" [filterTemplate]="filterTemplate" [hasAdd]="hasAdd" [state]="state"
+    [pagination]="pagination" [columns]="columns" [rows]="entities" (stateChange)="onStateChange($event)"
+    (add)="addNew()">
+  </app-entity-list>
+</ng-container>
+
+<ng-template #filterTemplate>
+  <ng-container *ngIf="companies$ | async as companies">
+    <shared-dropdown [entities]="companies" (onSelectEntity)="selectEntity($event)"
+      *ngIf="showCompanies"></shared-dropdown>
+  </ng-container>
+  <div class="form-check mt-1">
+    <input class="form-check-input" type="checkbox" name="showClosed" [ngModel]="showClosed"
+      (ngModelChange)="showCloseList()">
+    <label class="form-check-label" for="shipType">
+      {{ 'Manifests.ShowClosed' | translate }}</label>
+  </div>
+</ng-template>
+
+<ng-template #actionTemplate let-params="params">
+  <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"
+    (click)="editEntity(params.row)"></i>
+  <i class="fa fa-lock-open text-green-700 fs-15px me-2 pointer" *ngIf="params.row.closed === 1 && hasOpenManifest"
+    ngbTooltip="{{ 'Manifests.OpenManifest' | translate }}" (click)="openEntity(params.row)"></i>
+  <i class="fa fa-clock-rotate-left text-orange-700 fs-15px me-2 pointer" *ngIf="params.row.closed === 1 && hasUpdate"
+    ngbTooltip="{{ 'Manifests.DelayNotification' | translate }}" (click)="sendDelay(params.row)"></i>
+  <i class="fa fa-trash text-danger fs-15px me-2 pointer" *ngIf="hasDelete"
+    ngbTooltip="{{ 'Tooltips.Delete' | translate }}" (click)="deleteEntity(params.row)"></i>
+</ng-template>
+
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.closed">
+    <span *ngSwitchCase="0" class="badge bg-green text-white">{{ 'Manifests.Open' | translate }}</span>
+    <span *ngSwitchCase="1" class="badge bg-dark">{{ 'Manifests.Closed' | translate }}</span>
+    <span *ngSwitchDefault class="badge bg-yellow text-dark">{{ 'Manifests.Unknown' | translate }}</span>
+  </ng-container>
+</ng-template>

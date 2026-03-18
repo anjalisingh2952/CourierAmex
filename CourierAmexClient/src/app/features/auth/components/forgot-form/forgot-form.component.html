@@ -1,0 +1,28 @@
+<form class="forgot-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" autocomplete="off">
+
+  <div class="mb-20px">
+    <div class="form-floating ">
+      <input type="text" class="form-control fs-13px h-45px border-0" name="email" [ngModel]="request.email"
+        placeholder="{{ 'Placeholders.EmailAddress' | translate }}" [ngModelOptions]="{ updateOn: 'blur' }"
+        [class.is-valid]="email.valid && email.touched" [class.is-invalid]="email.invalid && email.touched"
+        #email="ngModel" maxlength="256" minlength="5" required>
+      <label for="email" class="d-flex align-items-center text-gray-600 fs-13px">{{'Labels.EmailAddress' |
+        translate}}</label>
+    </div>
+    <ng-container *ngIf="email.invalid && email.touched">
+      <div class="mt-2 text-danger" *ngIf="email.errors?.['required']">
+        {{ 'Labels.FieldRequired' | translate }}
+      </div>
+      <div class="mt-2 text-danger" *ngIf="email.errors?.['minlength']">
+        {{ 'Labels.FieldMinLength' | translate:{ min: 5 } }}
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="mb-20px">
+    <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg" [disabled]="!form.valid">
+      {{'Labels.Submit' | translate}}</button>
+  </div>
+
+  <div class="text-gray-500" [innerHTML]="'Labels.LoginAccount' | translate:loginLink"></div>
+</form>

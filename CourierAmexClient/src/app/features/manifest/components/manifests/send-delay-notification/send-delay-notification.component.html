@@ -1,0 +1,99 @@
+<form class="send-delay-notification" #form="ngForm" autocomplete="off" *ngIf="entity">
+  <div class="panel panel-inverse">
+    <div class="panel-heading">
+      <h4 class="panel-title"><i class="fa fa-clock-rotate-left fa-lg fa-fw me-1"></i> {{
+        'Manifests.DelayNotification' | translate }}</h4>
+    </div>
+    <div class="panel-body">
+      <div class="row mb-2">
+        <div class="col-12 fw-bolder border-bottom">
+          {{ 'ManifestDetails.Title' | translate }}
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-2 fw-bold">
+          {{ 'ManifestDetails.Number' | translate }}
+        </div>
+        <div class="col-4">
+          {{ entity.manifestNumber }}
+        </div>
+
+        <div class="col-2 fw-bold">
+          {{ 'ManifestDetails.Date' | translate }}
+        </div>
+        <div class="col-4">
+          {{ entity.manifestDate | date:'MM/dd/yyyy hh:mm a' }}
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-2 fw-bold">
+          {{ 'Labels.Name' | translate }}
+        </div>
+        <div class="col-4">
+          {{ entity.name }}
+        </div>
+
+        <div class="col-2 fw-bold">
+          {{ 'Manifests.ShippingWay' | translate }}
+        </div>
+        <div class="col-4">
+          {{ entity.shippingWayName }}
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-2 fw-bold">
+          {{ 'Labels.Status' | translate }}
+        </div>
+        <div class="col-4">
+          <ng-container [ngSwitch]="entity.closed">
+            <span *ngSwitchCase="0" class="badge bg-green text-white">{{ 'Manifests.Open' | translate }}</span>
+            <span *ngSwitchCase="1" class="badge bg-dark">{{ 'Manifests.Closed' | translate }}</span>
+            <span *ngSwitchDefault class="badge bg-yellow text-dark">{{ 'Manifests.Unknown' | translate }}</span>
+          </ng-container>
+        </div>
+
+        <div class="col-2 fw-bold">
+          &nbsp;
+        </div>
+        <div class="col-4">
+          &nbsp;
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-12 fw-bolder border-bottom">
+          {{ 'Manifests.Packages' | translate }}
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <div class="d-flex pb-2">
+          <div class="form-label">{{ 'Manifests.SelectAllPackages' | translate }}*</div>
+          <input type="checkbox" [checked]="isAllSelected" (click)="SelectAll()" class="form-check-input ms-2" />
+        </div>
+        <app-entity-list [state]="state" [hasPagination]="true" [pagination]="pagination" [showHeader]="false" [activeSearch]="true"
+          [columns]="columns" [rows]="packageList" (stateChange)="onStateChange($event)">
+        </app-entity-list>
+        <ng-template #filterTemplate let-params="params">
+          <input type="checkbox" class="form-check-input me-2" [(ngModel)]="params.row.checked"
+            [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange(params.row)" />
+        </ng-template>
+      </div>
+
+      <div class="row">
+        <div class="col-6 text-center">
+          <button type="button" class="btn btn-primary btn-sm" (click)="submit(form)">
+            <i class="fa fa-check fa-lg me-2"></i> {{ 'Labels.Submit' |
+            translate }}</button>
+        </div>
+        <div class="col-6 text-center">
+          <button type="button" class="btn btn-default btn-sm text-decoration-none text-dark" (click)="close()">
+            <i class="fa fa-ban fa-lg me-2 text-dark"></i> {{ 'Labels.Cancel' |
+            translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

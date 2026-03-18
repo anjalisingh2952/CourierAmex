@@ -1,0 +1,41 @@
+<ng-container *ngIf="entities$ | async as customers">
+  <app-entity-list [title]="'Customers.Title' | translate" [subTitle]="'Customers.SubTitle' | translate"
+    [addLabel]="'Labels.New' | translate" [hasAdd]="hasAdd" [state]="state" [pagination]="pagination"
+    [filterTemplate]="filterTemplate" [columns]="columns" [rows]="customers" (stateChange)="onStateChange($event)"
+    (add)="addNew()">
+  </app-entity-list>
+</ng-container>
+
+<ng-template #filterTemplate>
+  <ng-container *ngIf="companies$ | async as companies">
+    <shared-dropdown [entities]="companies" [selectedEntity]="companies[0] || undefined" (onSelectEntity)="selectCompany($event)" *ngIf="showsCompanies"></shared-dropdown>
+  </ng-container>
+</ng-template>
+
+<ng-template #actionTemplate let-params="params">
+  <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"
+    (click)="editItem(params.row)"></i>
+  <i class="fa fa-trash text-danger fs-15px me-2 pointer" *ngIf="hasDelete"
+    ngbTooltip="{{ 'Tooltips.Delete' | translate }}" (click)="deleteItem(params.row)"></i>
+</ng-template>
+
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.status">
+    <span *ngSwitchCase="1" class="badge bg-dark">{{ 'Labels.Draft' | translate }}</span>
+    <span *ngSwitchCase="2" class="badge bg-green text-white">{{ 'Labels.Active' | translate }}</span>
+    <span *ngSwitchCase="3" class="badge bg-yellow text-dark">{{ 'Labels.Inactive' | translate }}</span>
+  </ng-container>
+</ng-template>
+
+<ng-template #shippingTemplate let-params="params">
+  <i class="fa fa-plane me-2" *ngIf="params.row.shipByAir" ngbTooltip="{{ 'Customers.ShipByAir' | translate }}"></i>
+  <i class="fa fa-ship me-2" *ngIf="params.row.shipBySea" ngbTooltip="{{ 'Customers.ShipBySea' | translate }}"></i>
+</ng-template>
+
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.status">
+    <span *ngSwitchCase="1" class="badge bg-dark">{{ 'Labels.Draft' | translate }}</span>
+    <span *ngSwitchCase="2" class="badge bg-green text-white">{{ 'Labels.Active' | translate }}</span>
+    <span *ngSwitchCase="3" class="badge bg-yellow text-dark">{{ 'Labels.Inactive' | translate }}</span>
+  </ng-container>
+</ng-template>

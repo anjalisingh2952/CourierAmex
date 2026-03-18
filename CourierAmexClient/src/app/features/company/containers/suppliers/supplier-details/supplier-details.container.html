@@ -1,0 +1,18 @@
+<div class="supplier-details" *ngIf="{ 
+  entity: entity$ | async, 
+  companies: companies$ | async, 
+  locations: locations$ | async 
+  } as data">
+  <ng-container *ngIf="data.entity && data.companies">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'SupplierDetails.Title' | translate }} <small>{{ 'SupplierDetails.SubTitle' |
+        translate
+        }}</small>
+    </h1>
+
+    <supplier-form [entity]="data.entity" [companies]="data.companies" [locations]="data.locations ?? []"
+      (onCompanyChange)="onCompanyChange($event)" (onSave)="save($event)" 
+      (onGoBack)="goBack()"></supplier-form>
+  </ng-container>
+</div>

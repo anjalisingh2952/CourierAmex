@@ -1,0 +1,105 @@
+<div class="package-details">
+    <shared-breadcrumb></shared-breadcrumb>
+    <h1 class="page-header">{{ 'PendingInvoices.Title' | translate }} <small>{{ 'PendingInvoices.SubTitle' |
+            translate
+            }}</small>
+    </h1>
+
+    <!---
+  "StartDate": "Start Date",
+    "EndDate": "End Date:",
+    "Package": "Package",
+    "Zone": "Zone/Area",
+    "PayType": "Customer Pay Type",
+    "AllPayType": "ALL Cusomer Pay Type",
+    "AllZone": "ALL Zones"--->
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{ 'PendingInvoices.SubTitle' | translate }}</h4>
+        </div>
+
+        <div class="panel-body">    
+    <form class="package-form" #reportForm="ngForm" (ngSubmit)="getExcel_PendingInvoicesReport(reportForm)" autocomplete="off">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label class="form-label" for="ManifestID">* {{ 'PendingInvoices.StartDate' |
+                    translate }}</label>
+
+                <div class="input-group">
+                    <input #dateInputFromval="ngModel" name="startDate" #dateInputFrom type="date" class="form-control"
+                        [(ngModel)]="startDate"
+                        [ngClass]="{ 'is-invalid': dateInputFromval.invalid && dateInputFromval.touched }" required />
+                    <span class="input-group-text" (click)="openDatePickerFrom()">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+                <div class="invalid-feedback" *ngIf="dateInputFromval.invalid && dateInputFromval.touched">
+                    {{ 'Labels.FieldRequired' | translate }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="ManifestID">* {{ 'PendingInvoices.EndDate' |
+                    translate }}</label>
+                <div class="input-group">
+                    <input #dateInputToval="ngModel" name="endDate" #dateInputTo type="date" class="form-control"
+                        [(ngModel)]="endDate"
+                        [ngClass]="{ 'is-invalid': dateInputToval.invalid && dateInputToval.touched }" required />
+                    <span class="input-group-text" (click)="openDatePickerTo()">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+                <div class="invalid-feedback" *ngIf="dateInputToval.invalid && dateInputToval.touched">
+                    {{ 'Labels.FieldRequired' | translate }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ng-container>
+                    <label class="form-label" for="ManifestID">* {{ 'PendingInvoices.PayType' |
+                        translate }}</label>
+                    <select #selectedPaytypeToval="ngModel" [(ngModel)]="selectedPaytype" (ngModelChange)="onChangePaytype()" minValueValidator="1"
+                        class="form-select" name="payType"  [ngClass]="{ 'is-invalid': selectedPaytypeToval.invalid && selectedPaytypeToval.touched }"  [required]="!AllPayType"
+                        [disabled]="AllPayType">
+                        <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                        <option [ngValue]=c.id *ngFor="let c of customerPayType">{{ c.name }}</option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="selectedPaytypeToval.invalid && selectedPaytypeToval.touched">
+                        {{ 'Labels.FieldRequired' | translate }}
+                    </div>
+                </ng-container>
+            </div>
+            <div class="col-md-6">
+                <ng-container>
+                    <label class="form-label" for="ManifestID">* {{ 'PendingInvoices.Zone' |
+                        translate }}</label>
+                    <select #selectedZoneToval="ngModel" [(ngModel)]="selectedZone" (ngModelChange)="onChangeZone()" minValueValidator="1"
+                        class="form-select" name="selectedZone"  [ngClass]="{ 'is-invalid': selectedZoneToval.invalid && selectedZoneToval.touched }" [required]="!AllZone"
+                        [disabled]="AllZone">
+                        <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                        <option [ngValue]=c.id *ngFor="let c of zonelist">{{ c.name }}</option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="selectedZoneToval.invalid && selectedZoneToval.touched">
+                        {{ 'Labels.FieldRequired' | translate }}
+                    </div>
+                </ng-container>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                <div class="col-md-4 float-left mt-3">
+                    <label class="block pt-2 form-label mb-0 col-md-3"></label>
+                    <div class="input-group mb-10px">
+                    <input type="checkbox" (change)="toggleAllPayType()" [(ngModel)]="AllPayType" name="AllPayType" class="form-check-input"  value="Category D"> <label class="pl-5"> {{'PendingInvoices.AllPayType' | translate}}</label>
+                    </div>
+                </div>   
+                <div class="col-md-4 float-left mt-3">
+                    <label class="block pt-2 form-label mb-0 col-md-3"></label>
+                    <div class="input-group mb-10px">
+                    <input type="checkbox"  (change)="toggleAllZone()"  [(ngModel)]="AllZone" name="AllZone" class="form-check-input"  value="Category D"> <label class="pl-5"> {{'PendingInvoices.AllZone' | translate}}</label>
+                    </div>
+                </div> 
+                <div class="col-md-4 float-left mt-3"><button type="submit" class="btn btn-primary">Generate Report</button></div>
+                </div>  
+            </div>
+        </div>
+    </form>
+</div>
+</div>

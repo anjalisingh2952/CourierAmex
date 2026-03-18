@@ -1,0 +1,67 @@
+<div class="package-details credit-pending">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'DetailedBilling.Title' | translate }} <small>{{ 'DetailedBilling.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{ 'DetailedBilling.SubTitle' | translate }}</h4>
+        </div>
+        <div class="panel-body">
+            <div class="col-12">
+                <form #reportForm="ngForm" (ngSubmit)="generateReport(reportForm)">
+
+                    <div class="col-md-3 float-left" *ngIf="!isGatewayUser">
+                        <label class="block pt-2 form-label mb-0 col-md-3">* {{'DetailedBilling.Company' | translate
+                            }}</label>
+                        <div class="input-group mb-10px">
+                            <ng-container *ngIf="companies$ | async as entities">
+                                <select #companySelect="ngModel" (ngModelChange)="selectCompany($event)"
+                                    [(ngModel)]="selectedCompany" minValueValidator="1" class="form-select"
+                                    name="companyId" required
+                                    [ngClass]="{'is-invalid': companySelect.invalid && companySelect.touched}">
+                                    <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                                    <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                                </select>
+                                <div class="invalid-feedback" *ngIf="companySelect.invalid && companySelect.touched">
+                                    {{ 'Labels.FieldRequired' | translate }}
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class=" col-md-2 float-left">
+                        <label class="block pt-2 form-label mb-0 col-md-3">*{{'DetailedBilling.Manifest' | translate
+                            }}</label>
+                        <div class="input-group mb-10px">
+                            <ng-container *ngIf="closesManifest$ | async as entities">
+                                <select #manifestSelect="ngModel" [(ngModel)]="selectedManifest"
+                                    (ngModelChange)="manifestChange($event)" minValueValidator="1" class="form-select"
+                                    name="manifestNumber" required
+                                    [ngClass]="{'is-invalid': manifestSelect.invalid && manifestSelect.touched}">
+                                    <option [ngValue]=0 disabled>{{ 'DetailedBilling.SelectManifest' | translate }}
+                                    </option>
+                                    <option [ngValue]=c.manifestNumber *ngFor="let c of entities">{{ c.manifestNumber }}
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback" *ngIf="manifestSelect.invalid && manifestSelect.touched">
+                                    {{ 'Labels.FieldRequired' | translate }}
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="col-md-2 float-left">
+                        <button type="submit" class="btn btn-primary mt-25px">{{'DetailedBilling.Report' |
+                            translate}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <app-manifest-details [entities]="manifestDetail"></app-manifest-details>
+        <app-manifest-supplier [entities]="manifestSupplier"></app-manifest-supplier> 
+        <app-manifest-average [entities]="manifestAverage"></app-manifest-average>      
+    </div>

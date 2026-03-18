@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "CourierAmex": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:57942;http://localhost:57943",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

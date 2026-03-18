@@ -1,0 +1,7 @@
+<app-entity-list [title]="'Packages.Title' | translate" [state]="state" [columns]="columns" [pagination]="pagination"
+  [activeSearch]="false" [hasPagination]="false" [showHeader]="false" [rows]="packageListByInvoice">
+</app-entity-list>
+<ng-template #actionTemplate let-params="params">
+    <input type="checkbox" class="form-check-input me-2" [id]="'factura-' + params.row.id"
+      [(ngModel)]="params.row.selected" (change)="onCheckboxChange(params.row)">
+  </ng-template>

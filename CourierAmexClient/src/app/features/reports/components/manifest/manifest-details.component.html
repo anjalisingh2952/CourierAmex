@@ -1,0 +1,22 @@
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <i class="fa fa-boxes fa-lg fa-fw me-1"></i> {{ 'DetailedBilling.ManifestProductsDetail' |
+            translate }}
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="mb-12">
+                    <ng-container *ngIf="paginatedEntities$ | async as entities">
+                        <app-entity-list [showHeader]="false" [state]="state" [columns]="columns"
+                            [rows]="entities" [activeSearch]="false"
+                            (stateChange)="onStateChange($event)" [pagination]="pagination" [hasPagination]="true">
+                        </app-entity-list>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

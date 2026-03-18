@@ -1,0 +1,33 @@
+button.btn.btn-xs {
+    margin-right: 2px !important;
+}
+.lefttable::ng-deep  .table-responsive {
+    max-height: 400px;
+    overflow: scroll;
+}
+.primeng-table .p-datatable-tbody > tr:hover {
+    color: rgb(75, 85, 99);
+    background: rgb(243, 244, 246);
+}
+thead, tbody, tfoot, tr, td, th {
+    font-size: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+    border-width: 0 0 1px 0 !important;
+    padding: 5px !important;
+}
+
+::ng-deep .highlight-row {
+    background-color: #d0ebff !important;
+    transition: background-color 0.5s ease;
+  }
+::ng-deep .highlight-row {
+    background-color: #d0ebff !important; /* Light blue highlight */
+}
+::ng-deep .selectedRow {
+    background-color: #dee2e6 !important;
+}
+
+.badge{
+    font-size: 14px;
+}

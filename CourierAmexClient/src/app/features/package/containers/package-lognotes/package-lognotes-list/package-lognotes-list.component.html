@@ -1,0 +1,58 @@
+<ng-container *ngIf="entities$ | async as packagesLogNotes"> 
+     <app-entity-list 
+      [title]="'PackageLogNotes.Title' | translate" 
+      [subTitle]="'PackageLogNotes.SubTitle' | translate"
+      [filterTemplate]="filterTemplate" 
+      [hasAdd]="hasAdd" 
+      [state]="state"
+      [pagination]="pagination"  
+      [columns]="columns" 
+      [rows]="packagesLogNotes" 
+      [showHeader] = "true"
+      [activeSearch] = "false"
+      (stateChange)="onStateChange($event)">
+      <div class="row mb-2">
+        <div class="col-12">
+          <label class="ml-10" for="customerCode">Customer Code: </label>
+          <input 
+            id="customerCode" 
+            type="text" 
+            [(ngModel)]="customerCode" 
+            (ngModelChange)="onCustomerCodeChange($event)"
+            class="form-control"
+          />
+        </div>
+      </div>  
+      <div class="row mb-2">
+        <div class="col-12">
+          <label class="ml-10" for="customerCode">Package Number: </label>
+          <input 
+            id="packageNumber" 
+            type="text" 
+            [(ngModel)]="packageNumber" 
+            (ngModelChange)="onPackageNumberChange($event)"
+            class="form-control"
+          />
+        </div>
+      </div>    
+      <div class="row mb-3 d-flex justify-content-end">
+        <div class="col-auto">
+          <button type="button" 
+            class="btn btn-primary"
+            (click)="onSearch()">Search
+          </button>
+        </div>
+      </div>      
+    </app-entity-list>
+  </ng-container>
+  
+    
+
+  <ng-template #filterTemplate>
+      <ng-container *ngIf="companies$ | async as companies">
+        <shared-dropdown [entities]="companies" (onSelectEntity)="selectEntity($event)"
+          *ngIf="showCompanies"></shared-dropdown>
+      </ng-container> 
+  </ng-template> 
+
+  

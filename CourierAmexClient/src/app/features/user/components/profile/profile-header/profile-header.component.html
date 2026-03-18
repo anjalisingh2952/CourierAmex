@@ -1,0 +1,29 @@
+<div class="profile">
+  <div class="profile-header">
+
+    <div class="profile-header-cover"></div>
+
+    <div class="profile-header-content">
+      <div class="profile-header-img bg-gray-900 text-gray-600 text-center">
+        <i class="fa fa-user fs-80px mt-3"></i>
+        <!-- <img src="../assets/img/user/no-photo.jpeg" alt=""> -->
+      </div>
+
+      <div class="profile-header-info">
+        <h4 class="mt-0 mb-1">{{userFullname}}</h4>
+        <p class="mb-1" *ngIf="userEmail.length > 0">{{userEmail}}</p>
+        <p class="mb-1" *ngIf="username.length > 0">{{username}}</p>
+      </div>
+    </div>
+
+    <ul class="profile-header-tab nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation" *ngFor="let t of tabs">
+        <a href="javascript:void(0);" class="nav-link" (click)="selectTab(t)" [class.active]="t.name === tab?.name"
+          aria-selected="false" tabindex="-1" role="tab">
+          {{ t.displayName | translate }}
+        </a>
+      </li>
+    </ul>
+
+  </div>
+</div>

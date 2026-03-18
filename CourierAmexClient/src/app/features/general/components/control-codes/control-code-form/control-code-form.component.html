@@ -1,0 +1,46 @@
+<form class="control-code-form form-inline" (ngSubmit)="handleSubmit(form)" #form="ngForm" *ngIf="entities" autocomplete="off">
+
+  <div class="mb-3 d-md-flex fw-bold">
+    <div class="mt-md-0 mt-2">
+      <button type="submit" class="btn btn-link btn-sm text-decoration-none text-dark" *ngIf="hasUpdate"
+        [disabled]="!form.valid">
+        <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' |
+        translate }}</button>
+    </div>
+  </div>
+
+  <div class="panel panel-inverse">
+    <div class="panel-heading">
+      <h4 class="panel-title"><i class="fa fa-cog fa-lg fa-fw me-1"></i> {{
+        'ControlCodes.Title' | translate }}</h4>
+    </div>
+    <div class="panel-body">
+
+      <div class="row mb-2" *ngFor="let item of entities; let idx = index">
+        <ng-container ngModelGroup="{{idx}}">
+          <input type="hidden" [ngModel]="item.id" name="id" />
+          <label class="form-label col-form-label col-md-3" [for]="item.id">{{ 'ControlCodes.' + item.id |
+            translate }}</label>
+          <div class="col-md-6">
+            <ng-container [ngSwitch]="item.type">
+              <input type="text" *ngSwitchCase="0" class="form-control" name="value" [ngModel]="item.value"
+                [ngModelOptions]="{ updateOn: 'blur' }" [class.bg-gray-300]="!hasUpdate" [readonly]="!hasUpdate"
+                [placeholder]=" 'ControlCodes.' + item.id + 'Placeholder' | translate ">
+              <input type="password" *ngSwitchCase="3" class="form-control" name="value" [ngModel]="item.value"
+                [ngModelOptions]="{ updateOn: 'blur' }" [class.bg-gray-300]="!hasUpdate" [readonly]="!hasUpdate"
+                [placeholder]=" 'ControlCodes.' + item.id + 'Placeholder' | translate ">
+              <input type="number" *ngSwitchCase="1" class="form-control" name="value" [ngModel]="item.value"
+                [ngModelOptions]="{ updateOn: 'blur' }" min="0" max="9999" [class.bg-gray-300]="!hasUpdate"
+                [readonly]="!hasUpdate" [placeholder]=" 'ControlCodes.' + item.id + 'Placeholder' | translate ">
+              <div class="form-check" *ngSwitchCase="2">
+                <input class="form-check-input mt-2" type="checkBox" name="value" [ngModel]="item.value"
+                  [checked]="item.value" [class.bg-gray-300]="!hasUpdate" [readonly]="!hasUpdate">
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+
+    </div>
+  </div>
+</form>

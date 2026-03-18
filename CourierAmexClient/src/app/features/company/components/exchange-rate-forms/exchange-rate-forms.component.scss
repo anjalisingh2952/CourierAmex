@@ -1,0 +1,12 @@
+/* Hide the default date picker icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+.col-md-6.float-left,.col-md-4.float-left {
+    float: left;
+    padding: 5px;
+}

@@ -1,0 +1,9 @@
+<form class="search-form" #form="ngForm" autocomplete="off">
+  <div class="input-group input-group-sm mb-2">
+    <input type="text" class="form-control input-white" name="search" [ngModel]="criteria"
+      (keyup.enter)="handleSubmit(form)" [ngModelOptions]="{ updateOn: 'change' }"
+      placeholder="{{ 'Labels.SearchKeyword' | translate }}" autocomplete="off" />
+    <button type="button" class="btn btn-primary" (click)="handleSubmit(form)"><i class="fa fa-search fa-fw"></i> {{
+      'Labels.Search' | translate }}</button>
+  </div>
+</form>

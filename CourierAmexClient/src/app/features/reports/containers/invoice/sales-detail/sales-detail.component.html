@@ -1,0 +1,85 @@
+<div class="package-details">
+    <shared-breadcrumb></shared-breadcrumb>
+    <h1 class="page-header">{{ 'SalesDetail.Title' | translate }} <small>{{ 'SalesDetail.SubTitle' |
+            translate
+            }}</small>
+    </h1>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{ 'SalesDetail.SubTitle' | translate }}</h4>
+        </div>
+
+        <div class="panel-body">
+            <form class="package-form" #reportForm="ngForm" (ngSubmit)="getExcel_exportSalesReport(reportForm)"
+                autocomplete="off">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label" for="ManifestID">* {{ 'PendingInvoices.StartDate' |
+                            translate }}</label>
+
+                        <div class="input-group">
+                            <input #dateInputFromval="ngModel" name="startDate" #dateInputFrom type="date"
+                                class="form-control" [(ngModel)]="startDate"
+                                [ngClass]="{ 'is-invalid': dateInputFromval.invalid && dateInputFromval.touched }"
+                                required />
+                            <span class="input-group-text" (click)="openDatePickerFrom()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="dateInputFromval.invalid && dateInputFromval.touched">
+                            {{ 'Labels.FieldRequired' | translate }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="ManifestID">* {{ 'PendingInvoices.EndDate' |
+                            translate }}</label>
+                        <div class="input-group">
+                            <input #dateInputToval="ngModel" name="endDate" #dateInputTo type="date"
+                                class="form-control" [(ngModel)]="endDate"
+                                [ngClass]="{ 'is-invalid': dateInputToval.invalid && dateInputToval.touched }"
+                                required />
+                            <span class="input-group-text" (click)="openDatePickerTo()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="dateInputToval.invalid && dateInputToval.touched">
+                            {{ 'Labels.FieldRequired' | translate }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="row">
+
+                            <div class="col-md-2 float-left mt-3">
+                                <label class="block pt-2 form-label mb-0 col-md-3"></label>
+                                <div class="input-group mb-10px">
+                                    <input type="checkbox" (change)="toggleAllcustomer()" [(ngModel)]="allcustomer"
+                                        name="allcustomer" class="form-check-input" value="0"> <label class="pl-5">
+                                        {{'SalesDetail.All' | translate}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 float-left mt-3">
+                                <label class="block pt-2 form-label mb-0 col-md-3"></label>
+                                <div class="input-group mb-10px">
+                                    <input type="checkbox" (change)="toggleCustomer()" [(ngModel)]="customer"
+                                        name="customer" class="form-check-input" value="0"> <label class="pl-5">
+                                        {{'SalesDetail.Customer' | translate}}</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label" for="ManifestID">* {{ 'SalesDetail.Name' |
+                                translate }}</label>
+                            <shared-search-customer [isLocked]="isLocked" [companyId]="selectedCompanyId"
+                                [customerCode]="customerCode" (executeAction)="onSearchCustomer($event)">
+                            </shared-search-customer>
+                        </div>
+                        <div class="col-md-4 float-left mt-3"><button type="submit" class="btn btn-primary">Generate
+                                Report</button></div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>

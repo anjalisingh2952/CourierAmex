@@ -1,0 +1,25 @@
+<div class="manifest-details" *ngIf="{ 
+  entity: entity$ | async, 
+  companies: companies$ | async,
+  shippingWayTypes: shippingWayTypes$ | async, 
+  } as data">
+  <ng-container *ngIf="data.entity && data.companies">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'ManifestDetails.Title' | translate }} <small>{{ 'ManifestDetails.SubTitle' |
+        translate
+        }}</small>
+    </h1>
+
+    <manifest-form 
+      [entity]="data.entity" 
+      [companies]="data.companies" 
+      [shippingWayTypes]="data.shippingWayTypes ?? []" 
+      (onSave)="save($event)"
+      (onCompanyChange)="onCompanyChange($event)"
+      (onUpdateShipType)="onUpdateShipType($event)"
+      (onUpdateEntity)="onUpdateEntity($event)"
+      (onGoBack)="goBack()"></manifest-form>
+      
+  </ng-container>
+</div>

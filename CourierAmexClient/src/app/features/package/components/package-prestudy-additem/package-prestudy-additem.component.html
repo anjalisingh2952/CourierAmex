@@ -1,0 +1,108 @@
+<div class="modal-header">
+  <h5 class="modal-title">Add New Item</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="dismissModal()"></button>
+</div>
+<div class="modal-body">
+  <div class="modalcontent p-3">
+    <div class="package-form d-flex flex-wrap">
+      <div class="col-12">
+        <form class="package-form" #form="ngForm" autocomplete="off">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-12">
+                  <div class="mb-2">
+                    <label class="form-label" for="brandId">Brand *</label>
+                    <input [(ngModel)]="additem.brandId" type="text" class="form-control" name="brandId" maxlength="200"
+                      #brandId="ngModel" [class.is-valid]="brandId.valid && brandId.touched"
+                      [class.is-invalid]="brandId.invalid && (brandId.touched || submitted)" required>
+                  </div>
+
+                  <div class="mb-2">
+                    <label class="form-label" for="Model">Model *</label>
+                    <input [(ngModel)]="additem.modelId" type="text" class="form-control" name="modelId" maxlength="200"
+                      #modelId="ngModel" [class.is-valid]="modelId.valid && modelId.touched"
+                      [class.is-invalid]="modelId.invalid && (modelId.touched || submitted)" required>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Series">Series</label>
+                    <input [(ngModel)]="additem.series" type="text" class="form-control" name="series" maxlength="200">
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Description">Description *</label>
+                    <input [(ngModel)]="additem.description" type="text" class="form-control" name="description"
+                      maxlength="200" #modelId="ngModel" [class.is-valid]="modelId.valid && modelId.touched"
+                      [class.is-invalid]="modelId.invalid && (modelId.touched || submitted)" required>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Composition">Composition</label>
+                    <input [(ngModel)]="additem.composition" type="text" class="form-control" name="composition"
+                      maxlength="200">
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Composition">Quantity *</label>
+                    <input [(ngModel)]="additem.quantity" type="number" class="form-control" name="quantity"
+                      maxlength="200" #modelId="ngModel" [class.is-valid]="modelId.valid && modelId.touched"
+                      [class.is-invalid]="modelId.invalid && (modelId.touched || submitted)" required>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Unit Cost">Unit Cost *</label>
+                    <input [(ngModel)]="additem.unitCost" type="number" class="form-control" name="unitCost"
+                      maxlength="200" #modelId="ngModel" [class.is-valid]="modelId.valid && modelId.touched"
+                      [class.is-invalid]="modelId.invalid && (modelId.touched || submitted)" required>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Origin">Origin *</label>
+                    <input [(ngModel)]="additem.origin" type="text" class="form-control" name="origin" maxlength="200"
+                      #origin="ngModel" [class.is-valid]="origin.valid && origin.touched"
+                      [class.is-invalid]="origin.invalid && (origin.touched || submitted)" required>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Item Condition">Item Condition *</label>
+                    <input [(ngModel)]="additem.state" type="text" class="form-control" name="state" maxlength="200"
+                      #modelId="ngModel" [class.is-valid]="modelId.valid && modelId.touched"
+                      [class.is-invalid]="modelId.invalid && (modelId.touched || submitted)" required>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Style">Style</label>
+                    <input [(ngModel)]="additem.style" type="text" class="form-control" name="style" maxlength="200">
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Color">Color</label>
+                    <input [(ngModel)]="additem.color" type="text" class="form-control" name="color" maxlength="200">
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Size">Size</label>
+                    <input [(ngModel)]="additem.size" type="text" class="form-control" name="size" maxlength="200">
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Item"> Item (or Tariff item, depending on context)</label>
+                    <input [(ngModel)]="additem.batch" type="text" class="form-control" name="batch" maxlength="200">
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" for="Invoice">Invoice</label>
+                    <input [(ngModel)]="additem.invoice" type="text" class="form-control" name="Invoice"
+                      maxlength="200">
+                  </div>
+                  <button type="button" class="btn btn-primary btn-sm" (click)="openModalWithPendingData(form)">
+                    Save Item
+                  </button>
+                </div>
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+  <div class="pb-3 text-center">
+    <button type="button" class="btn btn-secondary" (click)="dismissModal()"><i
+        class="fa-solid fa-ban pe-2"></i>Close</button>
+  </div>
+</div>

@@ -1,0 +1,274 @@
+<div class="package-details pre-study">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'PriceImageMaintenance.Title' | translate }} <small>{{
+                'PriceImageMaintenance.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+
+    <div class="manifest-packages">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <i class="fa fa-circle-info fa-lg fa-fw me-1"></i> Package List
+                    <span class="badge bg-primary ms-1">{{packageList.length}}</span>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="row mb-4">
+                    <div class="col-12 ">
+                        <div class="mb-12" *ngIf="!isGatewayUser">
+                            <ng-container *ngIf="companies$ | async as entities">
+                                <label class="form-label" for="companyId">* {{ 'PriceImageMaintenance.Company' |
+                                    translate }}</label>
+                                <select #CompanyInputFromval="ngModel" [(ngModel)]="selectedCompany"
+                                    minValueValidator="1" class="form-select" name="companyId"
+                                    [ngClass]="{ 'is-invalid': CompanyInputFromval.invalid && CompanyInputFromval.touched }"
+                                    required>
+                                    <option [ngValue]=0 disabled selected>{{ 'HasInvoiceMaintenance.Select' |
+                                        translate }}
+                                    </option>
+                                    <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                                </select>
+                                <div class="invalid-feedback"
+                                    *ngIf="CompanyInputFromval.invalid && CompanyInputFromval.touched">
+                                    {{ 'Labels.FieldRequired' | translate }}
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="col-12 ">
+                        <div class="mb-12">
+                            <ng-container *ngIf="companies$ | async as entities">
+                                <label class="form-label" for="PackageID">{{ 'Labels.Search' |
+                                    translate }}</label>
+                                <input type="text" [(ngModel)]="filterBy"
+                                    [placeholder]="'HasInvoiceMaintenance.SearchFilter' | translate"
+                                    class="form-control" name="filterBy" pInputText (input)="onGlobalFilter($event)">
+
+                            </ng-container>
+                        </div>
+                    </div>
+                </div> 
+                <div class="col-md-12" style="float:left">
+
+                    <p-table emptyMessage="No records found" editMode="row" [loading]="loading" [scrollable]="true"
+                        scrollHeight="450px" styleClass="cl1 primeng-table p-datatable-sm small-table" #dt
+                        [value]="packageList" [(selection)]="selectedPackageId" dataKey="id" [rowHover]="true"
+                        [rows]="10" [showCurrentPageReport]="true" [paginator]="true"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [filterDelay]="0" [globalFilterFields]="['customerCode','packageNumber']" selectionMode="single"
+                        (onEditComplete)="onEditComplete($event)">
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="packageNumber">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Manifest Number
+                                    </div>
+                                </th>
+
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Customer Account
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Customer Name
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Package Number
+                                    </div>
+                                </th>
+
+                                <th>
+
+                                    <div class="flex justify-content-between align-items-center">
+                                        Description
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Weight
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Price
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Commodity
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Documents/Images
+                                    </div>
+                                </th>
+
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-packagelist let-i="rowIndex" let-editing="editing"
+                            let-ri="rowIndex">
+
+                            <tr class="p-selectable-row row-{{i}}" [ngClass]="{ 'selectedRow': selectedRow === i }"
+                                (click)="onRowClick(packagelist,i)" [pEditableRow]="packagelist">
+                                <!--Manifest Number, Customer Account, Customer Name, Package Number, Description-->
+                                <td [pEditableColumn]="packagelist.manifestNumber"
+                                    pEditableColumnField="manifestNumber">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" readonly
+                                                [(ngModel)]="packagelist.manifestNumber" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ packagelist.manifestNumber }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td [pEditableColumn]="packagelist.customerCode">
+
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="packagelist.customerCode" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ packagelist.customerCode }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+
+
+                                <td [pEditableColumn]="packagelist.customerFullName">
+
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText readonly type="text"
+                                                [(ngModel)]="packagelist.customerFullName" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ packagelist.customerFullName }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td [pEditableColumn]="packagelist.packageNumber">
+
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText readonly type="text"
+                                                [(ngModel)]="packagelist.packageNumber" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ packagelist.packageNumber }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+
+
+                                <td [pEditableColumn]="packagelist.description" class="wrap-text">
+
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText readonly type="text"
+                                                [(ngModel)]="packagelist.description" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ packagelist.description }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td [pEditableColumn]="packagelist.weight">
+
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText readonly type="number" [(ngModel)]="packagelist.weight" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ packagelist.weight }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+
+                                <td [pEditableColumn]="packagelist.updatedprice" pEditableColumnField="price">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="number" [(ngModel)]="packagelist.updatedprice" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{packagelist.updatedprice || packagelist.price | currency }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td [pEditableColumn]="packagelist.commodityId" pEditableColumnField="commodity">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <p-dropdown [options]="commodityModelList" optionLabel="description"
+                                                optionValue="id" placeholder="Select One"
+                                                [(ngModel)]="packagelist.commodity">
+                                            </p-dropdown>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ getDescriptionById(packagelist.commodity,packagelist.commodityId)}}
+
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+
+                                    <ng-container *ngFor="let index of [0, 1, 2]">
+                                        <span class="ml-1 vertical-align-middle">
+                                            <ng-container
+                                                *ngIf="packagelist.resourceFiles && packagelist.resourceFiles.length > index; else grayIcon">
+                                                <ng-container
+                                                    *ngIf="isImageFile(packagelist.resourceFiles[index]); else fileIcon">
+
+                                                    <span
+                                                        (click)="fileModelView(attachmentUrl + packagelist.packageNumber + '/' + packagelist.resourceFiles[index])"
+                                                        class="enabled-link">
+                                                        <i class="fas fa-image blue"></i>
+                                                    </span>
+                                                </ng-container>
+                                                <ng-template #fileIcon>
+                                                    <!-- Generic file icon -->
+                                                    <a target="_blank"
+                                                        [href]="attachmentUrl + packagelist.packageNumber + '/' + packagelist.resourceFiles[index]"
+                                                        class="enabled-link">
+                                                        <i class="fas fa-file-export"></i>
+                                                    </a>
+                                                </ng-template>
+                                            </ng-container>
+
+                                            <ng-template #grayIcon>
+                                                <a class="disabled-link">
+                                                    <i class="fas fa-file-export gray"></i>
+                                                </a>
+                                            </ng-template>
+                                        </span>
+                                    </ng-container>
+
+                                </td>
+
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No package found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

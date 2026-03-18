@@ -1,0 +1,53 @@
+<div class="package-details pre-study">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'ManifestReportObservations.Title' | translate }} <small>{{ 'ManifestReportObservations.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+    <form class="package-form" #form="ngForm" autocomplete="off">
+        <div class="row mb-4" >
+            <div class="col-12 ">
+                <div class="mb-12" *ngIf="!isGatewayUser">
+                    <ng-container *ngIf="companies$ | async as entities">
+                        <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' |
+                            translate }}</label>
+                        <select [(ngModel)]="selectedCompany"
+                            minValueValidator="1" class="form-select" name="companyId"
+                            required>
+                            <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                            <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                        </select>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="col-12 ">
+                <div class="mb-12">
+                    <ng-container *ngIf="companies$ | async as entities">
+                        <label class="form-label" for="ManifestID">* {{ 'ManifestDetails.NumberPlaceholder' |
+                            translate }}</label>
+                        <input type="text" [(ngModel)]="selectedManifestNumber"
+                            [placeholder]="'ManifestDetails.NumberPlaceholder' | translate"
+                            class="form-control" name="SelectedManifest"
+                            (keyup.enter)="OnManifestNumberChange()">
+                        
+                    </ng-container>
+                </div>
+            </div>
+            <div class="w-auto mt-2">
+                <!-- <img (click)="exportToExcel()" src="assets/img/xls.png" alt="Export to Excel" 
+                                        class="float-end cursor-pointer" 
+                                        title="Export to Excel"
+                                        style="width: 35px; height: 35px; cursor: pointer; transition: transform 0.2s;"
+                                        onmouseover="this.style.transform='scale(1.1)'" 
+                                        onmouseout="this.style.transform='scale(1)'"> -->
+                                        <button class="btn btn-primary" (click)="exportToExcel()">Genrate Report</button>
+                                    
+            </div>
+        </div>
+    </form>
+    <!-- <div class="row">
+        <ng-container #reportContainer></ng-container>
+    </div> -->
+</div>

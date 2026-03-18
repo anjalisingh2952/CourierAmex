@@ -1,0 +1,151 @@
+<div *ngIf="showPendingInvoices; else mainPage">
+  <app-pending-invoices-customer [selectedPointOfSale]="selectedPointOfSale" (closePage)="closePendingInvoices()">
+  </app-pending-invoices-customer>
+</div>
+
+<ng-template #mainPage>
+  <div class="row">
+    <div class="row" *ngIf="pointOfSaleList?.length">
+      <div *ngFor="let item of pointOfSaleList" class="col-12 col-md-6 col-lg-4 mb-3">
+        <div class="bg-white border panel panel-inverse h-90">
+          <div class="p-3">
+            <div>
+              <h5 class="mb-3 fw-bold">{{ item.pointOfSaleName }}</h5>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 mb-2">
+                <div *ngIf="item.state === 1" class="d-flex align-items-center gap-2 flex-wrap justify-content-between">
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-primary" (click)="openContinueModal(item)">
+                      {{ 'Payment.ContinueSale' | translate }}
+                    </button>
+                    <button class="btn btn-primary"
+                      (click)="openCashInOutModal(openCashInOutModalRef, item)">{{ 'Payment.CashEntryExit' | translate }}</button>
+                    <button (click)="closePointOfSale(item)" class="btn btn-sm bg-black text-white">
+                      {{ 'Payment.CloseSale' | translate }}
+                    </button>
+                  </div>
+                  <a #tlprint style="display: none;"></a>
+                  <iframe #tlprintFrame style="display: none;"></iframe>
+                  <div class="d-flex gap-2">
+                    <input type="date" class="border rounded px-3 py-2 text-center"
+                      [(ngModel)]="selectedDate[item.pointOfSaleId]">
+                    <button class="btn btn-primary" (click)="handleDailySales(item)">
+                      <i class="fas fa-file-excel me-1"></i>{{ 'Payment.DailySales' | translate }}
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="item.state === 0 || item.state == null" class="mt-2">
+                  <button class="btn btn-sm btn-primary" (click)="openModal(openModalRef, item)">
+                    {{ 'Payment.OpenSale' | translate }}
+                  </button>
+                  <input type="date" class="border rounded px-3 py-2 text-center ms-2"
+                    [(ngModel)]="selectedDate[item.pointOfSaleId]">
+                  <button class="btn btn-primary ms-2" (click)="handleDailySales(item)">
+                    <i class="fas fa-file-excel me-1"></i>{{ 'Payment.DailySales' | translate }}
+                  </button>
+                  <div class="d-flex gap-2">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <p class="text-muted mb-1">
+                  <strong>Closure:</strong> {{ item.createdAt | date: 'dd/MM/yyyy' }}
+                </p>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-2">
+              <span [ngClass]="item.state === 1 ? 'badge bg-success' : 'badge bg-danger'">
+                {{ item.state === 1 ? "A" : "C" }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #openModalRef>
+  <div class="modal-content">
+    <div class="modal-header border-0">
+      <h5 class="modal-title">{{ 'Payment.OpenSale' | translate }}</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="totalDollar" class="form-label">{{ 'Payment.TotalAmountDollar' | translate }}</label>
+        <input type="text" class="form-control" #totalDollar="ngModel" [(ngModel)]="totalAmountDollar"
+          name="totalDollar" placeholder="Enter Amount in Dollar" (input)="validateFields()"
+          [class.is-invalid]="isInvalid(totalDollar)" />
+      </div>
+
+      <div class="mb-3">
+        <label for="totalLocal" class="form-label">{{ 'Payment.TotalAmountLocal' | translate }}</label>
+        <input type="text" class="form-control" #totalLocal="ngModel" [(ngModel)]="totalAmountLocal" name="totalLocal"
+          placeholder="Enter Amount in Local Currency" (input)="validateFields()"
+          [class.is-invalid]="isInvalid(totalLocal)" />
+      </div>
+    </div>
+
+    <div class="modal-footer border-0">
+      <button class="btn btn-primary" (click)="confirmOpenSale()"
+        [disabled]="!isFormValid">{{ 'Payment.OpenSale' | translate }}</button>
+      <button class="btn btn-secondary" (click)="closeModal()">{{ 'Close' | translate }}</button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #openCashInOutModalRef>
+  <div class="modal-content"
+    [ngClass]="{'border-success': transactionType === 'in', 'border-danger': transactionType === 'out'}">
+    <div class="modal-header border-0">
+      <h5 class="modal-title">{{ 'Payment.OpenSale' | translate }}</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+    </div>
+
+    <div class="px-3">
+      <label class="form-label">{{ 'Payment.TransactionType' | translate }}</label>
+      <div class="d-flex gap-3 mt-3">
+        <div class="form-check">
+          <input type="radio" id="cashIn" name="cashTransaction" [(ngModel)]="transactionType" value="in"
+            class="form-check-input" />
+          <label for="cashIn" class="form-check-label form-label">{{ 'Payment.CashIn' | translate }}</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" id="cashOut" name="cashTransaction" [(ngModel)]="transactionType" value="out"
+            class="form-check-input" />
+          <label for="cashOut" class="form-check-label form-label">{{ 'Payment.CashOut' | translate }}</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="totalDollar" class="form-label">{{ 'Payment.TotalAmountDollar' | translate }}</label>
+        <input type="text" class="form-control" #totalDollar="ngModel" [(ngModel)]="totalAmountDollar"
+          name="totalDollar" placeholder="Enter Amount in Dollar" (input)="validateFields()"
+          [class.is-invalid]="isInvalid(totalDollar)"
+          [ngClass]="{'border-success': transactionType === 'in', 'border-danger': transactionType === 'out'}" />
+      </div>
+
+      <div class="mb-3">
+        <label for="totalLocal" class="form-label">{{ 'Payment.TotalAmountLocal' | translate }}</label>
+        <input type="text" class="form-control" #totalLocal="ngModel" [(ngModel)]="totalAmountLocal" name="totalLocal"
+          placeholder="Enter Amount in Local Currency" (input)="validateFields()"
+          [class.is-invalid]="isInvalid(totalLocal)"
+          [ngClass]="{'border-success': transactionType === 'in', 'border-danger': transactionType === 'out'}" />
+      </div>
+    </div>
+
+    <div class="modal-footer border-0">
+      <button *ngIf="transactionType == 'in'" class="btn btn-success" (click)="cashInOut(true)"
+        [disabled]="!isFormValid">{{ 'Payment.CashIn' | translate }}</button>
+      <button *ngIf="transactionType == 'out'" class="btn btn-danger" (click)="cashInOut(false)"
+        [disabled]="!isFormValid">{{ 'Payment.CashOut' | translate }}</button>
+      <button class="btn btn-secondary" (click)="closeModal()">{{ 'Close' | translate }}</button>
+    </div>
+  </div>
+</ng-template>

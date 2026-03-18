@@ -1,0 +1,71 @@
+<div class="package-details" *ngIf="entity">
+  <ng-template #LOADER>
+    <ngx-skeleton-loader />
+  </ng-template>
+
+  <form class="package-form" autocomplete="off">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-inverse">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa-solid fa fa-boxes fa-lg fa-fw me-1"></i> {{ 'PackingPackages.SubTitle' |
+                            translate }}
+            </h4>
+          </div>
+          <div class="panel-body" style="min-height: 222px;">
+            <div *ngIf="showCompanies">
+              <label class="form-label">* {{ 'PackingPackages.Company' | translate }}</label>
+              <select minValueValidator="1" [ngModel]="entity.companyId" name="companyId" class="form-select"
+                #companyId="ngModel" [class.is-valid]="companyId.valid && companyId.touched"
+                [class.is-invalid]="companyId.invalid && companyId.touched" (change)="onChangeOfCompany($event)"
+                required>
+                <option selected hidden [ngValue]="0">{{ 'Labels.Select' | translate }}</option>
+                <option [ngValue]="c.id" *ngFor="let c of companies">{{ c.name }}</option>
+              </select>
+            </div>
+            <div class="mt-2">
+              <label class="form-label" for="manifestId">* {{ 'Sidebar.Manifest' | translate }}</label>
+              <select [disabled]="!isCompanyValid" minValueValidator="1" class="form-select" #manifestId="ngModel"
+                [class.is-valid]="manifestId.valid && manifestId.touched"
+                [class.is-invalid]="manifestId.invalid && manifestId.touched" name="manifestId" [ngModel]="entity.id"
+                (change)="onChangeOfManifest($event)" required>
+                <option selected hidden [ngValue]="0">{{ 'Labels.Select' | translate }}</option>
+                <option [ngValue]="m.id" *ngFor="let m of manifests">{{ m.manifestNumber }}</option>
+              </select>
+            </div>
+
+            <div class="mt-2" *ngIf="isManifestConsolidatedType">
+              <label class="form-label" for="guideId">* {{'Labels.GUIAHija' | translate}}</label>
+              <select [disabled]="!isRecordsForAirGuides" name="guideId" #guideId="ngModel"
+                [class.is-valid]="guideId.valid && guideId.touched" [ngModel]="selectedGuideId"
+                [class.is-invalid]="guideId.invalid && guideId.touched" minValueValidator="1" class="form-select"
+                (change)="onChangeOfAirGuide($event)" required>
+                <option selected hidden [ngValue]="0">{{ 'Labels.Select' | translate }}</option>
+                <option [ngValue]="airGuide.guide" *ngFor="let airGuide of airGuides">{{ airGuide.guide }}
+                </option>
+              </select>
+            </div>
+
+            <div class="mt-2 d-flex gap-2" *ngIf="isManifestConsolidatedType && isRecordsForAirGuides">
+              <div>
+                <label class="form-label">
+                  * {{ 'Labels.Total' | translate }}
+                </label>
+                <input [(ngModel)]="bags" class="form-control" placeholder="Total" name="bags" disabled />
+              </div>
+
+              <div>
+                <label class="form-label">
+                  * {{ 'Labels.Packed' | translate }}
+                </label>
+                <input [(ngModel)]="sortedPackage" class="form-control" placeholder="Packed" name="sortedPackage"
+                  disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

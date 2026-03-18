@@ -1,0 +1,12 @@
+<div class="zone-details" *ngIf="{ entity: entity$ | async, countries: countries$ | async, states: states$ | async } as data">
+  <ng-container *ngIf="data.entity && data.countries">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'ZoneDetails.Title' | translate }} <small>{{ 'ZoneDetails.SubTitle' | translate
+        }}</small>
+    </h1>
+
+    <zone-form [entity]="data.entity" [countries]="data.countries" [states]="data.states ?? []" (onSave)="save($event)"
+      (onGoBack)="goBack()" (onLoadStates)="onLoadStates($event)"></zone-form>
+  </ng-container>
+</div>

@@ -1,0 +1,55 @@
+<shared-breadcrumb></shared-breadcrumb>
+
+<h1 class="page-header">{{ 'ManagePackagesRoute.Title' | translate }} <small>{{ 'ManagePackagesRoute.SubTitle' |
+    translate
+    }}</small>
+</h1>
+
+
+<div class="nav nav-tabs">
+  <button class="nav-link" [class.active]="activeTab === 'home'" (click)="setActiveTab('home')">
+    {{ 'RouteSheet.GenerateRoadMap' | translate }}
+  </button>
+  <button class="nav-link" [class.active]="activeTab === 'Report'" (click)="setActiveTab('Report')">
+    {{ 'RouteSheet.RoadMapReport' | translate }}
+  </button>
+  <button class="nav-link" [class.active]="activeTab === 'Control'" (click)="setActiveTab('Control')">
+    {{ 'RouteSheet.RoadMapControl' | translate }}
+  </button>
+  <button class="nav-link" [class.active]="activeTab === 'scanner'" (click)="setActiveTab('scanner')">
+    {{ 'RouteSheet.RoadMapScanner' | translate }}
+  </button>
+  <!-- -->
+</div>
+
+<div class="tab-content bg-white rounded">
+  <div class="tab-pane fade" [class.show]="activeTab === 'home'" [class.active]="activeTab === 'home'">
+    <ng-container *ngIf="activeTab === 'home'">
+      <app-generate-route-sheet></app-generate-route-sheet>
+    </ng-container>
+  </div>
+
+  <div class="tab-pane fade" [class.show]="activeTab === 'Report'" [class.active]="activeTab === 'Report'">
+    <ng-container *ngIf="activeTab === 'Report'">
+      <app-route-sheet-report></app-route-sheet-report>
+    </ng-container>
+  </div>
+
+  <div class="tab-pane fade" [class.show]="activeTab === 'Control'" [class.active]="activeTab === 'Control'">
+    <ng-container *ngIf="activeTab === 'Control'">
+      <app-route-sheet-control></app-route-sheet-control>
+    </ng-container>
+  </div>
+
+  <div class="tab-pane fade" [class.show]="activeTab === 'scanner'" [class.active]="activeTab === 'scanner'">
+    <ng-container *ngIf="activeTab === 'scanner'">
+      <app-route-sheet-scanner></app-route-sheet-scanner>
+    </ng-container>
+  </div>
+
+  <!-- <div class="tab-pane fade" [class.show]="activeTab === 'reopen'" [class.active]="activeTab === 'reopen'">
+    <ng-container *ngIf="activeTab === 'reopen'">
+      <app-reopen-roadmap></app-reopen-roadmap>
+    </ng-container>
+  </div> -->
+</div>

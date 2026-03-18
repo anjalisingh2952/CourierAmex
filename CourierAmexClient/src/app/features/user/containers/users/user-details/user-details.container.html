@@ -1,0 +1,22 @@
+<ng-container *ngIf="{ 
+  roles: roles$ | async, 
+  countries: countries$ | async, 
+  states: states$ | async, 
+  companies: companies$ | async,
+  entity: user$ | async
+} as data">
+
+  <div class="user-details" *ngIf="data.entity && data.roles && data.countries && data.companies">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'UserDetails.Title' | translate }} <small>{{ 'UserDetails.SubTitle' | translate
+        }}</small>
+    </h1>
+
+    <settings-user-form [entity]="data.entity" [roles]="data.roles" [countries]="data.countries"
+      [states]="data.states ?? []" [companies]="data.companies" (onSave)="save($event)" (onGoBack)="goBack()"
+      (onLoadStates)="onLoadStates($event)" (onUpdateUser)="onUpdateUser($event)"
+      (onResetPassword)="resetPassword($event)" (onCreatePassword)="onCreatePassword($event)">
+    </settings-user-form>
+  </div>
+</ng-container>

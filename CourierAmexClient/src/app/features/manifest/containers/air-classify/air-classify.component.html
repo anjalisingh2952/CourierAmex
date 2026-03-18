@@ -1,0 +1,76 @@
+<div class="air-classify" *ngIf="{ 
+  entity: entity$ | async, 
+  companies: companies$ | async,
+  manifests: manifests$ | async,
+  airGuides: airGuides$ | async,
+  packagesAssigned: packagesAssigned$ | async,
+  packagesUnAssigned: packagesUnAssigned$ | async
+  } as data">
+
+  <ng-container *ngIf="data.entity && data.companies">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'AirClassify.Title' | translate }} <small>{{ 'AirClassify.SubTitle' |
+        translate
+        }}</small>
+    </h1>
+
+    <app-air-classify-form [entity]="data.entity" [companies]="data.companies" [manifests]="data.manifests || []"
+      [airGuides]="data.airGuides || []" (onCompanyChange)="onCompanyChange($event)" [isPackageAssigned]="isPackageAssigned"
+      (onManifestChange)="onManifestChange($event)" (onAirGuideChange)="onAirGuideChange($event)"
+      (onFormSubmit)="onFormSubmit($event)" (onModelClick)="onModelClick($event)"
+      (onDeleteButtonClick)="onDeleteButtonClick($event)">
+    </app-air-classify-form>
+
+    <div class="d-flex justify-content-between align-items-start">
+      <div style="width: 47%;">
+        <app-air-classify-packages [packages]="data.packagesUnAssigned || []"
+          [textTitle]="'AirClassify.PackagesUnAssigned'" (onPackageAssign)="onPackageAssign($event)">
+        </app-air-classify-packages>
+      </div>
+
+      <div class="d-flex flex-column align-items-center mx-3 mt-5 mb-2" style="width: 6%;">
+        <button (click)="packagesAssignToGuide()" class="btn btn-primary w-100">
+          <i class="fa-regular fa-circle-right fa-lg"></i>
+        </button>
+        <button (click)="packagesRemoveFromGuide()" class="btn btn-primary mt-3 w-100">
+          <i class="fa-regular fa-circle-left fa-lg"></i>
+        </button>
+      </div>
+
+      <div style="width: 47%;">
+        <app-air-classify-packages [packages]="data.packagesAssigned || []" [textTitle]="'AirClassify.PackagesAssigned'"
+          (onPackageAssign)="onPackageRemove($event)">
+        </app-air-classify-packages>
+      </div>
+    </div>
+
+
+    <!--     <app-air-classify-form [entity]="data.entity" [companies]="data.companies"
+      [manifests]="data.manifests || []"
+      (onCompanyChange)="onCompanyChange($event)" 
+      (onManifestChange)="onManifestChange($event)">
+    </app-air-classify-form>
+ -->
+
+    <!--      <div class="panel panel-inverse">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <i class="fa-solid  fa-plane fa-fw me-1"></i> {{ 'AirClassify.SubTitle' |
+          translate }}
+        </h4>
+      </div>
+      <div class="panel-body">
+      </div>
+    </div>
+ -->
+
+    <!--         <app-package-category-list 
+        [packagesList]="data.packages || []"
+        (onSave)="save($event)"
+        [entity]="data.entity">
+        </app-package-category-list> -->
+
+
+  </ng-container>
+</div>

@@ -1,0 +1,27 @@
+<shared-breadcrumb></shared-breadcrumb>
+
+<h1 class="page-header">{{ 'Users.Title' | translate }} <small>{{ 'Users.SubTitle' | translate }}</small></h1>
+
+<div class="mb-3 d-md-flex fw-bold" *ngIf="hasAdd">
+  <div class="mt-md-0 mt-2" *ngIf="hasAdd">
+    <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="addNew()">
+      <i class="fa fa-plus fa-lg me-1 text-dark"></i>
+      {{ 'Labels.New' | translate }}
+    </button>
+  </div>
+</div>
+
+<shared-keyword-search [criteria]="pagination.c ?? ''" (onSearch)="onKeywordSearch($event)"></shared-keyword-search>
+
+<shared-pagination [Pagination]="pagination" (onPaginationChange)="onPagerChange($event)">
+</shared-pagination>
+
+<div class="card border-0 p-3 mb-3" *ngIf="users$ | async as users">
+
+  <settings-user-table [users]="users" [pagination]="pagination" (onSortBy)="sortBy($event)" (onEdit)="editItem($event)"
+    (onDelete)="deleteItem($event)"></settings-user-table>
+
+</div>
+
+<shared-pagination [type]="'Footer'" [Pagination]="pagination"
+  (onPaginationChange)="onPagerChange($event)"></shared-pagination>

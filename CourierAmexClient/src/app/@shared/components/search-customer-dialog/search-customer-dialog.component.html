@@ -1,0 +1,21 @@
+<div class="search-customers">
+  <div class="panel panel-inverse">
+    <div class="panel-heading">
+      <h4 class="panel-title"><i class="fa fa-users fa-lg fa-fw me-1"></i> {{
+        'Labels.SearchCustomers' | translate }}</h4>
+    </div>
+    <div class="panel-body">
+      <ng-container *ngIf="entities$ | async as customers">
+        <app-entity-list [showHeader]="false" [addLabel]="'Labels.New' | translate" [hasAdd]="false" [state]="state"
+          [pagination]="pagination" [columns]="columns" [rows]="customers" (stateChange)="onStateChange($event)"
+          (select)="onSelect($event)">
+        </app-entity-list>
+      </ng-container>
+    </div>
+    <div class="panel-footer text-center">
+      <button type="button" class="btn btn-default btn-sm text-decoration-none text-dark" (click)="close()">
+        <i class="fa fa-ban fa-lg me-2 text-dark"></i> {{ 'Labels.Cancel' |
+        translate }}</button>
+    </div>
+  </div>
+</div>

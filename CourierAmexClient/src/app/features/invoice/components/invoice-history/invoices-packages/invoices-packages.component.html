@@ -1,0 +1,151 @@
+<div class="panel panel-inverse">
+  <div class="panel-heading">
+    <h4 class="panel-title"><i class="fas fa-cubes fa-lg fa-fw me-1"></i>
+      {{ 'PackageDetails.Title' | translate }}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()" style="filter: invert(1);"></button>
+  </div>
+</div>
+<div class="ps-4 pe-4 pb-4 bg-white shadow-md rounded-md">
+  <h2 class="text-lg font-semibold mb-2 rounded-t-md text-gray-900">
+    {{ isInvoice ? 'Invoice Packages' : 'Payment Details' }}
+  </h2>
+
+  <ng-container *ngIf="isInvoice">
+    <table class="w-100 table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>{{ 'GenerateReport.Invoice' | translate }}</th>
+          <th>{{ 'GenerateReport.PackageNumber' | translate }}</th>
+          <th>{{ 'GenerateReport.CourierNumber' | translate }}</th>
+          <th>{{ 'GenerateReport.Origin' | translate }}</th>
+          <th>{{ 'GenerateReport.Description' | translate }}</th>
+          <th class="text-right">{{ 'GenerateReport.Weight' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="Packages.length > 0; else noData">
+          <tr *ngFor="let package of Packages">
+            <td class="border border-gray-300 px-4 py-2">{{ package.invoiceNumber }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ package.packageNumber }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ package.courierCode }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ package.origin }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ package.description }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-right">{{ package.weight }}</td>
+          </tr>
+        </ng-container>
+        <ng-template #noData>
+          <tr>
+            <td colspan="6" class="border border-gray-300 px-4 py-2 text-center text-gray-500">
+              {{ 'GenerateReport.NoDataAvailable' | translate }}
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
+
+    <h2 class="text-lg font-semibold mb-2 rounded-t-md text-gray-900">
+      {{ isInvoice && invoicePayment.length > 0 ? 'Invoice Payment Details' : '' }}
+    </h2>
+
+    <table *ngIf="invoicePayment.length > 0; else noData" class="w-100 table table-bordered table-hover">
+      <thead class="table-light">
+        <tr class="text-center">
+          <th>{{ 'GenerateReport.PaymentID' | translate }}</th>
+          <th>{{ 'GenerateReport.InvoiceNumber' | translate }}</th>
+          <th>{{ 'GenerateReport.User' | translate }}</th>
+          <th>{{ 'GenerateReport.Status' | translate }}</th>
+          <th>{{ 'GenerateReport.InvoiceDate' | translate }}</th>
+          <th>{{ 'GenerateReport.Total' | translate }}</th>
+          <th>{{ 'GenerateReport.LocalTotal' | translate }}</th>
+          <!-- <th>{{ 'GenerateReport.Balance' | translate }}</th>
+          <th>{{ 'GenerateReport.LocalBalance' | translate }}</th> -->
+          <th>{{ 'Payment.PaymentCurrency' | translate }}</th>
+          <th>{{ 'GenerateReport.Paid' | translate }}</th>
+          <th>{{ 'GenerateReport.ExchangeRate' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of invoicePayment">
+          <td class="border border-gray-300 px-4 py-2">{{ payment.id }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ payment.invoiceNumber }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ payment.user }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ payment.status }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ payment.invoiceDate | date: 'shortDate' }}</td>
+          <td class="border border-gray-300 px-4 py-2 text-right">{{ payment.total | currency: paymentInfo.currency }}
+          </td>
+          <td class="border border-gray-300 px-4 py-2 text-right">{{ payment.localTotal | number: '1.2-2' }}</td>
+          <!-- <td class="border border-gray-300 px-4 py-2 text-right">{{ payment.balance | currency: paymentInfo.currency }}</td>
+          <td class="border border-gray-300 px-4 py-2 text-right">{{ payment.localBalance | number: '1.2-2' }}</td> -->
+          <td class="border border-gray-300 px-4 py-2">{{ payment.currency }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ payment.paid | number:'1.0-2' }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ payment.exchangeRate | number:'1.0-2'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <ng-container *ngIf="!isInvoice">
+    <div class="table-responsive" #tableContainer>
+      <table class="w-100 table table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>{{ 'GenerateReport.PaymentID' | translate }}</th>
+            <th>{{ 'GenerateReport.InvoiceNumber' | translate }}</th>
+            <th>{{ 'GenerateReport.User' | translate }}</th>
+            <th>{{ 'GenerateReport.Status' | translate }}</th>
+            <th>{{ 'GenerateReport.InvoiceDate' | translate }}</th>
+            <th>{{ 'GenerateReport.Total' | translate }}</th>
+            <th>{{ 'GenerateReport.LocalTotal' | translate }}</th>
+            <!-- <th>{{ 'GenerateReport.Balance' | translate }}</th>
+            <th>{{ 'GenerateReport.LocalBalance' | translate }}</th> -->
+            <th>{{ 'Payment.PaymentCurrency' | translate }}</th>
+            <th>{{ 'GenerateReport.Paid' | translate }}</th>
+            <th>{{ 'GenerateReport.PaidSalesTax' | translate }}</th>
+            <th>{{ 'GenerateReport.PaidAdvanceRental' | translate }}</th>
+            <th>{{ 'GenerateReport.BankCommission' | translate }}</th>
+            <th>{{ 'GenerateReport.SalesTax' | translate }}</th>
+            <th>{{ 'GenerateReport.AdvanceRental' | translate }}</th>
+            <th>{{ 'GenerateReport.ExchangeRate' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payment of paymentInfo">
+            <td class="border border-gray-300 px-4 py-2">{{ payment.id }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ payment.invoiceNumber }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ payment.user }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ payment.status }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ payment.invoiceDate | date: 'shortDate' }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-right">
+              {{ payment.total | currency: paymentInfo.currency }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-right">{{ payment.localTotal | number: '1.2-2' }}</td>
+            <!-- <td class="border border-gray-300 px-4 py-2 text-right">
+              {{ payment.balance | currency: paymentInfo.currency }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-right">{{ payment.localBalance | number: '1.2-2' }}
+            </td> -->
+            <td class="border border-gray-300 px-4 py-2">
+              {{ payment.currency }}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              {{ payment.paid | number:'1.0-2' }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ payment.paidSalesTax | currency: payment.currency }}
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              {{ payment.paidAdvanceRental | currency: payment.currency }}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              {{ payment.bankCommission | currency: payment.currency }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ payment.salesTax | currency: payment.currency }}
+            </td>
+            <td class="border border-gray-300 px-4 py-2">
+              {{ payment.advanceRental | number:'1.0-2' }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ payment.exchangeRate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+</div>
+
+<div class="pb-3 text-center">
+  <button type="button" class="btn btn-secondary" (click)="onCancel()">
+    <i class="fa-solid fa-ban pe-2"></i>Close
+  </button>
+</div>

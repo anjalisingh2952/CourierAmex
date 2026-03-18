@@ -1,0 +1,82 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourierAmex.Storage", "CourierAmex.Storage\CourierAmex.Storage.csproj", "{8BA6F193-2EF0-426D-9FF6-D5F273C1FCCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourierAmex", "CourierAmex\CourierAmex.csproj", "{667E5524-EA91-4F2B-833C-4EA669F45961}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{D434AF0F-63A6-457A-9B6F-B82BA59FC936}"
+	ProjectSection(SolutionItems) = preProject
+		0250218-Invoice.sql = 0250218-Invoice.sql
+		Scripts\20231106-0700-AddEmailQueue.sql = Scripts\20231106-0700-AddEmailQueue.sql
+		Scripts\20231118-0344-AddMaskToTipoDocumento.sql = Scripts\20231118-0344-AddMaskToTipoDocumento.sql
+		Scripts\20231120-0300-AddCompany.sql = Scripts\20231120-0300-AddCompany.sql
+		Scripts\20231120-0850-CompanyCategory.sql = Scripts\20231120-0850-CompanyCategory.sql
+		Scripts\20231124-0945-Supplier.sql = Scripts\20231124-0945-Supplier.sql
+		Scripts\20231126-0130-Location.sql = Scripts\20231126-0130-Location.sql
+		Scripts\20231128-1230-CustomerPayTypes.sql = Scripts\20231128-1230-CustomerPayTypes.sql
+		Scripts\20231129-1230-States.sql = Scripts\20231129-1230-States.sql
+		Scripts\20231129-1345-Zones.sql = Scripts\20231129-1345-Zones.sql
+		Scripts\20231204-0850-Areas.sql = Scripts\20231204-0850-Areas.sql
+		Scripts\20231206-1030-Customers.sql = Scripts\20231206-1030-Customers.sql
+		Scripts\20240321-1720-Cashier.sql = Scripts\20240321-1720-Cashier.sql
+		Scripts\20240402-2100-Cashier.sql = Scripts\20240402-2100-Cashier.sql
+		Scripts\20240415-1200-PackageStatuses.sql = Scripts\20240415-1200-PackageStatuses.sql
+		Scripts\20240416-0830-Manifest.sql = Scripts\20240416-0830-Manifest.sql
+		Scripts\20240416-1830-ShippingWayTypes.sql = Scripts\20240416-1830-ShippingWayTypes.sql
+		Scripts\20240424-0210-Package.sql = Scripts\20240424-0210-Package.sql
+		Scripts\20240426-0132-Comodity.sql = Scripts\20240426-0132-Comodity.sql
+		Scripts\20240611-PackageEvents.sql = Scripts\20240611-PackageEvents.sql
+		Scripts\20240617-Package_GetByManifest.sql = Scripts\20240617-Package_GetByManifest.sql
+		Scripts\20240624-PackageCategory_Update.sql = Scripts\20240624-PackageCategory_Update.sql
+		Scripts\20240628-DocumentPayTypes.sql = Scripts\20240628-DocumentPayTypes.sql
+		Scripts\20240702-PackageClassify.sql = Scripts\20240702-PackageClassify.sql
+		Scripts\20240707-Currency.sql = Scripts\20240707-Currency.sql
+		Scripts\20240708-2043-PaymentTypes.sql = Scripts\20240708-2043-PaymentTypes.sql
+		Scripts\20240709-Bank.sql = Scripts\20240709-Bank.sql
+		Scripts\20240721-Module_And_Templates.sql = Scripts\20240721-Module_And_Templates.sql
+		Scripts\20240801-PackageLogNotes.sql = Scripts\20240801-PackageLogNotes.sql
+		Scripts\20240801-PackageLogNotes_respaldo.sql = Scripts\20240801-PackageLogNotes_respaldo.sql
+		Scripts\20240812-2125-Manifest_Air_Classify.sql = Scripts\20240812-2125-Manifest_Air_Classify.sql
+		Scripts\20242509-PackageNotes.sql = Scripts\20242509-PackageNotes.sql
+		20250113-Cashiers.sql = 20250113-Cashiers.sql
+		20250113-PackingPackage.sql = 20250113-PackingPackage.sql
+		20250115-1210-PackagingPackages.sql = 20250115-1210-PackagingPackages.sql
+		20250204-PackagePrice.sql = 20250204-PackagePrice.sql
+		20250212-1610-Payment.sql = 20250212-1610-Payment.sql
+		20250218-1700-PackageScanning.sql = 20250218-1700-PackageScanning.sql
+		20250306-PointOfSale.sql = 20250306-PointOfSale.sql
+		20250325-PreStudy.sql = 20250325-PreStudy.sql
+		20250418-Permissions.sql = 20250418-Permissions.sql
+		20250505-1716 InvoicePayment.sql = 20250505-1716 InvoicePayment.sql
+		20250514-Permissions.sql = 20250514-Permissions.sql
+		20250515-1330-Dashboard.sql = 20250515-1330-Dashboard.sql
+		20250522-Enabled_Credit.sql = 20250522-Enabled_Credit.sql
+		20250522-Permissions.sql = 20250522-Permissions.sql
+		Scripts\_Helper.sql = Scripts\_Helper.sql
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BA6F193-2EF0-426D-9FF6-D5F273C1FCCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BA6F193-2EF0-426D-9FF6-D5F273C1FCCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BA6F193-2EF0-426D-9FF6-D5F273C1FCCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BA6F193-2EF0-426D-9FF6-D5F273C1FCCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{667E5524-EA91-4F2B-833C-4EA669F45961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{667E5524-EA91-4F2B-833C-4EA669F45961}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{667E5524-EA91-4F2B-833C-4EA669F45961}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{667E5524-EA91-4F2B-833C-4EA669F45961}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17FD2DA5-087F-4402-91A0-CD4145954888}
+	EndGlobalSection
+EndGlobal

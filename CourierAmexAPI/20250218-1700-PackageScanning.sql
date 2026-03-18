@@ -1,0 +1,250 @@
+--------------------------------------------------------------------------
+-----------------------------PERMISSIONS----------------------------------
+--------------------------------------------------------------------------
+
+INSERT INTO [dbo].[BKO_Permission]([Id], [Parent], [Name])
+SELECT 'MNF_PACKAGE_SCANNING', 'Manifest', 'Package Scanning'
+WHERE NOT EXISTS (
+	SELECT 1
+	FROM [dbo].[BKO_Permission]
+	WHERE [Id]='MNF_PACKAGE_SCANNING'
+);
+GO
+
+INSERT INTO [dbo].[BKO_RolePermission]([RoleId], [PermissionId], [View], [Add], [Update], [Delete])
+SELECT [RoleId], [PermissionId], 1, 1, 1, 1
+FROM (
+	SELECT R.[Id] as RoleId, Pe.[Id] as PermissionId
+	FROM [dbo].[BKO_Role] R, [dbo].[BKO_Permission] Pe
+	WHERE R.[Name] = 'System' AND PE.[Id] = 'MNF_PACKAGE_SCANNING'
+) as t
+WHERE NOT EXISTS (
+	SELECT 1
+	FROM [dbo].[BKO_RolePermission]
+	WHERE [RoleId]=t.RoleId AND [PermissionId]=t.PermissionId
+);
+GO
+
+--------------------------------------------------------------------------
+-----------------------------STORED PROCEDURES----------------------------
+--------------------------------------------------------------------------
+
+
+-- Get All Manifests by country Id
+
+-- Get Pending Packages by Manifest
+
+-- Get Manifest Scanned and Pending Packages Count
+
+IF NOT EXISTS (SELECT NAME FROM sys.objects WHERE TYPE = 'P' AND NAME = 'BKO_GetCountManifestScanner')
+  BEGIN
+	EXEC('CREATE PROCEDURE [dbo].[BKO_GetCountManifestScanner] AS RETURN')
+END
+GO
+
+ALTER PROCEDURE BKO_GetCountManifestScanner 
+@ManifestNumber varchar(50)  
+AS  
+BEGIN  
+  
+SELECT   
+   SUM(CASE WHEN D.TIPO = 1 THEN 1 ELSE 0 END) AS Normal,     
+   SUM(CASE WHEN D.TIPO = 2 THEN 1 ELSE 0 END) AS Customs,     
+   SUM(CASE WHEN D.TIPO NOT IN (1, 2) THEN 1 ELSE 0 END) AS Pending,     
+   COUNT(D.ID) AS Total  
+FROM ENM_ENCABEZADO_MANIFIESTO E  
+inner join DEM_DETALLE_MANIFIESTO D on E.ID=D.ENM_ID  
+WHERE E.NUMERO = @ManifestNumber  
+  
+  
+END
+GO;
+
+-- Update Manifest after Package Scan
+
+IF NOT EXISTS (SELECT NAME FROM sys.objects WHERE TYPE = 'P' AND NAME = 'BKO_PackageScan_Update')
+  BEGIN
+	EXEC('CREATE PROCEDURE [dbo].[BKO_PackageScan_Update] AS RETURN')
+END
+GO
+
+ALTER PROCEDURE [dbo].[BKO_PackageScan_Update]  
+ @PACKAGE_NUMBER AS INT,  
+ @PACKAGE_STATUS AS INT,  
+ @DETAIL_ID AS INT,  
+ @TYPE AS VARCHAR (50)   
+AS  
+BEGIN  
+  
+  
+ DECLARE @ESTADO_ACTUAL AS INT  
+  
+ SELECT @ESTADO_ACTUAL =  EST_ID FROM PAQ_PAQUETE WHERE NUMERO = @PACKAGE_NUMBER  
+  
+ DECLARE @ENM_ID AS INT  
+ SET @ENM_ID = 0  
+  
+ IF @ESTADO_ACTUAL = 4 Or @ESTADO_ACTUAL = 3 -- CUSTOMS or Manifested  
+ BEGIN  
+   
+  UPDATE PAQ_PAQUETE  
+  SET EST_ID = @PACKAGE_STATUS,  
+   SINCRONIZADO = 0  
+  WHERE NUMERO = @PACKAGE_NUMBER  
+  
+  UPDATE DEM_DETALLE_MANIFIESTO   
+  SET TIPO = @TYPE, FECHAESCANEO = GETDATE()  
+  WHERE NUMEROPAQUETE = @PACKAGE_NUMBER  
+   
+  UPDATE PAQ_PAQUETE  
+  SET ESTADOFACTURA = 1 -- Por facturar  
+  WHERE NUMERO = @PACKAGE_NUMBER  
+  and ESTADOFACTURA = 0  
+  
+  SELECT @ENM_ID = ENM_ID FROM DEM_DETALLE_MANIFIESTO D  
+  INNER JOIN PAQ_PAQUETE P  
+  ON D.NUMEROPAQUETE = P.NUMERO  
+  WHERE NUMEROPAQUETE = @PACKAGE_NUMBER  
+  AND P.ESTADOFACTURA = 1 -- Por Facturar  
+  
+  -- Se coloca el manifiesto como facturable y se coloca facturacion automatica en 0.  
+  UPDATE ENM_ENCABEZADO_MANIFIESTO SET ESTADOFACTURA = 1, FACTURACIONAUTOMATICA = 0  
+  WHERE ID = @ENM_ID   
+  
+ END  
+  
+END;  
+GO;
+
+-- Insert Package Scan Logs
+
+IF NOT EXISTS (SELECT NAME FROM sys.objects WHERE TYPE = 'P' AND NAME = 'BKO_InsertScanLog')
+  BEGIN
+	EXEC('CREATE PROCEDURE [dbo].[BKO_InsertScanLog] AS RETURN')
+END
+GO;
+
+ALTER PROCEDURE [dbo].[BKO_InsertScanLog]  
+ @USER AS VARCHAR(50),  
+ @LOGTYPE AS VARCHAR(20),  
+ @SCANTYPE AS VARCHAR(10),  
+ @PACKAGENUMBER AS INT,  
+ @PREVIOUSMANIFEST AS VARCHAR(50),  
+ @NEWMANIFEST AS VARCHAR(50),  
+ @PREVIOUSBAG AS VARCHAR(25),  
+ @NEWBAG AS VARCHAR(25)   
+AS  
+BEGIN  
+  DECLARE @outId INT;
+ 
+   
+  INSERT INTO BITACORA_ESCANEO  
+      ([USUARIO],[TIPOBITACORA],[TIPOESCANEO],[NUMEROPAQUETE],[MANIFIESTOANTERIOR],[MANIFIESTONUEVO],[BOLSAANTERIOR],[BOLSANUEVA])  
+  VALUES  
+      (@USER,@LOGTYPE,@SCANTYPE,@PACKAGENUMBER,@NEWMANIFEST,@PREVIOUSMANIFEST,@PREVIOUSBAG,@NEWBAG)  
+  SET @outId = SCOPE_IDENTITY();  
+
+   SELECT @outId; 
+END
+GO;
+
+-- Get Scanned Package Info
+
+IF NOT EXISTS (SELECT NAME FROM sys.objects WHERE TYPE = 'P' AND NAME = 'BKO_GetPackageInfo')
+  BEGIN
+	EXEC('CREATE PROCEDURE [dbo].[BKO_GetPackageInfo] AS RETURN')
+END
+GO;
+
+ALTER PROCEDURE [dbo].[BKO_GetPackageInfo]
+ @packageNumber As INT
+AS  
+BEGIN  
+   
+ SELECT ISNULL(E.ID, 0) AS Manifestid, E.NUMERO AS ManifestNumber, E.PAIS AS ManifestCountry, P.NUMERO AS PackageNumber, P.CLIENTE as Client,   
+ D.ID AS ManifestDetailId, P.ID AS PackageId, P.DESCRIPCION as [Description], P.PAIS AS PackageCountry, C.NOMBRECOMPLETO as FullName,   
+ Z.NOMBRE AS [Zone], A.NOMBRE AS Area, PAI.NOMBRE AS CountryName, P.TOTALETIQUETA as TotalLabel, C.ENCOMIENDA as Shipment, D.BOLSA as Bag, P.EST_ID,  
+ P.PESO as [Weight], P.PESOVOLUMETRICO as Volume, ISNULL(Z.RUTA,1) AS [Route],D.TIPO as [Type]  
+ FROM PAQ_PAQUETE P   
+ INNER JOIN CLI_CLIENTE C  
+ ON C.CODIGO = P.CLIENTE  
+ INNER JOIN ZON_ZONA Z  
+ ON C.ZON_ID = Z.ID  
+ INNER JOIN ARE_AREA A  
+ ON C.ARE_ID = A.ID  
+ INNER JOIN PAI_PAIS PAI  
+ ON P.PAIS = PAI.INICIAL  
+ LEFT JOIN DEM_DETALLE_MANIFIESTO D  
+ ON P.ID = D.PAQ_ID   
+ LEFT JOIN ENM_ENCABEZADO_MANIFIESTO E  
+ ON E.ID = D.ENM_ID  
+ WHERE P.NUMERO = @packageNumber  
+  
+END  
+GO;
+
+-- Reassign Package that is not Manifested
+
+IF NOT EXISTS (SELECT NAME FROM sys.objects WHERE TYPE = 'P' AND NAME = 'BKO_UpdateReassignPackage')
+  BEGIN
+	EXEC('CREATE PROCEDURE [dbo].[BKO_UpdateReassignPackage] AS RETURN')
+END
+GO;
+
+ALTER PROCEDURE [dbo].[BKO_UpdateReassignPackage]  
+ @PACKAGENUMBER AS INT,  
+ @MANIFESTID AS INT,  
+ @BAGNUMBER AS VARCHAR(25),  
+ @MODIFIEDBY AS VARCHAR(50)   
+AS  
+BEGIN  
+ DECLARE @PAQ_ID AS INT  
+ DECLARE @TIPOENVIO AS INT  
+ DECLARE @SUBTIPOPAQUETE AS INT  
+ DECLARE @TIPOCOURIER AS INT  
+ DECLARE @TIPOIMPUESTO AS INT  
+ DECLARE @SORTEADO AS BIT  
+ DECLARE @EMPACADO AS INT  
+ DECLARE @ESTADOID_MANIFESTADO AS INT   
+   
+   
+ IF ((SELECT COUNT(1) FROM DEM_DETALLE_MANIFIESTO WHERE NUMEROPAQUETE = @PACKAGENUMBER) = 0)  
+ BEGIN  
+    
+  SELECT @ESTADOID_MANIFESTADO = EST_MANIFESTADO FROM PAR_PARAMETRO  
+   
+  SELECT TOP 1 @SUBTIPOPAQUETE = D.SUBTIPOPAQUETE, @TIPOCOURIER = D.TIPOCOURIER,  
+      @TIPOIMPUESTO = D.TIPOIMPUESTO , @SORTEADO = D.SORTEADO,   
+      @EMPACADO = D.EMPACADO, @TIPOENVIO = P.TIPOPAQUETE  
+  FROM DEM_DETALLE_MANIFIESTO D  
+  INNER JOIN PAQ_PAQUETE P  
+  ON D.PAQ_ID = P.ID  
+  WHERE D.ENM_ID = @MANIFESTID AND D.BOLSA = @BAGNUMBER  
+    
+  SELECT * FROM PAR_PARAMETRO  
+    
+  EXECUTE usp_ClasificaPaquete @MANIFESTID, @PACKAGENUMBER, '', @MODIFIEDBY,   
+          @TIPOENVIO, @SUBTIPOPAQUETE, @TIPOCOURIER, @TIPOIMPUESTO, @ESTADOID_MANIFESTADO, ''  
+    
+  UPDATE DEM_DETALLE_MANIFIESTO SET BOLSA = @BAGNUMBER,  
+  SUBTIPOPAQUETE = 1, TIPOCOURIER = 1, TIPOIMPUESTO = 1, TIPO = 1 -- Se coloca el tipo en 1 para que no siga apareciendo como pendiente de escanear    
+  WHERE NUMEROPAQUETE = @PACKAGENUMBER  
+  
+  UPDATE PAQ_PAQUETE SET EST_ID = 8, ESTADOFACTURA = 1 WHERE NUMERO = @PACKAGENUMBER  
+  
+ END  
+ ELSE  
+ BEGIN   
+   
+  UPDATE DEM_DETALLE_MANIFIESTO   
+  SET ENM_ID = @MANIFESTID, BOLSA = @BAGNUMBER,  
+  FECHAHORA = GETDATE(),  
+  MODIFICO = @MODIFIEDBY  
+  WHERE NUMEROPAQUETE = @PACKAGENUMBER  
+  
+  UPDATE PAQ_PAQUETE SET EST_ID = 8 WHERE NUMERO = @PACKAGENUMBER  
+  
+ END  
+   
+END  
+GO;

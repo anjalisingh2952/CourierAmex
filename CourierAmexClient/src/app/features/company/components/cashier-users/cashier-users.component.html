@@ -1,0 +1,31 @@
+  <div class="panel panel-inverse">
+    <div class="panel-heading">
+      <h4 class="panel-title"><i class="fa-solid fa-users fa-lg fa-fw me-1"></i>
+        {{'ClientCashierDetails.CashierUserList' | translate }}</h4>
+      <div class="">
+        <button type="button" [disabled]="!hasAdd" (click)="SaveChanges()" class="btn btn-primary me-2">
+          {{'Labels.SaveChanges' | translate }}
+        </button>
+        <!-- <button type="button" class="btn btn-xs btn-icon btn-primary me-2" (click)="selectProducts('included')"
+          *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+          <i class="fa fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-xs btn-icon btn-danger" (click)="removeProducts('included')"
+          *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+          <i class="fa fa-trash"></i>
+        </button> -->
+      </div>
+    </div>
+    <div class="">
+      <ng-container>
+        <app-entity-list [showHeader]="false" [activeSearch]="false" [hasPagination]="false" [state]="state"
+          [columns]="columns" [rows]="userList">
+        </app-entity-list>
+      </ng-container>
+
+      <ng-template #actionTemplate let-params="params">
+        <input type="checkbox" [(ngModel)]="params.row.isChecked" (change)="onCheckboxChange($event, params.row)"
+          ngbTooltip="{{ 'Tooltips.Select' | translate }}" />
+      </ng-template>
+    </div>
+  </div>

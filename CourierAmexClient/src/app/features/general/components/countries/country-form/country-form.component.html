@@ -1,0 +1,102 @@
+<form class="country-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" *ngIf="entity" autocomplete="off">
+  <input type="hidden" name="id" [ngModel]="entity.id" />
+
+  <div class="mb-3 d-md-flex fw-bold">
+    <div class="mt-md-0 mt-2">
+      <button type="submit" class="btn btn-link btn-sm text-decoration-none text-dark"
+        *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)" [disabled]="!form.valid">
+        <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' |
+        translate }}</button>
+    </div>
+    <div class="ms-md-0 mt-md-0 mt-2">
+      <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="goBack()">
+        <i class="fa fa-arrow-left fa-lg me-2 text-dark"></i> {{ 'Labels.GoBack' |
+        translate }}</button>
+    </div>
+  </div>
+
+  <div class="panel panel-inverse">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <i class="fa fa-earth-americas fa-lg fa-fw me-1"></i> {{ 'CountryDetails.Info' |
+        translate }}
+      </h4>
+    </div>
+    <div class="panel-body">
+      <div class="mb-3">
+        <label class="form-label" for="name">* {{ 'Labels.Name' | translate }}</label>
+        <input type="text" class="form-control" name="name" [ngModel]="entity.name"
+          [ngModelOptions]="{ updateOn: 'blur' }" placeholder="{{ 'CountryDetails.NamePlaceholder' | translate }}"
+          [class.is-valid]="name.valid && name.touched" [class.is-invalid]="name.invalid && name.touched"
+          #name="ngModel" maxlength="64" minlength="3" required>
+        <ng-container *ngIf="name.invalid && name.touched">
+          <div class="invalid-feedback" *ngIf="name.errors?.['required']">
+            {{ 'Labels.FieldRequired' | translate }}
+          </div>
+          <div class="invalid-feedback" *ngIf="name.errors?.['minlength']">
+            {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="shortName">{{ 'CountryDetails.Shortname' | translate }}</label>
+        <input type="text" class="form-control" name="shortName" [ngModel]="entity.shortname"
+          [ngModelOptions]="{ updateOn: 'blur' }" placeholder="{{ 'CountryDetails.ShortnamePlaceholder' | translate }}"
+          [class.is-valid]="shortName.valid && shortName.touched"
+          [class.is-invalid]="shortName.invalid && shortName.touched" #shortName="ngModel" maxlength="6" minlength="2">
+        <ng-container *ngIf="shortName.invalid && shortName.touched">
+          <div class="invalid-feedback" *ngIf="shortName.errors?.['minlength']">
+            {{ 'Labels.FieldMinLength' | translate:{ min: 2 } }}
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="code">{{ 'CountryDetails.Code' | translate }}</label>
+        <input type="number" class="form-control" name="code" [ngModel]="entity.code"
+          [ngModelOptions]="{ updateOn: 'blur' }" placeholder="{{ 'CountryDetails.CodePlaceholder' | translate }}"
+          [class.is-valid]="code.valid && code.touched" [class.is-invalid]="code.invalid && code.touched"
+          #code="ngModel" min="0" max="9999">
+        <ng-container *ngIf="code.invalid && code.touched">
+          <div class="invalid-feedback" *ngIf="code.errors?.['min'] || code.errors?.['max']">
+            {{ 'Labels.FieldNumberValue' | translate:{ min: 0, max: 9999 } }}
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="address">{{ 'CountryDetails.Address' | translate }}</label>
+        <textarea rows="4" class="form-control" name="address" [ngModel]="entity.address"
+          [ngModelOptions]="{ updateOn: 'blur' }" placeholder="{{ 'CountryDetails.AddressPlaceholder' | translate }}"
+          [class.is-valid]="address.valid && address.touched" [class.is-invalid]="address.invalid && address.touched"
+          #address="ngModel" maxlength="2000"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="notes">{{ 'CountryDetails.Notes' | translate }}</label>
+        <textarea rows="4" class="form-control" name="notes" [ngModel]="entity.notes"
+          [ngModelOptions]="{ updateOn: 'blur' }" placeholder="{{ 'CountryDetails.NotesPlaceholder' | translate }}"
+          [class.is-valid]="notes.valid && notes.touched" [class.is-invalid]="notes.invalid && notes.touched"
+          #notes="ngModel" maxlength="2000"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="status">* {{ 'Labels.Status' | translate }}</label>
+        <select class="form-select" name="status" [ngModel]="entity.status" #status="ngModel"
+          [ngModelOptions]="{ updateOn: 'change' }" [class.is-valid]="status.valid && status.touched"
+          [class.is-invalid]="status.invalid && status.touched" required>
+          <option [ngValue]=null>{{ 'Labels.Select' | translate }}</option>
+          <option [ngValue]=1>{{ 'Status.Draft' | translate }}</option>
+          <option [ngValue]=2>{{ 'Status.Active' | translate }}</option>
+          <option [ngValue]=3>{{ 'Status.Inactive' | translate }}</option>
+        </select>
+        <ng-container *ngIf="status.invalid && status.touched">
+          <div class="invalid-feedback" *ngIf="status.errors?.['required']">
+            {{ 'Labels.FieldRequired' | translate }}
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</form>

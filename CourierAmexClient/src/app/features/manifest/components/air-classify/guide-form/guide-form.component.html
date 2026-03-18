@@ -1,0 +1,171 @@
+<div class="p-2">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ 'AirGuide.GuideForm' | translate }}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+  </div>
+
+  <div class="container">
+    <div class="row mb-3 border-start border-end border-bottom rounded-bottom p-4">
+      <div class="col-md-4">
+        <div class="form-group mb-3">
+          <label for="manifestId" class="form-label">{{ 'AirGuide.ManifestID' | translate }}:</label>
+          <input type="number" id="manifestId" class="form-control" [(ngModel)]="manifestId" name="manifestId" disabled
+            placeholder="Enter Manifest ID">
+        </div>
+
+        <div *ngIf="isChildComponent" class="form-group">
+          <label class="form-label">{{ 'PackageClassify.Type' | translate }}:</label>
+          <div class="d-flex gap-3">
+            <div class="form-check">
+              <input type="radio" id="curier" name="type" value="AIPE" class="form-check-input"
+                (click)="getChildGuige('AIPE')" [(ngModel)]="formData.type" [disabled]="childModification">
+              <label for="curier" class="form-check-label">{{ 'AirGuide.Curier' | translate }}</label>
+            </div>
+            <div class="form-check">
+              <input type="radio" id="consolidated" name="type" value="AE" class="form-check-input"
+                (click)="getChildGuige('AE')" [(ngModel)]="formData.type" [disabled]="childModification">
+              <label for="consolidated" class="form-check-label">{{'AirGuide.Consolidated' | translate }}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isChildComponent" class="col-md-4">
+        <label class="form-label">{{ 'AirGuide.MasterGuide' | translate }}:</label>
+        <input type="text" class="form-control" [(ngModel)]="formData.id" name="masterGuide" disabled
+          placeholder="Master Guide ID">
+      </div>
+      <div *ngIf="isChildComponent" class="col-md-4">
+        <label class="form-label">{{ 'AirGuide.ChildGuide' | translate }}:</label>
+        <input type="text" class="form-control" [(ngModel)]="formData.childId" name="childGuide" disabled
+          placeholder="Child Guide ID">
+      </div>
+
+      <div class="col-md-4 text-center">
+        <button (click)="onKeep()" class="btn btn-primary p-2">{{ 'AirGuide.Keep' | translate }}</button>
+        <button type="button" class="btn btn-primary ms-2 p-2"
+          (click)="onCancel()">{{ 'AirGuide.Cancel' | translate }}</button>
+      </div>
+    </div>
+
+    <div *ngIf="!isChildComponent" class="row p-4 border rounded">
+      <div class="col-md-6">
+        <label class="form-label">{{ 'AirGuide.ShipperNameAddress' | translate }}</label>
+        <textarea class="form-control" [(ngModel)]="formData.shipper" name="shipper" required
+          placeholder="Enter shipper's name and address"></textarea>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label class="form-label">{{ 'AirGuide.IssuingCarriersAgentName' | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="formData.issuingCarrierName" name="issuingCarrierName"
+              required placeholder="Enter agent name">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ 'AirGuide.IssuingCarriersAgentCity' | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="formData.issuingCarrierCity" name="issuingCarrierCity"
+              required placeholder="Enter agent city">
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label class="form-label">{{ 'AirGuide.AirportofDeparture' | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="formData.airPortDeparture" name="airPortDeparture"
+              placeholder="Enter airport of departure">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ 'AirGuide.ToDestination' | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="formData.to" name="to" required
+              placeholder="Enter destination">
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label class="form-label">{{ 'AirGuide.AirportOfDestination' | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="formData.airPortDestination" name="airPortDestination"
+              placeholder="Enter airport of destination">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ 'AirGuide.FirstCarrier' | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="formData.firstCarrier" name="firstCarrier"
+              placeholder="Enter first carrier">
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <label class="form-label">{{ 'AirGuide.FlightDate' | translate }}</label>
+            <input type="date" class="form-control" [(ngModel)]="formData.flightDate" name="flightDate" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">{{ 'AirGuide.AirWaybill' | translate }}</label>
+        <textarea class="form-control" [(ngModel)]="formData.airWayBill" name="airWayBill" rows="3"
+          placeholder="Enter air waybill details"></textarea>
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <label class="form-label">{{ 'AirGuide.AccountingInformation' | translate }}</label>
+            <textarea class="form-control" [(ngModel)]="formData.accountingInformation" name="accountingInformation"
+              rows="2" required placeholder="Enter accounting information"></textarea>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label class="form-label">{{ 'AirGuide.Place' | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="formData.place" name="place" placeholder="Enter place">
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label class="form-label">{{ 'AirGuide.Signature' | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="formData.signature" name="signature"
+              placeholder="Enter signature">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isChildComponent" class="row p-4 border rounded">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">{{ 'AirGuide.CustomerNumber' | translate }} <span
+              class="text-danger">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="formData.customerNumber" name="customerNumber"
+            (keydown.enter)="getCustomerDetail()" placeholder="Enter consignee">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">{{ 'AirGuide.Name' | translate }}</label>
+          <input type="text" class="form-control" [(ngModel)]="formData.customerName" name="customerName" disabled
+            placeholder="Name">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">{{ 'AirGuide.IdentificationType' | translate }}</label>
+          <input type="text" class="form-control" [(ngModel)]="formData.identificationType" name="identificationType"
+            disabled placeholder="Identification Type">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">{{ 'AirGuide.Identification' | translate }}</label>
+          <input type="text" class="form-control" [(ngModel)]="formData.identification" name="identification" disabled
+            placeholder="Identification">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">{{ 'AirGuide.Status' | translate }}</label>
+          <input type="text" class="form-control" [(ngModel)]="formData.status" name="status" placeholder="Status">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="col-md-12">
+          <label class="form-label">{{ 'AirGuide.Contact' | translate }}</label>
+          <textarea class="form-control" [(ngModel)]="formData.contact" name="contact" rows="4" required
+            placeholder="Enter Contact"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

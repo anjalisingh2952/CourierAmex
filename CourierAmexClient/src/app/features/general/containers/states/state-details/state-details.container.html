@@ -1,0 +1,12 @@
+<div class="state-details" *ngIf="{ entity: entity$ | async, countries: countries$ | async } as data">
+  <ng-container *ngIf="data.entity && data.countries">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'StateDetails.Title' | translate }} <small>{{ 'StateDetails.SubTitle' | translate
+        }}</small>
+    </h1>
+
+    <state-form [entity]="data.entity" [countries]="data.countries" (onSave)="save($event)"
+      (onGoBack)="goBack()"></state-form>
+  </ng-container>
+</div>

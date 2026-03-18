@@ -1,0 +1,89 @@
+<div class="modal-header d-flex justify-content-between align-items-center">
+  <button class="btn btn-primary" (click)="closeScreen()">
+    <i class="fa fa-arrow-left me-2"></i> {{ 'AirGuide.Back' | translate }}
+  </button>
+  <div class="pt-2 pb-2 ps-3 pe-3 bg-primary text-white rounded d-flex flex-column">
+    <h5 class="modal-title">{{selectedPointOfSale.pointOfSaleName}}</h5>
+  </div>
+
+  <h5 class="modal-title mb-0">{{ 'AirGuide.PendingInvoices' | translate }}</h5>
+</div>
+
+<div class="flex-grow-1 m-3 row">
+  <div class="col-12 col-md-5">
+
+    <ng-container *ngIf="entities$ | async as entities">
+      <app-entity-list [title]="'Packages.Title' | translate" [filterTemplate]="filterTemplate" [state]="state"
+        [columns]="columns" [pagination]="pagination" [showHeader]="false" [rows]="entities"
+        (stateChange)="onStateChange($event)">
+      </app-entity-list>
+    </ng-container>
+
+    <ng-template #filterTemplate>
+      <ng-container *ngIf="companies$ | async as entities">
+        <shared-dropdown [entities]="entities" [selectedEntity]="entities[0] || undefined"
+          (onSelectEntity)="selectCompany($event)" *ngIf="showCompanies">
+        </shared-dropdown>
+      </ng-container>
+    </ng-template>
+
+    <ng-template #actionTemplate let-params="params">
+      <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"
+        (click)="viewDetail(params.row)">
+      </i>
+    </ng-template>
+  </div>
+  <div class="col-12 col-md-7">
+    <div class="d-flex flex-column flex-md-row justify-content-between mb-3">
+      <div class="d-flex flex-1 mb-3 mb-md-0">
+        <label
+          class="block w-100 w-md-25 text-sm form-label mb-1 align-self-center">{{'InvoiceHistory.Customer' | translate }}</label>
+        <input type="text" class="ms-2 w-100 w-md-75 border rounded px-3 py-2 bg-white" [(ngModel)]="customerCode"
+          placeholder="Customer ID" disabled>
+      </div>
+
+      <div class="d-flex flex-1">
+        <label
+          class="w-100 w-md-25 ms-2 block justify-center form-label mb-1 align-self-center">{{'InvoiceHistory.CustomerName' | translate }}</label>
+        <input type="text" class="w-100 w-md-75 border rounded py-2 px-3 ng-untouched ng-pristine bg-white"
+          [(ngModel)]="fullName" placeholder="Customer Name" disabled>
+      </div>
+    </div>
+    <div class="flex-grow-1 flex-column">
+      <app-invoices-cradits-list (invoicePendingPaymentDetail)="invoicePendingPaymentDetail($event)"
+        [invoicePendingPayment]="invoicePendingPayment" [invoiceCraditsDetail]="InvoiceCraditsDetail">
+      </app-invoices-cradits-list>
+      <div class="d-flex flex-column flex-md-row justify-center mb-3 gap-3">
+        <div class="d-flex flex-fill align-items-center gap-2">
+          <label class="form-label mb-0" style="min-width: 40px;">
+            {{ 'Payment.TotalDollar' | translate }}
+          </label>
+          <input type="text" class="form-control bg-white" [value]="totalDollar | number:'1.0-2'"
+            placeholder="Balance In Dollar" disabled style="font-size: 15px;">
+        </div>
+
+        <div class="d-flex flex-fill align-items-center gap-2">
+          <label class="form-label mb-0" style="min-width: 70px;">
+            {{ 'Payment.TotalLocal' | translate }}
+          </label>
+          <input type="text" class="form-control bg-white" [value]="totalLocal | number:'1.0-2'"
+            placeholder="Balance In Local" disabled style="font-size: 15px;">
+        </div>
+      </div>
+
+      <app-pending-invoice-packages [packageListByInvoice]="packageListByInvoice"></app-pending-invoice-packages>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-end">
+      <button (click)="closeScreen()" class="btn btn-primary mb-2 mb-md-0">
+        {{ 'AirGuide.Cancel' | translate }}
+      </button>
+      <button (click)="partialPayment()" class="ms-0 ms-md-2 btn btn-primary mb-2 mb-md-0">
+        {{ 'AirGuide.PartialPay' | translate }}
+      </button>
+      <button (click)="Payment()" class="ms-0 ms-md-2 btn btn-primary">
+        {{ 'AirGuide.Pay' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

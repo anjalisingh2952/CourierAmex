@@ -1,0 +1,36 @@
+<ng-container *ngIf="entities$ | async as countries">
+  <app-entity-list
+    [title]="'ClientCategories.Title' | translate"
+    [subTitle]="'ClientCategories.SubTitle' | translate"
+    [addLabel]="'Labels.New' | translate"
+    [filterTemplate]="filterTemplate"
+    [hasAdd]="hasAdd"
+    [state]="state"
+    [pagination]="pagination"
+    [columns]="columns"
+    [rows]="countries"
+    (stateChange)="onStateChange($event)"
+    (add)="addNew()">
+  </app-entity-list>
+</ng-container>
+
+<ng-template #filterTemplate>
+  <ng-container *ngIf="companies$ | async as companies">
+    <shared-dropdown [entities]="companies" (onSelectEntity)="selectEntity($event)" *ngIf="showCompanies"></shared-dropdown>
+  </ng-container>
+</ng-template>
+
+<ng-template #actionTemplate let-params="params">
+  <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"
+    (click)="editEntity(params.row)"></i>
+  <i class="fa fa-trash text-danger fs-15px me-2 pointer" *ngIf="hasDelete"
+    ngbTooltip="{{ 'Tooltips.Delete' | translate }}" (click)="deleteEntity(params.row)"></i>
+</ng-template>
+
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.status">
+    <span *ngSwitchCase="1" class="badge bg-dark">{{ 'Labels.Draft' | translate }}</span>
+    <span *ngSwitchCase="2" class="badge bg-green text-white">{{ 'Labels.Active' | translate }}</span>
+    <span *ngSwitchCase="3" class="badge bg-yellow text-dark">{{ 'Labels.Inactive' | translate }}</span>
+  </ng-container>
+</ng-template>

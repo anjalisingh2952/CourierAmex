@@ -1,0 +1,62 @@
+IF NOT EXISTS(SELECT 1 FROM sys.columns WHERE Name = N'CompanyId' AND Object_ID = Object_ID(N'dbo.CN_MODULO'))
+BEGIN
+	ALTER TABLE [CN_MODULO] ADD [CompanyId] [int] NULL;
+END
+GO
+
+UPDATE [CN_MODULO] 
+SET [CompanyId] = 2
+GO
+
+
+IF NOT EXISTS (SELECT NAME FROM sys.objects WHERE TYPE = 'P' AND NAME = 'BKO_Module_GetByCompany')
+  BEGIN
+	EXEC('CREATE PROCEDURE [dbo].[BKO_Module_GetByCompany] AS RETURN')
+END
+GO
+ALTER PROCEDURE [dbo].BKO_Module_GetByCompany
+	@inCompanyId INT
+AS
+	SET NOCOUNT ON;
+
+	SELECT COD_MODULO AS 'Id', DES_MODULO AS 'Name'
+	FROM CN_MODULO
+	WHERE CompanyId = @inCompanyId
+	
+
+	SET NOCOUNT OFF; 
+GO
+
+
+IF NOT EXISTS (SELECT NAME FROM sys.objects WHERE TYPE = 'P' AND NAME = 'BKO_Template_GetByCompanyModule')
+  BEGIN
+	EXEC('CREATE PROCEDURE [dbo].[BKO_Template_GetByCompanyModule] AS RETURN')
+END
+GO
+ALTER PROCEDURE [dbo].BKO_Template_GetByCompanyModule
+	@inCompanyId INT,
+	@inModuleId VARCHAR(10)
+AS
+	SET NOCOUNT ON;
+
+	SELECT 
+		ID_EMPRESA AS 'CompanyId',
+		COD_PLANTILLA AS 'Id',
+		COD_MODULO AS 'ModuleID',
+		COD_TRANSACCION AS 'TransactionId',
+		COD_SUBTRANSACCION AS 'SubTransactionId',
+		DES_PLANTILLA AS 'Name',
+		ID_ESTADO AS 'Status',
+		TIPO_PROCESO AS 'ProcessType',
+		FEC_INCLUSION AS 'CreatedAt',
+		USER_INCLUSION AS 'CreatedBy',
+		FEC_MODIFICA AS 'ModifyAt',
+		USER_MODIFICA AS 'ModifyBy'
+		FROM CN_PLANTILLA
+		WHERE COD_MODULO = @inModuleId AND ID_EMPRESA = @inCompanyId
+	ORDER BY DES_PLANTILLA
+
+
+	SET NOCOUNT OFF; 
+GO
+

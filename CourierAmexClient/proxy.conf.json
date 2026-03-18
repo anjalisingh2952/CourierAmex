@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "https://localhost:5005/",
+    "secure": false,
+    "logLevel": "info",
+    "changeOrigin": true
+  },
+  "/files/*": {
+    "target": "https://localhost:5005/",
+    "secure": false,
+    "logLevel": "info",
+    "changeOrigin": true
+  }
+}

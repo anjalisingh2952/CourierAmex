@@ -1,0 +1,144 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ 'PackageDetails.Title' | translate }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+</div>
+<div class="modal-body">
+  <div class="modal-content p-3">
+    <div *ngIf="dataRecived">
+      <div *ngIf="!isPending" class="row">
+        <div class="col-md-4 mb-3">
+          <h6 class="mb-3">Air Guide List</h6>
+          <table class="table table-bordered table-hover">
+            <thead class="table-light">
+              <tr>
+                <th (click)="sortList('airGuide', data)">
+                  {{'PackageDetails.AirGuide' | translate }}
+                  <i class="fa" [ngClass]="getSortIcon('airGuide')"></i>
+                </th>
+                <th (click)="sortList('category', data)">
+                  {{'PackageDetails.Category' | translate }}
+                  <i class="fa" [ngClass]="getSortIcon('category')"></i>
+                </th>
+                <th (click)="sortList('airGuideCount', data)">
+                  {{'PackageDetails.Count' | translate }}
+                  <i class="fa" [ngClass]="getSortIcon('airGuideCount')"></i>
+                </th>
+                <th>{{'PackageDetails.Action' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let package of data">
+                <tr>
+                  <td>{{ package.airGuide }}</td>
+                  <td>{{ package.category || 'N/A' }}</td>
+                  <td>{{ package.airGuideCount }}</td>
+                  <td class="text-center">
+                    <i class="fa fa-eye text-primary cursor-pointer" title="View Details"
+                      (click)="OnClickList(package)"></i>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+        <!-- Right Table for Package Details -->
+        <div class="col-md-8">
+          <h6 class="mb-3">{{ 'PackageDetails.Title' | translate }}</h6>
+          <div *ngIf="isPackageListPresent; else noDataTemplate">
+            <table class="table table-bordered table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th (click)="sortList('packageNumber', packageList)">
+                    {{'PackageDetails.PackageNumber' | translate }}
+                    <i class="fa" [ngClass]="getSortIcon('packageNumber')"></i>
+                  </th>
+                  <th (click)="sortList('clientCode', packageList)">
+                    {{'PackageDetails.ClientCode' | translate }}
+                    <i class="fa" [ngClass]="getSortIcon('clientCode')"></i>
+                  </th>
+                  <th (click)="sortList('fullName', packageList)">
+                    {{'PackageDetails.FullName' | translate }}
+                    <i class="fa" [ngClass]="getSortIcon('fullName')"></i>
+                  </th>
+                  <th (click)="sortList('description', packageList)">
+                    {{'PackageDetails.Description' | translate }}
+                    <i class="fa" [ngClass]="getSortIcon('description')"></i>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let package of packageList">
+                  <tr>
+                    <td>{{ package.packageNumber }}</td>
+                    <td>{{ package.clientCode }}</td>
+                    <td>{{ package.fullName }}</td>
+                    <td>{{ package.description }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+          <!-- Template for when no package data is present -->
+          <ng-template #noDataTemplate>
+            <div class="alert alert-info text-center mt-3">
+              {{'PackageDetails.PleaseSelect' | translate }}
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <div *ngIf="isPending">
+        <table class="table table-bordered table-hover">
+          <thead class="table-light">
+            <tr>
+              <th (click)="sortList('packageId', packagedPackagesForAirGuides)">
+                {{'PackageDetails.PackageID' | translate }}
+                <i class="fa" [ngClass]="getSortIcon('packageId')"></i>
+              </th>
+              <th (click)="sortList('clientCode', packagedPackagesForAirGuides)">
+                {{'PackageDetails.ClientCode' | translate }}
+                <i class="fa" [ngClass]="getSortIcon('clientCode')"></i>
+              </th>
+              <th (click)="sortList('fullName', packagedPackagesForAirGuides)">
+                {{'PackageDetails.FullName' | translate }}
+                <i class="fa" [ngClass]="getSortIcon('fullName')"></i>
+              </th>
+              <th (click)="sortList('company', packagedPackagesForAirGuides)">
+                {{'PackageDetails.Company' | translate }}
+                <i class="fa" [ngClass]="getSortIcon('company')"></i>
+              </th>
+              <th (click)="sortList('origin', packagedPackagesForAirGuides)">
+                {{'PackageDetails.Origin' | translate }}
+                <i class="fa" [ngClass]="getSortIcon('origin')"></i>
+              </th>
+              <th (click)="sortList('description', packagedPackagesForAirGuides)">
+                {{'PackageDetails.Description' | translate }}
+                <i class="fa" [ngClass]="getSortIcon('description')"></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let package of packagedPackagesForAirGuides">
+              <tr>
+                <td>{{ package.packageNumber }}</td>
+                <td>{{ package.clientCode }}</td>
+                <td>{{ package.fullName }}</td>
+                <td>{{ package.company }}</td>
+                <td>{{ package.origin }}</td>
+                <td>{{ package.description }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="!dataRecived">
+      <div class="fst-italic text-gray">
+        {{'PackageDetails.NoData' | translate }}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="pb-3 text-center">
+  <button type="button" class="btn btn-secondary" (click)="onCancel()"><i
+      class="fa-solid fa-ban pe-2"></i>Close</button>
+</div>

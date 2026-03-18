@@ -1,0 +1,42 @@
+<ng-container *ngIf="entities$ | async as data">
+  <app-entity-list
+    [title]="'ShippingWayTypes.Title' | translate"
+    [subTitle]="'ShippingWayTypes.SubTitle' | translate"
+    [addLabel]="'Labels.New' | translate"
+    [hasAdd]="hasAdd"
+    [state]="state"
+    [pagination]="pagination"
+    [columns]="columns"
+    [rows]="data"
+    (stateChange)="onStateChange($event)"
+    (add)="addNew()">
+  </app-entity-list>
+</ng-container>
+
+<ng-template #actionTemplate let-params="params">
+  <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"
+    (click)="editEntity(params.row)"></i>
+  <i class="fa fa-trash text-danger fs-15px me-2 pointer" *ngIf="hasDelete"
+    ngbTooltip="{{ 'Tooltips.Delete' | translate }}" (click)="deleteEntity(params.row)"></i>
+</ng-template>
+
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.status">
+    <span *ngSwitchCase="1" class="badge bg-dark">{{ 'Labels.Draft' | translate }}</span>
+    <span *ngSwitchCase="2" class="badge bg-green text-white">{{ 'Labels.Active' | translate }}</span>
+    <span *ngSwitchCase="3" class="badge bg-yellow text-dark">{{ 'Labels.Inactive' | translate }}</span>
+  </ng-container>
+</ng-template>
+
+<ng-template #shipTypeTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.shipType">
+    <ng-container *ngSwitchCase="0">
+      <label class="form-check-label" for="shipType">{{ 'ShippingWayTypes.ShipByAir' | translate }}</label>
+      <i class="fa fa-plane ms-2" ngbTooltip="{{ 'ShippingWayTypes.ShipByAir' | translate }}"></i>
+    </ng-container>
+    <ng-container *ngSwitchCase="1">
+      <label class="form-check-label" for="shipType">{{ 'ShippingWayTypes.ShipBySea' | translate }}</label>
+      <i class="fa fa-ship ms-2" ngbTooltip="{{ 'ShippingWayTypes.ShipBySea' | translate }}"></i>
+    </ng-container>
+  </ng-container>
+</ng-template>

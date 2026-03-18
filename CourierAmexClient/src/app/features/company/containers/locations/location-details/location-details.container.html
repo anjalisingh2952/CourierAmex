@@ -1,0 +1,13 @@
+<div class="location-details" *ngIf="{ entity: entity$ | async, companies: companies$ | async } as data">
+  <ng-container *ngIf="data.entity && data.companies">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'LocationDetails.Title' | translate }} <small>{{ 'LocationDetails.SubTitle' |
+        translate
+        }}</small>
+    </h1>
+
+    <location-form [entity]="data.entity" [companies]="data.companies" (onSave)="save($event)"
+      (onCompanyChange)="onCompanyChange($event)" (onGoBack)="goBack()"></location-form>
+  </ng-container>
+</div>

@@ -1,0 +1,13 @@
+<ng-container *ngIf="entities$ | async as countries">
+    <app-entity-list [title]="'PackageEvents.Title' | translate" [subTitle]="'PackageEvents.SubTitle' | translate"
+      [filterTemplate]="filterTemplate" [hasAdd]="hasAdd" [state]="state"
+      [pagination]="pagination" [columns]="columns" [rows]="countries" (stateChange)="onStateChange($event)">
+    </app-entity-list>
+  </ng-container>
+  
+  <ng-template #filterTemplate>
+    <ng-container *ngIf="companies$ | async as companies">
+      <shared-dropdown [entities]="companies" (onSelectEntity)="selectEntity($event)"
+        *ngIf="showCompanies"></shared-dropdown>
+    </ng-container>
+  </ng-template>

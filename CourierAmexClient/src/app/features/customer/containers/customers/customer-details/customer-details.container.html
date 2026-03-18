@@ -1,0 +1,30 @@
+<ng-container *ngIf="{ 
+  companies: companies$ | async,
+  countries: countries$ | async,
+  states: states$ | async, 
+  zones: zones$ | async, 
+  areas: areas$ | async, 
+  suppliers: suppliers$ | async, 
+  locations: locations$ | async, 
+  documentTypes: documentTypes$ | async, 
+  customerPayTypes: customerPayTypes$ | async, 
+  customerCategories: customerCategories$ | async, 
+  entity: entity$ | async 
+} as data">
+  <div class="customer-details" *ngIf="data.entity">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'CustomerDetails.Title' | translate }} <small>{{ 'CustomerDetails.SubTitle' | translate
+        }}</small>
+    </h1>
+
+    <customer-form [entity]="data.entity" [companies]="data.companies ?? []" [countries]="data.countries ?? []"
+      [states]="data.states ?? []" [zones]="data.zones ?? []" [areas]="data.areas ?? []"
+      [suppliers]="data.suppliers ?? []" [locations]="data.locations ?? []" [documentTypes]="data.documentTypes ?? []"
+      [customerPayTypes]="data.customerPayTypes ?? []" [customerCategories]="data.customerCategories ?? []"
+      (onSave)="save($event)" (onGoBack)="goBack()" (onCompanyChange)="onCompanyChange($event)"
+      (onLoadZones)="onLoadZones($event)" (onLoadAreas)="onLoadAreas($event)"
+      (onLoadLocations)="onLoadLocations($event)" (onUpdateCustomer)="onUpdateCustomer($event)">
+    </customer-form>
+  </div>
+</ng-container>

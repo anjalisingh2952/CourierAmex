@@ -1,0 +1,191 @@
+<div class="package-details">
+    <shared-breadcrumb></shared-breadcrumb>
+    <h1 class="page-header">{{ 'PackageInventory.Title' | translate }} <small>{{ 'PackageInventory.SubTitle' |
+            translate
+            }}</small>
+    </h1>
+    <form class="package-form" #form="ngForm" autocomplete="off">
+        <div class="row mb-4">
+            <div class="col-12 ">
+                <div class="mb-12" *ngIf="!isGatewayUser">
+                    <ng-container *ngIf="companies$ | async as entities">
+                        <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' |
+                            translate }}</label>
+                        <select [(ngModel)]="selectedCompany" minValueValidator="1" class="form-select" name="companyId"
+                            required>
+                            <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                            <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                        </select>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <ng-container *ngIf="entities$ | async as countries">
+                    <label class="form-label" for="ManifestID">* {{ 'PackageInventory.Location' |
+                        translate }}</label>
+
+                    <select [(ngModel)]="selectedStore" (ngModelChange)="onChangeStore()" minValueValidator="1" class="form-select" name="storeId"
+                        required>
+                        <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                        <option [ngValue]=c.id *ngFor="let c of countries">{{ c.name }}</option>
+                    </select>
+
+
+                </ng-container>
+            </div>
+            <div class="col-md-6">
+                <ng-container *ngIf="entities$ | async as countries">
+                    <label class="form-label" for="ManifestID">* {{ 'PackageInventory.Package' |
+                        translate }}</label>
+
+                    <input type="text" [(ngModel)]="packageNumber"
+                        placeholder="{{'PackageInventory.PackagePlaceholder' | translate}}" class="form-control"
+                        name="packageNumber"  (keyup.enter)="OnPackageNumberChange()" required/>
+
+
+                </ng-container>
+            </div>
+        </div>
+    </form>
+    <div class="manifest-packages">
+    <p-tabView class="custom-tab-view" [(activeIndex)]="active"  (onChange)="onTabChange($event)">
+        <p-tabPanel header="Inventory">
+            
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-circle-info fa-lg fa-fw me-1"></i> Inventory List
+                            <span class="badge bg-primary ms-1">{{inventoryList.length}}</span>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-10" style="float:left" *ngIf="!loading">
+                            <p-table [loading]="loading" [scrollable]="true" scrollHeight="450px"
+                                styleClass="cl1 primeng-table p-datatable-sm small-table" #dt [value]="inventoryList"
+                                [(selection)]="selectedInventoryId" dataKey="id" [rowHover]="true" [rows]="10"
+                                [showCurrentPageReport]="true" [paginator]="false"
+                                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                                [filterDelay]="0" [globalFilterFields]="['customerCode','packageNumber']"
+                                selectionMode="single">
+                         
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <!-- <th style="min-width: 7rem">-Select-<p-tableHeaderCheckbox />({{selectedPackageId.length || 0}})
+                    </th> -->
+                                        <th pSortableColumn="customerCode" style="min-width: 8rem">
+                                            <div class="flex justify-content-between align-items-center">
+                                                Store
+                                                <!-- <p-columnFilter type="text" field="name" display="menu" class="ml-auto" /> -->
+                                            </div>
+                                        </th>
+                                        <th pSortableColumn="packageNumber" style="min-width: 8rem">
+                                            <div class="flex justify-content-between align-items-center">
+                                                User
+                                                <!-- <p-columnFilter type="text" field="country.name" display="menu" class="ml-auto" /> -->
+                                            </div>
+                                        </th>
+
+                                        <th>
+                                            <div class="flex justify-content-between align-items-center">
+                                                Package
+                                            </div>
+                                        </th>
+                                        <th style="min-width: 8rem">
+                                            <div class="flex justify-content-between align-items-center">
+                                                Customer
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="flex justify-content-between align-items-center">
+                                                Name
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="flex justify-content-between align-items-center">
+                                                Date
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-packagelist let-i="rowIndex">
+                                    <tr class="p-selectable-row row-{{i}}"
+                                        [ngClass]="{ 'selectedRow': selectedRow === i }"
+                                        (click)="onRowClick(packagelist,i)">
+                                        
+                                        <!-- <td>
+                      <p-tableCheckbox [value]="packagelist" />
+                    </td> -->
+                                        <td>
+                                            <span class="p-column-title">Store</span>
+                                            <span class="ml-1 vertical-align-middle">{{ packagelist.storeName
+                                                }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="p-column-title">User</span>
+                                            {{ packagelist.user }}
+                                        </td>
+                                        <td>
+                                            <span class="p-column-title">Package</span>
+                                            <span class="ml-1 vertical-align-middle">{{ packagelist.packageNumber }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="p-column-title">Customer</span>
+                                            <span class="ml-1 vertical-align-middle">{{ packagelist.customerAccount
+                                                }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="p-column-title">Name</span>
+                                            <span class="ml-1 vertical-align-middle">{{ packagelist.customerName }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="p-column-title">Date</span>
+                                            <span class="ml-1 vertical-align-middle">{{ packagelist.date |
+                                                date:'MM/dd/yyyy hh:mm a'}}</span>
+                                        </td>
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="8">No package found.</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+
+                        </div>
+                        <div class="col-md-2" style="float:left">
+                            <ul class="fa-ul">
+                                <li class="mt-2"><button class="btn btn-primary w-100" (click)="resendPackageNotification()">Send
+                                        Notification</button></li>
+                                <li class="mt-2"><button (click)="deleteEntity(1)"
+                                        class="btn btn-danger w-100">Delete</button>
+                                </li>
+                                <li class="mt-2"><button (click)="deleteEntity(2)" class="btn btn-danger w-100">Delete
+                                        All</button></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </p-tabPanel>
+        <p-tabPanel header="Report" (click)="getReport()">
+            <div *ngIf="pdfSrc; else noData" class="h-full w-full">
+                <iframe [src]="pdfSrc" class="w-full w-100 h-full border-0" style="height: 100vh;" title="Invoice PDF">
+                </iframe>
+              </div>
+              <div id="html-container" *ngIf="!pdfSrc"></div>
+              <ng-template #noData>
+                <div class="d-flex flex-column align-items-center justify-content-center py-4 ">
+                  <i class="fa-solid fa-file-invoice-dollar text-muted mb-2" style="font-size: 3rem;"></i>
+                  <label class="text-muted text-center form-label">
+                    <!-- {{ 'GenerateReport.NoReport' | translate }} -->
+                    <br>
+                    <!-- {{ 'GenerateReport.SelectDocument' | translate }} pending-invoices -->
+                  </label>
+                </div>
+              </ng-template>
+        </p-tabPanel>
+    </p-tabView>
+</div>
+
+</div>

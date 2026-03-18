@@ -1,0 +1,133 @@
+<form class="commodity-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" *ngIf="entity" autocomplete="off">
+  <input type="hidden" name="id" [ngModel]="entity.id" />
+
+  <div class="mb-3 d-md-flex fw-bold">
+    <div class="mt-md-0 mt-2">
+      <button type="submit" class="btn btn-link btn-sm text-decoration-none text-dark"
+        *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+        <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' |
+        translate }}</button>
+    </div>
+    <div class="ms-md-0 mt-md-0 mt-2">
+      <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="goBack()">
+        <i class="fa fa-arrow-left fa-lg me-2 text-dark"></i> {{ 'Labels.GoBack' |
+        translate }}</button>
+    </div>
+  </div>
+
+  <div class="panel panel-inverse">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <i class="fa fa-credit-card fa-lg fa-fw me-1"></i> {{ 'CommodityDetails.Info' |
+        translate }}
+      </h4>
+    </div>
+    <div class="panel-body">
+      <input type="hidden" name="companyId" #companyId [ngModel]="entity.companyId" *ngIf="!showCompanies" />
+      <div class="mb-3" *ngIf="showCompanies">
+        <label class="form-label" for="companyId">{{ 'DocumentTypeDetails.Company' | translate }}</label>
+        <select minValueValidator="1" class="form-select" name="companyId" [ngModel]="entity.companyId" #companyId="ngModel"
+          (ngModelChange)="companyChange($event)" [class.is-valid]="companyId.valid && companyId.touched"
+          [class.is-invalid]="companyId.invalid && companyId.touched" required [disabled]="entity.id > 0">
+          <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+          <option [ngValue]=c.id *ngFor="let c of companies;">{{ c.name }}</option>
+        </select>
+        <ng-container *ngIf="companyId.invalid && companyId.touched">
+          <div class="invalid-feedback" *ngIf="companyId.errors?.['required']">
+            {{ 'Labels.FieldRequired' | translate }}
+          </div>
+          <div class="invalid-feedback" *ngIf="companyId.errors?.['min']">
+            {{ 'Labels.FieldRequired' | translate }}
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="code">{{ 'Labels.Code' | translate }}</label>
+        <input type="text" class="form-control" name="code" [ngModel]="entity.code"
+          placeholder="{{ 'CommodityDetails.CodePlaceholder' | translate }}"
+          [class.is-valid]="code.valid && code.touched" [class.is-invalid]="code.invalid && code.touched"
+          #code="ngModel" maxlength="20" minlength="2" required commodityCodeValidator
+          [params]="{ id: entity.id, companyId: entity.companyId }" [disabled]="entity.id > 0">
+        <ng-container *ngIf="code.invalid && code.touched">
+          <div class="invalid-feedback" *ngIf="code.errors?.['required']">
+            {{ 'Labels.FieldRequired' | translate }}
+          </div>
+          <div class="invalid-feedback" *ngIf="code.errors?.['minlength']">
+            {{ 'Labels.FieldMinLength' | translate:{ min: 2 } }}
+          </div>
+          <div class="invalid-feedback" *ngIf="code.errors?.['company']">
+            {{ 'CommodityDetails.MissingCompany' | translate }}
+          </div>
+          <div class="invalid-feedback" *ngIf="code.errors?.['duplicate']">
+            {{ 'CommodityDetails.DuplicateCode' | translate }}
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="description">{{ 'Labels.Description' | translate }}</label>
+        <input type="text" class="form-control" name="description" [ngModel]="entity.description"
+          placeholder="{{ 'CommodityDetails.DescriptionPlaceholder' | translate }}"
+          [class.is-valid]="description.valid && description.touched"
+          [class.is-invalid]="description.invalid && description.touched" #description="ngModel" maxlength="100"
+          required>
+        <ng-container *ngIf="code.invalid && code.touched">
+          <div class="invalid-feedback" *ngIf="code.errors?.['required']">
+            {{ 'Labels.FieldRequired' | translate }}
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="row">
+        <div class="col-4">
+          <div class="mb-3">
+            <label class="form-label" for="customsDuty">{{ 'CommodityDetails.CustomsDuty' | translate }}</label>
+            <input type="number" class="form-control" name="customsDuty" [ngModel]="entity.customsDuty"
+              placeholder="{{ 'CommodityDetails.CustomsDutyPlaceholder' | translate }}"
+              [class.is-valid]="customsDuty.valid && customsDuty.touched"
+              [class.is-invalid]="customsDuty.invalid && customsDuty.touched" #customsDuty="ngModel">
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="mb-3">
+            <label class="form-label" for="customsGct">{{ 'CommodityDetails.CustomsGct' | translate }}</label>
+            <input type="number" class="form-control" name="customsGct" [ngModel]="entity.customsGct"
+              placeholder="{{ 'CommodityDetails.CustomsGctPlaceholder' | translate }}"
+              [class.is-valid]="customsGct.valid && customsGct.touched"
+              [class.is-invalid]="customsGct.invalid && customsGct.touched" #customsGct="ngModel">
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="mb-3">
+            <label class="form-label" for="customsFee">{{ 'CommodityDetails.CustomsFee' | translate }}</label>
+            <input type="number" class="form-control" name="customsFee" [ngModel]="entity.customsFee"
+              placeholder="{{ 'CommodityDetails.CustomsFeePlaceholder' | translate }}"
+              [class.is-valid]="customsFee.valid && customsFee.touched"
+              [class.is-invalid]="customsFee.invalid && customsFee.touched" #customsFee="ngModel">
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="status">{{ 'Labels.Status' | translate }}</label>
+        <select class="form-select" name="status" [ngModel]="entity.status" #status="ngModel"
+          [ngModelOptions]="{ updateOn: 'change' }" [class.is-valid]="status.valid && status.touched"
+          [class.is-invalid]="status.invalid && status.touched" required>
+          <option [ngValue]=null>{{ 'Labels.Select' | translate }}</option>
+          <option [ngValue]=1>{{ 'Status.Draft' | translate }}</option>
+          <option [ngValue]=2>{{ 'Status.Active' | translate }}</option>
+          <option [ngValue]=3>{{ 'Status.Inactive' | translate }}</option>
+        </select>
+        <ng-container *ngIf="status.invalid && status.touched">
+          <div class="invalid-feedback" *ngIf="status.errors?.['required']">
+            {{ 'Labels.FieldRequired' | translate }}
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+</form>

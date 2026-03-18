@@ -1,0 +1,27 @@
+body {
+    background-color: #f8f9fa; /* Light gray Bootstrap background */
+  }
+  .a4-container {
+    // width: 210mm;
+    min-height: auto;
+    background: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+.table th, .table td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    text-align: center;
+}
+
+.table th {
+    background-color: #343a40;
+    color: white;
+}
+
+
+
+.tr-bg-white{
+    background-color: white !important;
+    color: #343a40 !important;
+}

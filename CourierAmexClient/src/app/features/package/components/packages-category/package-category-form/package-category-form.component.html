@@ -1,0 +1,60 @@
+<div class="package-details" *ngIf="entity">
+  <ng-template #LOADER>
+    <ngx-skeleton-loader />
+  </ng-template>
+
+  <form class="package-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" autocomplete="off">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-inverse">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa fa-boxes fa-lg fa-fw me-1"></i> {{ 'PackageCategory.Info' | translate }}
+            </h4>
+          </div>
+
+          <div class="panel-body">
+            <div>
+              <div class="mb-2">
+                <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' | translate }}</label>
+                <select minValueValidator="1" class="form-select" [ngModel]="entity.companyId" #companyId="ngModel"
+                  [class.is-valid]="companyId.valid && companyId.touched" (ngModelChange)="companyChange($event)"
+                  [class.is-invalid]="companyId.invalid && companyId.touched" required>
+                  <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                  <option [ngValue]=c.id *ngFor="let c of companies">{{ c.name }}</option>
+                </select>
+                <ng-container>
+                  <div class="invalid-feedback">
+                    {{ 'Labels.FieldRequired' | translate }}
+                  </div>
+                </ng-container>
+              </div>
+
+
+              <div class="mb-2">
+                <label class="form-label" for="manifestId">* {{ 'Sidebar.Manifest' | translate }}</label>
+                <select minValueValidator="1" class="form-select" [ngModel]="entity.id" #manifestId="ngModel"
+                  [class.is-valid]="manifestId.valid && manifestId.touched" (ngModelChange)="manifestChange($event)"
+                  [class.is-invalid]="manifestId.invalid && manifestId.touched" required>
+                  <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                  <option [ngValue]=m.id *ngFor="let m of manifests">{{ m.manifestNumber }}</option>
+                </select>
+                <ng-container *ngIf="manifestId.invalid && manifestId.touched">
+                  <div class="invalid-feedback" *ngIf="manifestId.errors?.['required'] || manifestId.errors?.['min']">
+                    {{ 'Labels.FieldRequired' | translate }}
+                  </div>
+                </ng-container>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,54 @@
+<div>
+    <shared-breadcrumb></shared-breadcrumb>
+    <h1 class="page-header">
+        {{ 'InvoiceHistory.GenerateReport' | translate }}
+        <small>{{ 'GenerateReport.SubTitle' | translate }}</small>
+    </h1>
+</div>
+
+<div class="panel panel-inverse bg-white rounded-lg rounded">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <i class="fa-solid fa-file-invoice fa-lg fa-fw me-1"></i> {{ 'GenerateReport.GenerateReportHeader' |
+            translate }}
+        </h4>
+    </div>
+    <div class="items-center row panel-body mt-3 mb-3">
+        <div class="col-3">
+            <label for="invoiceNumber1" class="form-label block text-sm font-bold text-gray-700">* {{
+                'GenerateReport.InvoiceNumber'
+                | translate }}</label>
+            <input type="text" name="selectedId" #selectedId="ngModel" [(ngModel)]="selectedInvoiceId"
+                [class.is-valid]="selectedId.valid && selectedId.touched"
+                [class.is-invalid]="selectedId.invalid && selectedId.touched"
+                class="ms-4 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Enter Invoice Number" required (keydown.enter)="loadInvoice()" />
+        </div>
+        <div class="col-2 flex justify-end">
+            <button (click)="loadInvoice()"
+                class="border-0 w-full md:w-auto bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {{ 'GenerateReport.LoadDocument' | translate }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Full-Size PDF View -->
+<div class="flex-grow w-full h-full bg-white shadow-sm rounded">
+    <div *ngIf="pdfSrc; else noData" class="h-full w-full">
+        <iframe [src]="pdfSrc" class="w-full w-100 h-full border-0" style="height: 100vh;" title="Invoice PDF">
+        </iframe>
+    </div>
+    <div id="html-container" *ngIf="!pdfSrc"></div>
+    <ng-template #noData>
+        <div class="d-flex flex-column align-items-center justify-content-center py-4 ">
+            <i class="fa-solid fa-file-invoice-dollar text-muted mb-2" style="font-size: 3rem;"></i>
+            <label class="text-muted text-center form-label">
+                {{ 'GenerateReport.NoDocument' | translate }}
+                <br>
+                {{ 'GenerateReport.SelectDocument' | translate }}
+            </label>
+        </div>
+    </ng-template>
+
+</div>

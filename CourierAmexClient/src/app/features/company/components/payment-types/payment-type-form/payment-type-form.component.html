@@ -1,0 +1,78 @@
+<form class="payment-type-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" *ngIf="entity" autocomplete="off">
+    <input type="hidden" name="id" [ngModel]="entity.id" />
+  
+    <div class="mb-3 d-md-flex fw-bold">
+      <div class="mt-md-0 mt-2">
+        <button type="submit" class="btn btn-link btn-sm text-decoration-none text-dark"
+          *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+          <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' |
+          translate }}</button> 
+      </div>
+      <div class="ms-md-0 mt-md-0 mt-2">
+        <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="goBack()">
+          <i class="fa fa-arrow-left fa-lg me-2 text-dark"></i> {{ 'Labels.GoBack' |
+          translate }}</button>
+      </div>
+    </div>
+  
+    <div class="panel panel-inverse">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <i class="fa fa-credit-card fa-lg fa-fw me-1"></i> {{ 'PaymentTypeDetails.Info' |
+          translate }}
+        </h4>
+      </div>
+      <div class="panel-body">
+        <input type="hidden" name="companyId" [ngModel]="entity.companyId" *ngIf="!showCompanies" />
+        <div class="mb-3" *ngIf="showCompanies">
+          <label class="form-label" for="companyId">{{ 'PaymentTypeDetails.Company' | translate }}</label>
+          <select class="form-select" name="companyId" [ngModel]="entity.companyId" #companyId="ngModel"
+            [ngModelOptions]="{ updateOn: 'change' }" [class.is-valid]="companyId.valid && companyId.touched"
+            [class.is-invalid]="companyId.invalid && companyId.touched" required>
+            <option [ngValue]=undefined>{{ 'Labels.Select' | translate }}</option>
+            <option [ngValue]=c.id *ngFor="let c of companies;">{{ c.name }}</option>
+          </select>
+          <ng-container *ngIf="companyId.invalid && companyId.touched">
+            <div class="invalid-feedback" *ngIf="companyId.errors?.['required']">
+              {{ 'Labels.FieldRequired' | translate }}
+            </div>
+          </ng-container>
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label" for="name">{{ 'Labels.Name' | translate }}</label>
+          <input type="text" class="form-control" name="name" [ngModel]="entity.name"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            placeholder="{{ 'PaymentTypeDetails.NamePlaceholder' | translate }}"
+            [class.is-valid]="name.valid && name.touched" [class.is-invalid]="name.invalid && name.touched"
+            #name="ngModel" maxlength="255" minlength="2" required>
+          <ng-container *ngIf="name.invalid && name.touched">
+            <div class="invalid-feedback" *ngIf="name.errors?.['required']">
+              {{ 'Labels.FieldRequired' | translate }}
+            </div>
+            <div class="invalid-feedback" *ngIf="name.errors?.['minlength']">
+              {{ 'Labels.FieldMinLength' | translate:{ min: 2 } }}
+            </div>
+          </ng-container>
+        </div>
+  
+        <div class="mb-3">
+          <label class="form-label" for="status">{{ 'Labels.Status' | translate }}</label>
+          <select class="form-select" name="status" [ngModel]="entity.status" #status="ngModel"
+            [ngModelOptions]="{ updateOn: 'change' }" [class.is-valid]="status.valid && status.touched"
+            [class.is-invalid]="status.invalid && status.touched" required>
+            <option [ngValue]=null>{{ 'Labels.Select' | translate }}</option>
+            <option [ngValue]=1>{{ 'Status.Draft' | translate }}</option>
+            <option [ngValue]=2>{{ 'Status.Active' | translate }}</option>
+            <option [ngValue]=3>{{ 'Status.Inactive' | translate }}</option>
+          </select>
+          <ng-container *ngIf="status.invalid && status.touched">
+            <div class="invalid-feedback" *ngIf="status.errors?.['required']">
+              {{ 'Labels.FieldRequired' | translate }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  
+  </form>

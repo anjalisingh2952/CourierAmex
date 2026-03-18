@@ -1,0 +1,393 @@
+<div class="package-details pre-study">
+  <ng-container>
+    <shared-breadcrumb></shared-breadcrumb>
+    <h1 class="page-header">{{ 'CustomerService.Title' | translate }} <small>{{ 'CustomerService.SubTitle' |
+        translate
+        }}</small>
+    </h1>
+  </ng-container>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="col-md-12" *ngIf="closeCustomer">
+        <div class="panel panel-inverse" [ngClass]="{ 'panel-expand': expandCustomer }">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa fa-users fa-lg fa-fw me-1"></i> {{ 'CustomerService.Searchforcustomer' |
+              translate }}
+            </h4>
+            <div class="panel-heading-btn">
+              <button title="Expand/Compress" class="btn btn-xs btn-icon btn-default"
+                (click)="expandCustomer = !expandCustomer">
+                <i class="fa " [ngClass]="expandCustomer ? 'fa-compress' : 'fa-expand'"></i></button>
+              <button title="Reload" class="btn btn-xs btn-icon btn-success" (click)="resetCustmer()"><i
+                  class="fa fa-redo"></i></button>
+              <button title="Collapse/Expand" class="btn btn-xs btn-icon btn-warning"
+                (click)="collapsCustomer = !collapsCustomer">
+                <i class="fa" [ngClass]="collapsCustomer ? 'fa-minus' : 'fa-plus'"></i>
+              </button>
+              <button title="Remove" class="btn btn-xs btn-icon btn-danger" (click)="closeCustomer = !closeCustomer"><i
+                  class="fa fa-times"></i></button>
+            </div>
+          </div>
+          <div class="panel-body" *ngIf="collapsCustomer">
+            <div>
+              <input type="text" [(ngModel)]="customerSearch" class="form-control" placeholder="{{ 'CustomerService.CustomerPlaceholder' |
+            translate }}" (keyup.enter)="performSearch()">
+            </div>
+            <div class="lefttable customertable">
+              <ng-container *ngIf="customerSearch!=''">
+                <ng-container *ngIf="entities$ | async as customers">
+
+                  <p-table [loading]="loading" [scrollable]="true" scrollHeight="400px"
+                    styleClass="cl1 primeng-table p-datatable-sm small-table" #dt [value]="customers"
+                    [(selection)]="selectedPackageId" dataKey="id" [rowHover]="true" [showCurrentPageReport]="true"
+                    [paginator]="false" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [filterDelay]="0" [globalFilterFields]="['customerCode','packageNumber']" selectionMode="single">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th pSortableColumn="account">
+                          <div class="flex justify-content-between align-items-center">
+                            Account
+                          </div>
+                        </th>
+                        <th pSortableColumn="fullNames" style="min-width: 10rem;">
+                          <div class="flex justify-content-between align-items-center">
+                            Full Name
+                          </div>
+                        </th>
+
+                        <th style="min-width: 9rem;">
+                          <div class="flex justify-content-between align-items-center">
+                            Company Name
+                          </div>
+                        </th>
+                        <th style="min-width: 8rem">
+                          <div class="flex justify-content-between align-items-center">
+                            Phone
+                          </div>
+                        </th>
+                        <th>
+                          <div class="flex justify-content-between align-items-center">
+                            Email
+                          </div>
+                        </th>
+                        <th style="min-width: 8rem;">
+                          <div class="flex justify-content-between align-items-center">
+                            Identification Type
+                          </div>
+                        </th>
+                        <th style="min-width: 10rem;">
+                          <div class="flex justify-content-between align-items-center">
+                            Identification Number
+                          </div>
+                        </th>
+                        <th style="min-width: 8rem;">
+                          <div class="flex justify-content-between align-items-center">
+                            Pay Type
+                          </div>
+                        </th>
+
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-packagelist let-i="rowIndex">
+                      <tr class="p-selectable-row row-{{i}}" [ngClass]="{ 'selectedRow': selectedRow === i }"
+                        (click)="onCustomerRowClick(packagelist,i)">
+
+                        <td>
+                          <span class="p-column-title">Account</span>
+                          <span class="ml-1 vertical-align-middle">{{ packagelist.code }}</span>
+                        </td>
+                        <td>
+                          <span class="p-column-title">Full Name</span>
+                          {{ packagelist.fullName }}
+                        </td>
+                        <td>
+                          <span class="p-column-title">Company name</span>
+                          <span class="ml-1 vertical-align-middle">{{ packagelist.companyName }}</span>
+                        </td>
+                        <td>
+                          <span class="p-column-title">Phone</span>
+                          <span class="ml-1 vertical-align-middle">{{ packagelist.phone }}</span>
+                        </td>
+                        <td>
+                          <span class="p-column-title">email</span>
+                          <span class="ml-1 vertical-align-middle">{{ packagelist.email }}</span>
+                        </td>
+                        <td>
+                          <span class="p-column-title">identification Type</span>
+                          <span class="ml-1 vertical-align-middle">{{ packagelist.identificationType }}</span>
+                        </td>
+                        <td>
+                          <span class="p-column-title">identification</span>
+                          <span class="ml-1 vertical-align-middle">{{ packagelist.identification }}</span>
+                        </td>
+                        <td>
+                          <span class="p-column-title">Pay Type </span>
+                          <span class="ml-1 vertical-align-middle">{{ packagelist.customerPayTypeId }}</span>
+                        </td>
+
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="8">No package found.</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+
+                  <!---<app-entity-list [showHeader]="false" [activeSearch]="false"
+                [addLabel]="'Labels.New' | translate"  [state]="state" [hasPagination]="false"
+                [filterTemplate]="" [columns]="columns" [rows]="customers">
+              </app-entity-list>-->
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12" *ngIf="closePackage">
+        <div class="panel panel-inverse" [ngClass]="{ 'panel-expand': expandPackage }">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa fa-boxes-packing fa-lg fa-fw me-1"></i> {{ 'CustomerService.Searchforpackages' |
+              translate }}
+             <span class="badge bg-primary ms-1" title="Total packages"> {{totalRows}}</span>
+            </h4>
+            <div class="panel-heading-btn">
+              <button title="Expand/Compress" class="btn btn-xs btn-icon btn-default"
+                (click)="expandPackage = !expandPackage">
+                <i class="fa " [ngClass]="expandPackage ? 'fa-compress' : 'fa-expand'"></i></button>
+              <button title="Reload" class="btn btn-xs btn-icon btn-success" (click)="resetPackage()"><i
+                  class="fa fa-redo"></i></button>
+              <button title="Collapse/Expand" class="btn btn-xs btn-icon btn-warning"
+                (click)="collapsPackage = !collapsPackage">
+                <i class="fa" [ngClass]="collapsPackage ? 'fa-minus' : 'fa-plus'"></i>
+              </button>
+              <!-- <button class="btn btn-xs btn-icon btn-danger" (click)="closePackage = !closePackage"><i class="fa fa-times"></i></button> -->
+            </div>
+          </div>
+          <div class="panel-body" *ngIf="collapsPackage">
+            <div>
+              <input type="text" class="form-control" [(ngModel)]="searchPackage" placeholder="Search package"
+                (keyup.enter)="packperformSearch()">
+            </div>
+            <div class="packtable lefttable" *ngIf="searchPackage!=''">
+              <ng-container *ngIf="entitiesPack$ | async as entities">
+                <p-table [loading]="loading" [scrollable]="true" scrollHeight="400px"
+                  styleClass="cl1 primeng-table p-datatable-sm small-table" #dt [value]="entities"
+                  [(selection)]="selectedPackageId" dataKey="id" [rowHover]="true" [showCurrentPageReport]="true"
+                  [paginator]="false" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                  [filterDelay]="0" [globalFilterFields]="['customerCode','packageNumber']" selectionMode="single">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <!-- <th pSortableColumn="packageType" style="min-width: 8rem">
+                    <div class="flex justify-content-between align-items-center">
+                      Package Type
+                    </div>
+                  </th> -->
+                      <th pSortableColumn="packageNumber" style="min-width: 8rem">
+                        <div class="flex justify-content-between align-items-center">
+                          Package number
+                        </div>
+                      </th>
+
+                      <th style="min-width: 9rem;">
+                        <div class="flex justify-content-between align-items-center">
+                          Customer Account
+                        </div>
+                      </th>
+                      <th style="min-width: 13rem">
+                        <div class="flex justify-content-between align-items-center">
+                          Customer name
+                        </div>
+                      </th>
+                      <th style="min-width: 13rem;">
+                        <div class="flex justify-content-between align-items-center">
+                          Company Name
+                        </div>
+                      </th>
+                      <th>
+                        <div class="flex justify-content-between align-items-center">
+                          Zone
+                        </div>
+                      </th>
+                      <th>
+                        <div class="flex justify-content-between align-items-center">
+                          Description
+                        </div>
+                      </th>
+                      <th style="min-width: 7rem;">
+                        <div class="flex justify-content-between align-items-center">
+                          Courier Number
+                        </div>
+                      </th>
+                      <th style="min-width: 7rem;">
+                        <div class="flex justify-content-between align-items-center">
+                          Courier Name
+                        </div>
+                      </th>
+                      <th style="min-width: 8rem;">
+                        <div class="flex justify-content-between align-items-center">
+                          Origin
+                        </div>
+                      </th>
+                      <th>
+                        <div class="flex justify-content-between align-items-center">
+                          Weight
+                        </div>
+                      </th>
+                      <th>
+                        <div class="flex justify-content-between align-items-center">
+                          Price
+                        </div>
+                      </th>
+                      <th style="min-width: 8rem;">
+                        <div class="flex justify-content-between align-items-center">
+                          Volumetric Weight
+                        </div>
+                      </th>
+                      <!-- <th style="min-width: 6rem;">
+                    <div class="flex justify-content-between align-items-center">
+                      Created At
+                    </div>
+                  </th> -->
+                      <!-- <th style="min-width: 7rem;">
+                    <div class="flex justify-content-between align-items-center">
+                     Manifest Number
+                    </div>
+                  </th>
+                  <th style="min-width: 7rem;">
+                    <div class="flex justify-content-between align-items-center">
+                      Invoice Number
+                    </div>
+                  </th>
+                  <th style="min-width: 7rem;">
+                    <div class="flex justify-content-between align-items-center">
+                      Readmap Number
+                    </div>
+                  </th> -->
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-packagelist let-i="rowIndex">
+                    <tr class="p-selectable-row row-{{i}}" [ngClass]="{ 'selectedRow': selectedRow === i }"
+                      (click)="onRowClick(packagelist,i)">
+
+                      <!-- <td >
+                    <span class="p-column-title">Package Type</span>
+                    <span class="ml-1 vertical-align-middle">{{ packagelist.packageType }}</span>
+                  </td> -->
+                      <td>
+                        <span class="p-column-title">Package Number</span>
+                        {{ packagelist.number }}
+                      </td>
+                      <td>
+                        <span class="p-column-title">customer Code</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.customerCode }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">customer Name</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.customerName }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">companyName</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.companyName }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">Zone</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.zone }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">description</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.description }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">Courier Number</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.trackingNumber }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">Courier Name</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.courierName }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">origin</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.origin }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">Weight</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.weight }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">Price</span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.Price }}</span>
+                      </td>
+                      <td>
+                        <span class="p-column-title">volumetric Weight </span>
+                        <span class="ml-1 vertical-align-middle">{{ packagelist.volumetricWeight |
+                          number:'1.2-2'}}</span>
+                      </td>
+                      <!-- <td>
+                    <span class="p-column-title">Creation At</span>
+                    <span class="ml-1 vertical-align-middle">{{ packagelist.createdDate | date:'MM/dd/yyyy hh:mm a'
+                      }}</span>
+                  </td> -->
+
+                      <!-- <td>
+                    <span class="p-column-title">Manifest number</span>
+                    <span class="ml-1 vertical-align-middle">{{ packagelist.manifestNumber }}</span>
+                  </td>
+                  <td>
+                    <span class="p-column-title">Invoice Number </span>
+                    <span class="ml-1 vertical-align-middle">{{ packagelist.invoiceNumber }}</span>
+                  </td>
+                  <td>
+                    <span class="p-column-title">Roadmap Number</span>
+                    <span class="ml-1 vertical-align-middle">{{ packagelist.roadmapNumber }}</span>
+                  </td>
+                  -->
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="8">No package found.</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <!-- <app-entity-list [showHeader]="false" [activeSearch]="false"
+              [addLabel]="'Labels.New' | translate" [hasAdd]="false" [state]="state" [hasPagination]="false"
+              [filterTemplate]=""  [columns]="packcolumns" [rows]="entities" (select)="onSelect($event)">
+              </app-entity-list> -->
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="col-md-12">
+        <div class="panel panel-inverse" [ngClass]="{ 'panel-expand': expandPackageDetail }">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa fa-boxes-packing fa-lg fa-fw me-1"></i> {{ 'CustomerService.PackageInfo' |
+              translate }}
+              <span class="badge bg-primary ms-1" *ngIf="selectedPackage">Package Number: {{packageDetails?.number}}</span>
+            </h4>
+            <div class="panel-heading-btn">
+              <button title="Expand/Compress" class="btn btn-xs btn-icon btn-default"
+                (click)="expandPackageDetail = !expandPackageDetail">
+                <i class="fa " [ngClass]="expandPackageDetail ? 'fa-compress' : 'fa-expand'"></i></button>
+              <button title="Collapse/Expand" class="btn btn-xs btn-icon btn-warning"
+                (click)="collapsPackageDetail = !collapsPackageDetail">
+                <i class="fa" [ngClass]="collapsPackageDetail ? 'fa-minus' : 'fa-plus'"></i>
+              </button>
+            </div>
+          </div>
+          <div class="panel-body" *ngIf="collapsPackageDetail">
+            <ng-container *ngIf="packageDetails!=''">
+              <app-package-detail [entity]="packageDetails"></app-package-detail>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

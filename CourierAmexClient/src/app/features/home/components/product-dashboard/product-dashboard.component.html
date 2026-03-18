@@ -1,0 +1,148 @@
+<div class="row">
+  <div class="col-12 col-lg-3 mb-4">
+    <div class="p-3 rounded-3 border shadow-sm h-100">
+      <div class="p-1">
+        <h3 class="fw-bold mb-2 d-flex align-items-center">Product</h3>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fas fa-search"></i>
+          </span>
+          <input type="text" class="form-control" placeholder="Search product ID..." [(ngModel)]="productSearch">
+          <button class="btn btn-primary" type="button" (click)="search()">Search</button>
+        </div>
+      </div>
+      <div class="p-1">
+        <h3 class="fw-bold mb-2 d-flex align-items-center">Invoice</h3>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fas fa-search"></i>
+          </span>
+          <input type="text" class="form-control" placeholder="Search invoice ID..." [(ngModel)]="invoiceSearch">
+          <button class="btn btn-primary" type="button" (click)="search()">Search</button>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="fw-bold mb-2 align-items-center">Year</h3>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-outline-secondary btn-sm" (click)="scrollYears(-1)">←</button>
+          <div class="d-flex overflow-auto flex-nowrap w-100" #yearScroll>
+            <button *ngFor="let year of years" class="btn btn-outline-primary btn-sm me-2"
+              [class.active]="selectedYear.includes(year)" (click)="toggleYear(year)">
+              {{ year }}
+            </button>
+          </div>
+          <button class="btn btn-outline-secondary btn-sm" (click)="scrollYears(1)">→</button>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h6 class="fw-bold mb-2">Month</h6>
+        <div class="row row-cols-3 g-2">
+          <div class="col" *ngFor="let month of months">
+            <button class="btn btn-outline-secondary w-100 btn-sm" [class.active]="selectedMonths.includes(month)"
+              (click)="toggleMonth(month)">
+              {{ month }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+      </div>
+
+      <div>
+        <button class="form-control btn btn-primary" (click)="search()">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-9">
+    <div class="row">
+      <div class="row">
+        <div class="col-12 col-md-6 mb-3 p-2 border shadow-sm text-center"
+          style="max-height: 400px !important; overflow: scroll;">
+          <div class="m-2">
+            <h5>Status of Invoices</h5>
+            <canvas baseChart [data]="doughnutChartData" type="doughnut" [options]="doughnutChartOptions">
+            </canvas>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 mb-3 p-2 border shadow-sm text-center"
+          style="max-height: 400px !important; overflow-y: auto;">
+          <div class="m-2">
+            <h5>Distribution by Category</h5>
+            <div class="chart-container">
+              <ngx-charts-bar-horizontal-stacked [results]="chartData" [scheme]="colorScheme" [xAxis]="true"
+                [yAxis]="true" [legend]="true" [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisLabel]="'Value'"
+                [yAxisLabel]="'Category'" [animations]="true" [xAxisTickFormatting]="xAxisTickFormatting"
+                [view]="chartView" [barPadding]="barPadding">
+              </ngx-charts-bar-horizontal-stacked>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid mt-4">
+        <div class="row">
+          <!-- Table 1: totalFacturadoTableRef -->
+          <div class="col-md-6">
+            <table #totalFacturadoTableRef class="display nowrap table table-bordered table-sm" style="width:100%">
+              <thead class="table-dark">
+                <tr>
+                  <th>Product</th>
+                  <th class="text-end">Total Billed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data will be populated by DataTables -->
+              </tbody>
+              <tfoot>
+                <tr class="fw-bold">
+                  <td>Total</td>
+                  <td class="text-end"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <!-- Table 2: dataTable -->
+          <div class="col-md-6">
+            <table #dataTable class="display table table-bordered table-sm">
+              <thead class="table-dark">
+                <tr>
+                  <th>Invoice</th>
+                  <th>Product</th>
+                  <th>Amount</th>
+                  <th>Price</th>
+                  <th>Billed</th>
+                  <th>Client</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data will be populated by DataTables -->
+              </tbody>
+              <tfoot>
+                <tr class="fw-bold">
+                  <td colspan="2">Total</td>
+                  <td>{{totalCantidad}}</td>
+                  <td>{{totalPrecio | number:'1.2-2'}}</td>
+                  <td>{{totalFacturaFacturado | number:'1.2-2'}}</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+            <!-- Pagination Controls -->
+            <div class="d-flex justify-content-between m-3 mt-2">
+              <button class="btn btn-outline-primary btn-sm" (click)="prevPage()"
+                [disabled]="pageNumber === 1">Previous</button>
+              <span>Page {{ pageNumber }} of {{ totalRecords }}</span>
+              <button class="btn btn-outline-primary btn-sm" (click)="nextPage()"
+                [disabled]="pageNumber * pageSize >= totalRecords">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

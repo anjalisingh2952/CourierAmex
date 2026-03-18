@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .header {
+            text-align: left;
+            display:flex;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .info {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ddd;
+        }
+
+        .total {
+            font-weight: bold;
+            text-align: right;
+            padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="margin-left:20px;">
+            <h3 class="title">ROUTE SHEET</h3>
+            <h3 class="subtitle">Delivery / Shipment</h3>
+            <h3 class="subtitle">AMERICAN EXPORT</h3>
+        </div>
+    </div>
+
+    <div class="info">
+        <strong>Print Date:</strong> {{printDate}} &nbsp;&nbsp;&nbsp;
+        <strong>Print Time:</strong> {{printTime}}
+    </div>
+
+    <div class="table-container">
+        <table>
+            {{CustomerDetails}}
+        </table>
+    </div>
+
+</body>
+</html>

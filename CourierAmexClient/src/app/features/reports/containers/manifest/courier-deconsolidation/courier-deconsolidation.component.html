@@ -1,0 +1,77 @@
+<div class="package-details credit-pending">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'CourierDeconsolidation.Title' | translate }} <small>{{ 'CourierDeconsolidation.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">{{ 'CourierDeconsolidation.SubTitle' | translate }}</h4>
+        </div>
+        <div class="panel-body"> 
+            <div class="col-12">
+                <form #reportForm="ngForm" (ngSubmit)="generateReport(reportForm)">
+
+                <div class="col-md-3 float-left"  *ngIf="!isGatewayUser">
+                    <label class="block pt-2 form-label mb-0 col-md-3">* {{'CourierDeconsolidation.Company' | translate
+                    }}</label>
+                    <div class="input-group mb-10px">
+                        <ng-container *ngIf="companies$ | async as entities">
+                            <select #companySelect="ngModel"  (ngModelChange)="selectCompany($event)" [(ngModel)]="selectedCompany"
+                                minValueValidator="1" class="form-select" name="companyId"
+                                required [ngClass]="{'is-invalid': companySelect.invalid && companySelect.touched}"
+                                >
+                                <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                                <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="companySelect.invalid && companySelect.touched">
+                                {{ 'Labels.FieldRequired' | translate }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class=" col-md-2 float-left">
+                    <label class="block pt-2 form-label mb-0 col-md-3">*{{'CourierDeconsolidation.Manifest' | translate
+                    }}</label>
+                    <div class="input-group mb-10px">
+                        <ng-container *ngIf="closesManifest$ | async as entities">
+                            <select #manifestSelect="ngModel" [(ngModel)]="selectedManifest"
+                                minValueValidator="1" class="form-select" name="manifestNumber"
+                                required
+                                [ngClass]="{'is-invalid': manifestSelect.invalid && manifestSelect.touched}"
+                                >
+                                <option [ngValue]=0 disabled>{{ 'CourierDeconsolidation.SelectManifest' | translate }}</option>
+                                <option [ngValue]=c.id *ngFor="let c of entities">{{ c.manifestNumber }}</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="manifestSelect.invalid && manifestSelect.touched">
+                                {{ 'Labels.FieldRequired' | translate }}
+                            </div>
+                        </ng-container>
+                    </div>       
+                </div>
+                <div class="col-md-2 float-left">
+                    <label class="block pt-2 form-label mb-0 col-md-6">{{'CourierDeconsolidation.FreightPrice' | translate
+                    }}</label>
+                    <div class="input-group mb-10px">
+                     <input type="number" name="freightPriceN" class="form-control" [(ngModel)]="freightPrice" value=""> 
+                    </div>
+                </div>  
+                <div class="col-md-2 float-left mt-3">
+                    <label class="block pt-2 form-label mb-0 col-md-3"></label>
+                    <div class="input-group mb-10px">
+                    <input type="checkbox" name="categoryDN" class="form-check-input" [(ngModel)]="categoryD" value="Category D"> <label class="pl-5"> {{'CourierDeconsolidation.GroupByCategoryD' | translate}}</label>
+                    </div>
+                </div>       
+                
+                
+                  
+                <div class="col-md-2 float-left">
+                        <button type="submit" class="btn btn-primary mt-25px">{{'CreditPending.Report' | translate}}</button>
+                </div>
+                </form>
+            </div>
+        </div>
+      </div>
+</div>

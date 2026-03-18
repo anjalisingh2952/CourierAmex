@@ -1,0 +1,171 @@
+<div class="bg-white rounded panel panel-inverse">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <i class="fa-solid fa-circle-info fa-lg fa-fw me-1"></i> {{ 'InvoiceHistory.CustomerInfo'
+            |
+            translate }}
+    </h4>
+  </div>
+  <div class="row panel-body mt-2">
+    <div class="d-flex justify-content-between">
+
+      <div class="d-flex flex-1">
+        <label class="block w-25 text-sm form-label mb-1 align-self-center">{{'InvoiceHistory.Customer' |
+                    translate }}</label>
+        <input type="text" class="ms-2 w-75 border rounded px-3 py-2" [(ngModel)]="invoice.code"
+          placeholder="Customer ID" disabled>
+      </div>
+
+      <div class="d-flex flex-1">
+        <label class="w-25 ms-2 block justify-center form-label mb-1 align-self-center">{{'InvoiceHistory.CustomerName'
+                    |
+                    translate }}</label>
+        <input type="text" class="w-75 border rounded py-2 px-3 ng-untouched ng-pristine" [(ngModel)]="invoice.fullName"
+          placeholder="Customer Name" disabled>
+      </div>
+    </div>
+
+    <div class="col-5">
+      <div class="row mt-4 flex items-center">
+        <label class="block pt-2 form-label mb-2 col-3">{{'InvoiceHistory.BalanceInLocal' | translate
+                    }}</label>
+        <input type="text" [value]="balanceLocal | number:'1.2-2'" class="border rounded px-3 py-2 col-9"
+          placeholder="Balance" readonly />
+
+      </div>
+
+      <div class="mt-4">
+        <div class="flex items-center row">
+          <label class="block pt-2 form-label mb-1 col-3">{{'InvoiceHistory.From' | translate
+                        }}</label>
+          <input type="date" class="border rounded px-3 py-2 col-9" [(ngModel)]="filterData.fromDate">
+        </div>
+        <div class="flex items-center mt-4 row">
+          <label class="block pt-2 form-label mb-1 col-3">{{'InvoiceHistory.To' | translate
+                        }}</label>
+          <input type="date" class="w-[70%] border rounded px-3 py-2 col-9 " [(ngModel)]="filterData.toDate">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-7">
+      <div class="row">
+        <div class="col-6 d-flex flex-column">
+          <div class="mt-4 border rounded p-3">
+            <div class="form-check mb-2">
+              <input type="checkbox" class="form-check-input" id="factura"
+                (change)="updateSelectedOptions($event, 'Factura')">
+              <label class="form-check-label form-label" for="factura">{{'InvoiceHistory.Invoice' |
+                                translate
+                                }}</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" [checked]="selectedOptionsString.includes('Pago')"
+                id="pago" (change)="updateSelectedOptions($event, 'Pago')">
+              <label class="form-check-label form-label" for="pago">{{'InvoiceHistory.Payment' | translate
+                                }}</label>
+            </div>
+          </div>
+
+          <div class="mt-2 row">
+            <div class="col-12">
+              <button class="btn btn-primary text-white rounded w-100"
+                (click)="filterRecords()">{{'InvoiceHistory.Filter' | translate }}</button>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-primary text-white rounded w-100 mt-2"
+                (click)="generateInvoice()">{{'InvoiceHistory.GenerateReport' | translate }}</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="mt-4">
+            <button class="btn btn-primary w-100 mb-2 " (click)="cancelInvoice()">{{'InvoiceHistory.CancelInvoice' | translate
+                            }}</button>
+            <button class="btn btn-primary w-100 mb-2" (click)="CancelPayment()">{{'InvoiceHistory.CancelPayment' | translate
+                            }}</button>
+            <button class="btn btn-primary w-100 mb-2">{{'InvoiceHistory.CancelCredit' | translate
+                            }}</button>
+            <button (click)="openModal(openModalRef)" class="btn btn-primary w-100">{{'InvoiceHistory.PrintPaymenyAdel' | translate
+                            }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  <div class="bg-white rounded panel panel-inverse">
+
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <i class="fa-regular fa-credit-card fa-lg fa-fw me-1"></i> {{ 'InvoiceHistory.PaymentsInvoicesSubTitle'
+                |
+                translate }}
+      </h4>
+    </div>
+    <div class="panel-body" style="overflow-y:scroll; max-height: 350px;">
+      <ng-container *ngIf="entities$ | async as entities">
+        <app-entity-list [title]="'Packages.Title' | translate" [state]="state" [columns]="columns"
+          [hasPagination]="false" [pagination]="pagination" [activeSearch]="false" [showHeader]="false"
+          [rows]="entities">
+        </app-entity-list>
+      </ng-container>
+      <ng-template #actionTemplate let-params="params">
+        <!-- Make the ID dynamic based on the row ID -->
+        <input type="checkbox" class="form-check-input me-2" [id]="'factura-' + params.row.id"
+          [(ngModel)]="params.row.selected" (change)="onCheckboxChange(params.row)">
+
+        <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"
+          (click)="viewEntity(params.row)"></i>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #openModalRef>
+  <div class="modal-content">
+    <div class="modal-header border-0">
+      <h5 class="modal-title">{{ 'Payment.SelectForIP' | translate }}</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="totalDollar" class="form-label">{{ 'Payment.SelectCashier' | translate }}</label>
+        <select (change)="onChangeOfCashier($event)" [value]="selectedCashierId" class="form-control">
+          <option [value]="''" selected hidden>--select--</option>
+          <option *ngFor="let cashier of cashierList" [value]="cashier.id">
+            {{ cashier.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="modal-footer border-0">
+        <button class="btn btn-primary" (click)="sendToPrinter()">{{ 'Payment.SendForPrinting' | translate }}</button>
+        <button class="btn btn-secondary" (click)="closeModal()">{{ 'Close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.status">
+    <ng-container *ngSwitchCase="0">
+      <span *ngIf="params.row.documentType === 'PAGO' || params.row.documentType === 'ADELANTO'; else pendingStatus"
+        class="badge bg-success text-white">
+        {{ 'Status.PAID' | translate }}
+      </span>
+      <ng-template #pendingStatus>
+        <span class="badge bg-warning text-white">{{ 'Status.PENDING' | translate }}</span>
+      </ng-template>
+    </ng-container>
+    <span *ngSwitchCase="1" class="badge bg-danger text-white">{{ 'Status.CANCELLED' | translate }}</span>
+    <span *ngSwitchCase="2" class="badge bg-success text-white">{{ 'Status.PAID' | translate }}</span>
+    <span *ngSwitchCase="3" class="badge bg-secondary text-white">{{ 'Status.PENDINGCREDIT' | translate }}</span>
+    <span *ngSwitchDefault class="badge bg-info text-white">{{ 'Manifests.Unknown' | translate }}</span>
+  </ng-container>
+</ng-template>

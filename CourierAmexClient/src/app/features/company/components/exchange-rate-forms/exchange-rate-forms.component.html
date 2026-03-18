@@ -1,0 +1,140 @@
+<form class="document-pay-type-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" *ngIf="document" autocomplete="off">
+    <input type="hidden" name="id" [ngModel]="document.id" />
+
+    <div class="mb-3 d-md-flex fw-bold">
+        <div class="mt-md-0 mt-2">
+            <button type="submit" class="btn btn-link btn-sm text-decoration-none text-dark"
+                *ngIf="(hasAdd && document.id === 0) || (hasUpdate && document.id > 0)">
+                <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' |
+                translate }}</button>
+        </div>
+        <div class="ms-md-0 mt-md-0 mt-2">
+            <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="goBack()">
+                <i class="fa fa-arrow-left fa-lg me-2 text-dark"></i> {{ 'Labels.GoBack' |
+                translate }}</button>
+        </div>
+    </div>
+
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <i class="fa fa-id-card fa-lg fa-fw me-1"></i> {{ 'ExchangeRateList.Info' |
+                translate }}
+            </h4>
+        </div>
+        <div class="panel-body">
+            <input type="hidden" name="companyId" [ngModel]="document.companyId" *ngIf="!showCompanies" />
+            <div class="col-md-4 float-left" *ngIf="showCompanies">
+                <label class="form-label" for="companyId">{{ 'DocumentPayTypeDetails.CompanyName' | translate }}</label>
+                <select class="form-select" name="companyId" (ngModelChange)="companyChange($event)"
+                    [ngModel]="document.companyId" #companyId="ngModel" [ngModelOptions]="{ updateOn: 'change' }"
+                    [class.is-valid]="companyId.valid && companyId.touched"
+                    [class.is-invalid]="companyId.invalid && companyId.touched" required [disabled]="disabledFields">
+                    <option [ngValue]=undefined>{{ 'Labels.Select' | translate }}</option>
+                    <option [ngValue]=c.id *ngFor="let c of companies;">{{ c.name }}</option>
+                </select>
+                <ng-container *ngIf="companyId.invalid && companyId.touched">
+                    <div class="invalid-feedback" *ngIf="companyId.errors?.['required']">
+                        {{ 'Labels.FieldRequired' | translate }}
+                    </div>
+                </ng-container>
+            </div>
+            <div class="col-md-4 float-left">
+                <label class="block pt-2 form-label mb-0 col-md-6">*{{'ExchangeRateList.Date' | translate
+                    }}</label>
+                <div class="input-group">
+                    <input required #dateInputTo #dateInputToval="ngModel" type="date" name="endDateTo"
+                        [(ngModel)]="date" class="form-control"
+                        [ngClass]="{'is-invalid': dateInputToval.invalid && dateInputToval.touched}" />
+                    <span class="input-group-text" (click)="openDatePickerTo()">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+                <div class="invalid-feedback" *ngIf="dateInputToval.invalid && dateInputToval.touched">
+                    {{ 'Labels.FieldRequired' | translate }}
+                </div>
+            </div>
+            <div class="col-md-4 float-left">
+                <label class="form-label" for="currencyCode">* {{ 'DocumentPayTypeDetails.Currency' | translate
+                    }}</label>
+                <select minValueValidator="1" class="form-select" name="currencyCode" [ngModel]="document.currencyCode"
+                    #currencyCode="ngModel" [class.is-valid]="currencyCode.valid && currencyCode.touched"
+                    [class.is-invalid]="currencyCode.invalid && currencyCode.touched" required>
+                    <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                    <option [ngValue]=c.id *ngFor="let c of currencies"  
+                    [disabled]="c.id !== 840">{{ c.name }}</option>
+                </select>
+                <ng-container *ngIf="currencyCode.invalid && currencyCode.touched">
+                    <div class="invalid-feedback"
+                        *ngIf="currencyCode.errors?.['required'] || currencyCode.errors?.['min']">
+                        {{ 'Labels.FieldRequired' | translate }}
+                    </div>
+                </ng-container>
+            </div>
+
+
+            <div class="col-md-12">
+                <div class="input-group">
+                    <input   [disabled]="selectedcompanyId !== 2" type="checkbox" name="manual" class="form-check-input" [(ngModel)]="manualRate"> 
+                    <label> Add  Manually</label>
+                </div>
+            </div>
+            <div class="col-md-12 mt-2">
+                <div class="panel panel-inverse" *ngIf="manualRate ">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-money-check-dollar fa-lg fa-fw me-1"></i> {{
+                            'ExchangeRateList.AddManualRate' | translate }}
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-6 float-left">
+                            <label class="block pt-2 form-label mb-0 col-md-6"> {{ 'ExchangeRateList.PurchaseValue' |
+                                translate }}</label>
+                            <div class="input-group">
+                                <input type="text" name="purchaseRate" class="form-control" [(ngModel)]="purchaseRate">
+                            </div>
+                        </div>
+                        <div class="col-md-6 float-left">
+                            <label class="block pt-2 form-label mb-0 col-md-6">{{ 'ExchangeRateList.SaleValue' |
+                                translate }}</label>
+                            <div class="input-group">
+                                <input type="text" name="saleRate" class="form-control" [(ngModel)]="saleRate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-inverse" *ngIf="!manualRate && selectedcompanyId==2">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-money-check-dollar fa-lg fa-fw me-1"></i> {{
+                            'ExchangeRateList.AutoExchangeRate' | translate }}
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+
+                        <p-table [value]="TodayExchangeRateList" [tableStyle]="{ 'min-width': '50rem' }">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Purchase Value</th>
+                                    <th>Sale Value</th>
+                                    <th>Date</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-values>
+                                <input type="hidden" name="purchaseRate"  [(ngModel)]="values.PurchaseValue">
+                                <input type="hidden" name="saleRate" [(ngModel)]="values.SaleValue">
+                                <tr>
+                                    <td>{{ values.PurchaseValue }}</td>
+                                    <td>{{ values.SaleValue }}</td>
+                                    <td>{{ values.Date | date:'MM/dd/yyyy hh:mm a' }}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

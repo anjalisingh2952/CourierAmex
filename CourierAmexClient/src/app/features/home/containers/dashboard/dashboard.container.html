@@ -1,0 +1,22 @@
+<shared-breadcrumb></shared-breadcrumb>
+
+<h1 class="page-header mb-3">Dashboard
+  <div class="row">
+    <div class="col-xl-4 col-lg-6">
+      <div class="btn-group text-nowrap">
+        <button class="btn btn-secondary text-nowrap" (click)="showDashboard('B')">Show Invoices/Payments
+          Dashboard</button>
+        <button class="btn btn-primary text-nowrap" (click)="showDashboard('A')">Show Product Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+</h1>
+
+<div class="mt-1 bg-white">
+  <app-product-dashboard *ngIf="activeDashboard === 'A'"></app-product-dashboard>
+</div>
+
+<div class="mt-1 bg-white">
+  <app-invoices-payments-dashboard *ngIf="activeDashboard === 'B'"></app-invoices-payments-dashboard>
+</div>

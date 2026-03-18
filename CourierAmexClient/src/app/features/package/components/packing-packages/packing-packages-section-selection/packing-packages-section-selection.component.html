@@ -1,0 +1,116 @@
+<div class="package-form row">
+  <div class="col-4" *ngIf="!isManifestConsolidatedType">
+    <div class="row align-items-center mt-3 mb-4">
+      <div class="col-2 form-label">
+        {{'PackageStatusDetails.ReferenceLable' | translate}}
+      </div>
+      <div class="col-auto flex-grow-1">
+        <input type="text" class="form-control form-label" (change)="setReference()" [(ngModel)]="reference" name="reference"
+          placeholder="Reference" [disabled]="isClicked">
+      </div>
+      <div class="col-auto">
+        <button type="button" (click)="startPackaging(false)" class="btn btn-primary btn-sm">
+          {{ 'PackageStatusDetails.StartPackaging' | translate }}
+        </button>
+      </div>
+    </div>
+    <div *ngIf="componentType !== 'Aeropost'" class="row align-items-center">
+      <div class="col-2">
+        <label class="form-label" for="categorySelect">{{'PackageStatusDetails.CategoryLable' | translate}}</label>
+      </div>
+      <div class="col-auto flex-grow-1">
+        <select (change)="changeCategory()" [(ngModel)]="categorySelect" class="form-select w-10" id="categorySelect"
+          [disabled]="isClicked">
+          <option value="" selected hidden>-Select-</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        </select>
+      </div>
+      <div class="col-4"></div>
+    </div>
+  </div>
+  <div class="package-form col-4" *ngIf="isManifestConsolidatedType">
+    <div class="d-flex align-items-center mb-2">
+      <div class="form-check me-4">
+        <input class="form-check-input " type="radio" name="operationType" [value]="0" id="paletteRadio"
+          (change)="onTypeChange($event)" [checked]="true" [disabled]="isClicked" aria-selected="true" />
+        <label class="form-check-label form-label" for="paletteRadio">
+          {{ 'PackageStatusDetails.PaletteLable' | translate }}
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="operationType" [value]="1" id="individualRadio"
+          (change)="onTypeChange($event)" [disabled]="isClicked" />
+        <label class="form-check-label form-label" for="individualRadio">
+          {{ 'PackageStatusDetails.IndividualLable' | translate }}
+        </label>
+      </div>
+      <input type="hidden" name="companyId" aria-hidden="true" />
+    </div>
+    <div class="mt-3 mb-2">
+      <div class="form-label">{{'PackageStatusDetails.PaletteLable' |
+              translate}}:</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <input [disabled]="isIndividualRadio || isClicked" [(ngModel)]="pallet" (change)="onChangePallet()"
+          type="number" class="form-control" placeholder="Enter Palette number" />
+      </div>
+      <div class="col-12 col-md-6">
+        <button type="button" class="btn btn-primary btn-sm w-10" (click)="startPackaging(true)">{{'PackageStatusDetails.StartPackaging' |
+                  translate}}</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <div class="container">
+      <ng-container>
+        <div class="row">
+          <div class="row col-md-8">
+            <div>
+              <label class="form-label fw-bold">Total Volumetric Weight</label>
+              <div class="">
+                <div class="row align-items-top">
+                  <div class="col-md-3">
+                    <label class="form-label">Width (in)</label>
+                    <input type="number" class="form-control" [(ngModel)]="ancho" [disabled]="isPackageList"
+                      (ngModelChange)="calcularPesoVolumetrico()" placeholder="0">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Height (in)</label>
+                    <input type="number" class="form-control" [(ngModel)]="alto" [disabled]="isPackageList"
+                      (ngModelChange)="calcularPesoVolumetrico()" placeholder="0">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Length (in)</label>
+                    <input type="number" class="form-control" [(ngModel)]="largo" [disabled]="isPackageList"
+                      (ngModelChange)="calcularPesoVolumetrico()" placeholder="0">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Volumetric W.</label>
+                    <div class="fw-bold mt-2">{{ actualVolumeWeight | number:'1.2-2' }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Total Real Weight</label>
+            <div class="">
+              <div class="mb-2">
+                <label class="form-label">Weight</label>
+                <input type="number" class="form-control" [(ngModel)]="peso" placeholder="0" [disabled]="isPackageList">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1 d-flex align-items-center">
+            <button class="btn btn-primary btn-sm" (click)="savePackageDetailsOnUpdate()" [disabled]="isPackageList">Save</button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

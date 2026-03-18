@@ -1,0 +1,51 @@
+<div class="package-details pre-study">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'ManifestReportByBag.Title' | translate }} <small>{{ 'ManifestReportByBag.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+    <form class="package-form" #reportForm="ngForm" autocomplete="off"  (ngSubmit)="exportToExcel(reportForm)">
+        <div class="row mb-4">
+            <div class="col-12 ">
+                <div class="mb-12" *ngIf="!isGatewayUser">
+                    <ng-container *ngIf="companies$ | async as entities">
+                        <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' |
+                            translate }}</label>
+                        <select  #CompanyInputFromval="ngModel" [(ngModel)]="selectedCompany" minValueValidator="1" class="form-select" name="companyId"
+                        [ngClass]="{ 'is-invalid': CompanyInputFromval.invalid && CompanyInputFromval.touched }"
+                        required>
+                            <option [ngValue]=0 disabled>{{ 'Labels.Select' | translate }}</option>
+                            <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                        </select>
+                        <div class="invalid-feedback"
+                            *ngIf="CompanyInputFromval.invalid && CompanyInputFromval.touched">
+                            {{ 'Labels.FieldRequired' | translate }}
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="col-12 ">
+                <div class="mb-12">
+                    <ng-container *ngIf="companies$ | async as entities">
+                        <label class="form-label" for="ManifestID">* {{ 'ManifestDetails.NumberPlaceholder' |
+                            translate }}</label>
+                        <input #manifestInputFromval="ngModel" type="text" [(ngModel)]="selectedManifestNumber"
+                            [placeholder]="'ManifestDetails.NumberPlaceholder' | translate" class="form-control"
+                            name="SelectedManifest" (keyup.enter)="exportToExcel()"
+                            [ngClass]="{ 'is-invalid': manifestInputFromval.invalid && manifestInputFromval.touched }"
+                            required>
+                        <div class="invalid-feedback"
+                            *ngIf="manifestInputFromval.invalid && manifestInputFromval.touched">
+                            {{ 'Labels.FieldRequired' | translate }}
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="w-auto mt-2">
+                <button class="btn btn-primary" type="submit">Genrate Report</button>
+            </div>
+        </div>
+    </form>
+</div>

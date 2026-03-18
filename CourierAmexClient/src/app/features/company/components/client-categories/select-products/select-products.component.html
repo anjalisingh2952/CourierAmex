@@ -1,0 +1,38 @@
+<form class="select-products" #form="ngForm" autocomplete="off">
+  <div class="panel panel-inverse">
+    <div class="panel-heading">
+      <h4 class="panel-title"><i class="fa fa-boxes-stacked fa-lg fa-fw me-1"></i> {{
+        'ClientCategoryDetails.Products' | translate }}</h4>
+    </div>
+    <div class="panel-body">
+      <ul class="list-group mb-4 overflow-auto" [class.h500px]="products.length > 0">
+        <li class="list-group-item" *ngIf="products.length === 0">
+          {{ 'ClientCategoryDetails.NoProducts' | translate }}
+        </li>
+        <li class="list-group-item" *ngFor="let item of products; let idx = index" ngModelGroup="products"
+          #group="ngModelGroup">
+          <ng-container ngModelGroup="{{idx}}">
+            <input type="hidden" [ngModel]="item.id" name="id" />
+            <input type="hidden" [ngModel]="item.name" name="name" />
+            <input type="hidden" [ngModel]="item.companyId" name="companyId" />
+            <input class="form-check-input me-1" type="checkbox" name="isSelected" [ngModel]="item.isSelected"
+              [checked]="item.isSelected">
+            {{ item.name }}
+          </ng-container>
+        </li>
+      </ul>
+      <div class="row">
+        <div class="col-6 text-center">
+          <button type="button" class="btn btn-primary btn-sm" (click)="submit(form)">
+            <i class="fa fa-check fa-lg me-2"></i> {{ 'Labels.Submit' |
+            translate }}</button>
+        </div>
+        <div class="col-6 text-center">
+          <button type="button" class="btn btn-default btn-sm text-decoration-none text-dark" (click)="close()">
+            <i class="fa fa-ban fa-lg me-2 text-dark"></i> {{ 'Labels.Cancel' |
+            translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

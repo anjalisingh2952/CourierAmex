@@ -1,0 +1,84 @@
+<ng-container *ngIf="entities$ | async as entities">
+    <app-entity-list [title]="'PackageClassify.Title' | translate" [subTitle]="'PackageClassify.SubTitle' | translate"
+        [filterTemplate]="filterTemplate" [state]="state" [columns]="columns" [rows]="entities" [hasPagination]="false"
+        (stateChange)="onStateChange($event)">
+        <div class="mb-3 d-md-flex fw-bold">
+            <div class="mt-md-0 mt-2">
+              <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="copyValues()">
+                <i class="fa fa-plus fa-lg me-1 text-dark"></i>
+                {{ 'PackageClassify.CopyValues' | translate }}
+              </button>
+              &nbsp;
+              <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="copyAllValues()">
+                <i class="fa fa-plus fa-lg me-1 text-dark"></i>
+                {{ 'PackageClassify.CopyAllValues' | translate }}
+              </button>
+              &nbsp;
+              <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark"
+              (click)="saveChanges()">
+                <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' | translate }}</button>
+                &nbsp;({{entities.length}})
+            </div>
+        </div>
+    </app-entity-list>
+</ng-container>
+
+<ng-template #filterTemplate>
+    <ng-container *ngIf="companies$ | async as entities">
+        <shared-dropdown [entities]="entities" [selectedEntity]="entities[0] || undefined"
+            (onSelectEntity)="selectCompany($event)" *ngIf="showCompanies"></shared-dropdown>
+    </ng-container>
+</ng-template>
+
+<ng-template #shipTypeCellTemplate let-params="params">
+    <ng-container *ngIf="!params.row.isEdit">
+        {{params.row.shipTypeLabel}}&nbsp;
+        <i class="fa fa-pencil text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}" (click)="enterEditMode(params.row)"></i>
+    </ng-container>
+    <ng-container *ngIf="params.row.isEdit">
+        <select name="shipType" 
+                [ngModel]="params.row.shipType"
+                #shipType="ngModel" 
+                (ngModelChange)="shipTypeChange(params.row, $event)">
+            <option [ngValue]=-1>{{ 'Labels.Select' | translate }}</option>
+            <option [ngValue]=1>{{ 'ManifestDetails.ShipByAir' | translate }}</option>
+            <option [ngValue]=0>{{ 'ManifestDetails.ShipBySea' | translate }}</option>
+        </select>
+    </ng-container>
+</ng-template>
+
+<ng-template #typeCellTemplate let-params="params">
+  <ng-container *ngIf="!params.row.isEdit">
+        {{params.row.issueTypeLabel}}&nbsp;
+      <i class="fa fa-pencil text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}" (click)="enterEditMode(params.row)"></i>
+  </ng-container>
+  <ng-container *ngIf="params.row.isEdit && params.row.shipType !== -1">
+      <select name="issueTypeId" 
+              [ngModel]="params.row.issueTypeId"
+              #shipType="ngModel" 
+              (ngModelChange)="typeChange(params.row, $event)">
+              <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+              <ng-container *ngIf="shippingWays$ | async as shippingWays">
+                <option [ngValue]=p.id *ngFor="let p of shippingWays">{{ p.name }}</option>
+              </ng-container>
+      </select>
+  </ng-container>
+</ng-template>
+
+<ng-template #manifestCellTemplate let-params="params">
+    <ng-container *ngIf="!params.row.isEdit">
+        {{params.row.manifestLabel}}&nbsp;
+        <i class="fa fa-pencil text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}" (click)="enterEditMode(params.row)"></i>
+    </ng-container>
+    <ng-container *ngIf="params.row.isEdit && params.row.shipType !== -1">
+        <select name="manifiestId" 
+                [ngModel]="params.row.manifiestId"
+                #shipType="ngModel" 
+                (ngModelChange)="manifestChange(params.row, $event)">
+                <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                <ng-container *ngIf="manifiests$ | async as manifiests">
+                  <option [ngValue]=p.id *ngFor="let p of manifiests">{{ p.manifestNumber }}</option>
+                </ng-container>
+        </select>
+    </ng-container>
+</ng-template>

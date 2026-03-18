@@ -1,0 +1,13 @@
+<div class="commodity-details" *ngIf="{ entity: entity$ | async, companies: companies$ | async } as data">
+  <ng-container *ngIf="data.entity && data.companies">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'CommodityDetails.Title' | translate }} <small>{{ 'CommodityDetails.SubTitle'
+        | translate }}</small>
+    </h1>
+
+    <commodity-form [entity]="data.entity" [companies]="data.companies" (onSave)="save($event)" (onCompanyChange)="onCompanyChange($event)"
+      (onGoBack)="goBack()"></commodity-form>
+
+  </ng-container>
+</div>

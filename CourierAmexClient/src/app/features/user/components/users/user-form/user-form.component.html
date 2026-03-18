@@ -1,0 +1,381 @@
+<form class="user-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" *ngIf="entity" autocomplete="off">
+  <input type="hidden" name="id" [ngModel]="entity.id" />
+
+  <div class="mb-3 d-md-flex fw-bold">
+    <div class="mt-md-0 mt-2">
+      <button type="submit" class="btn btn-link btn-sm text-decoration-none text-dark" [disabled]="!form.valid"
+        *ngIf="(hasAdd && entity.id === '') || (hasUpdate && entity.id.length > 0)">
+        <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' |
+        translate }}</button>
+    </div>
+    <div class="ms-md-0 mt-md-0 mt-2 dropdown" ngbDropdown *ngIf="(hasUpdate && entity.id.length > 0)">
+      <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark dropdown-toggle"
+        ngbDropdownToggle>
+        <i class="fa fa-cog fa-lg me-2 text-dark"></i> {{ 'Labels.MoreActions' |
+        translate }} <b class="caret"></b></button>
+      <div class="dropdown-menu" ngbDropdownMenu>
+        <a class="dropdown-item" href="javascript:;" (click)="createPassword()" *ngIf="entity.email.length === 0">{{
+          'UserDetails.CreatePassword' |
+          translate }}</a>
+        <a class="dropdown-item" href="javascript:;" (click)="resetPassword()" *ngIf="entity.email.length > 0">{{
+          'UserDetails.ResetPassword' |
+          translate }}</a>
+      </div>
+    </div>
+    <div class="ms-md-0 mt-md-0 mt-2">
+      <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="goBack()">
+        <i class="fa fa-arrow-left fa-lg me-2 text-dark"></i> {{ 'Labels.GoBack' |
+        translate }}</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-user fa-lg fa-fw me-1"></i> {{ 'UserDetails.Info' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="mb-2">
+            <div class="row">
+              <div class="col-6">
+                <label class="form-label" for="name">* {{ 'UserDetails.Firstname' | translate }}</label>
+                <input type="text" class="form-control" name="name" [ngModel]="entity.name"
+                  [ngModelOptions]="{ updateOn: 'blur' }" (ngModelChange)="updateUser(form)"
+                  placeholder="{{ 'UserDetails.FirstnamePlaceholder' | translate }}" [readOnly]="entity.id.length > 0"
+                  [class.is-valid]="name.valid && name.touched" [class.is-invalid]="name.invalid && name.touched"
+                  #name="ngModel" maxlength="64" minlength="3" [class.bg-gray-300]="entity.id.length > 0" required>
+                <ng-container *ngIf="name.invalid && name.touched">
+                  <div class="invalid-feedback" *ngIf="name.errors?.['required']">
+                    {{ 'Labels.FieldRequired' | translate }}
+                  </div>
+                  <div class="invalid-feedback" *ngIf="name.errors?.['minlength']">
+                    {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+                  </div>
+                </ng-container>
+              </div>
+
+              <div class="col-6">
+                <label class="form-label" for="lastname">* {{ 'UserDetails.Lastname' | translate }}</label>
+                <input type="text" class="form-control" name="lastname" [ngModel]="entity.lastname"
+                  [ngModelOptions]="{ updateOn: 'blur' }" (ngModelChange)="updateUser(form)"
+                  placeholder="{{ 'UserDetails.LastnamePlaceholder' | translate }}" [readOnly]="entity.id.length > 0"
+                  [class.is-valid]="lastname.valid && lastname.touched" [class.bg-gray-300]="entity.id.length > 0"
+                  [class.is-invalid]="lastname.invalid && lastname.touched" #lastname="ngModel" maxlength="64"
+                  minlength="3" required>
+                <ng-container *ngIf="lastname.invalid && lastname.touched">
+                  <div class="invalid-feedback" *ngIf="lastname.errors?.['required']">
+                    {{ 'Labels.FieldRequired' | translate }}
+                  </div>
+                  <div class="invalid-feedback" *ngIf="lastname.errors?.['minlength']">
+                    {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="username">* {{ 'UserDetails.Username' | translate }}</label>
+            <input usernameValidator="{{entity.id}}" type="text" class="form-control" name="username"
+              [ngModel]="entity.username" [readOnly]="entity.id.length > 0" [class.bg-gray-300]="entity.id.length > 0"
+              [ngModelOptions]="{ updateOn: 'blur' }" placeholder="{{ 'UserDetails.UsernamePlaceholder' | translate }}"
+              [class.is-valid]="username.valid && username.touched"
+              [class.is-invalid]="username.invalid && username.touched" #username="ngModel" maxlength="64" minlength="3"
+              required>
+            <ng-container *ngIf="username.invalid && username.touched">
+              <div class="invalid-feedback" *ngIf="username.errors?.['required']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+              <div class="invalid-feedback" *ngIf="username.errors?.['usernameExists']">
+                {{ 'UserDetails.UsernameAlreadyExists' | translate:{ min: 3 } }}
+              </div>
+              <div class="invalid-feedback" *ngIf="username.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="email">{{ 'UserDetails.Email' | translate }}</label>
+            <input type="text" class="form-control" name="email" [ngModel]="entity.email"
+              placeholder="{{ 'UserDetails.EmailPlaceholder' | translate }}" [ngModelOptions]="{ updateOn: 'blur' }"
+              [class.is-valid]="email.valid && email.touched" [class.is-invalid]="email.invalid && email.touched"
+              #email="ngModel" maxlength="64" minlength="3" [pattern]="EMAIL_REGEX">
+            <ng-container *ngIf="email.invalid && email.touched">
+              <div class="invalid-feedback" *ngIf="email.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+              </div>
+              <div class="invalid-feedback" *ngIf="email.errors?.['pattern']">
+                {{ 'UserDetails.InvalidEmail' | translate }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="status">* {{ 'Labels.Status' | translate }}</label>
+            <select class="form-select" name="status" [ngModel]="entity.status" #status="ngModel"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="status.valid && status.touched"
+              [class.is-invalid]="status.invalid && status.touched" required>
+              <option [ngValue]=null>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=1>{{ 'Status.Draft' | translate }}</option>
+              <option [ngValue]=2>{{ 'Status.Active' | translate }}</option>
+              <option [ngValue]=3>{{ 'Status.Inactive' | translate }}</option>
+            </select>
+            <ng-container *ngIf="status.invalid && status.touched">
+              <div class="invalid-feedback" *ngIf="status.errors?.['required']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-user-plus fa-lg fa-fw me-1"></i> {{ 'UserDetails.AdditionalInfo' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="mb-2">
+            <div class="row">
+              <div class="col-6">
+                <label class="form-label" for="dateOfBirthValue">{{ 'UserDetails.DateOfBirth' | translate }}</label>
+                <input type="date" class="form-control" name="dateOfBirthValue" [ngModel]="entity.dateOfBirthValue"
+                  placeholder="{{ 'UserDetails.DateOfBirthPlaceholder' | translate }}"
+                  [ngModelOptions]="{ updateOn: 'blur' }"
+                  [class.is-valid]="dateOfBirthValue.valid && dateOfBirthValue.touched"
+                  [class.is-invalid]="dateOfBirthValue.invalid && dateOfBirthValue.touched" #dateOfBirthValue="ngModel">
+              </div>
+
+              <div class="col-6">
+                <label class="form-label" for="gender">{{ 'UserDetails.Gender' | translate }}</label>
+                <select class="form-select" name="gender" [ngModel]="entity.gender" #gender="ngModel"
+                  [class.is-valid]="gender.valid && gender.touched" [ngModelOptions]="{ updateOn: 'blur' }"
+                  [class.is-invalid]="gender.invalid && gender.touched">
+                  <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                  <option [ngValue]=1>{{ 'Gender.Unknown' | translate }}</option>
+                  <option [ngValue]=2>{{ 'Gender.Male' | translate }}</option>
+                  <option [ngValue]=3>{{ 'Gender.Female' | translate }}</option>
+                  <option [ngValue]=4>{{ 'Gender.NotApplicable' | translate }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-4">
+              <label class="form-label" for="mobile">{{ 'UserDetails.Cellphone' | translate }}</label>
+              <input type="text" class="form-control" name="mobile" [ngModel]="entity.mobile"
+                placeholder="{{ 'UserDetails.MobilePlaceholder' | translate }}" [ngModelOptions]="{ updateOn: 'blur' }"
+                [class.is-valid]="mobile.valid && mobile.touched" [class.is-invalid]="mobile.invalid && mobile.touched"
+                #mobile="ngModel" maxlength="24" minlength="8">
+              <ng-container *ngIf="mobile.invalid && mobile.touched">
+                <div class="invalid-feedback" *ngIf="mobile.errors?.['minlength']">
+                  {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+                </div>
+              </ng-container>
+            </div>
+            <div class="col-4">
+              <label class="form-label" for="phone">{{ 'UserDetails.Phone' | translate }}</label>
+              <input type="text" class="form-control" name="phone" [ngModel]="entity.phone"
+                placeholder="{{ 'UserDetails.PhonePlaceholder' | translate }}" [ngModelOptions]="{ updateOn: 'blur' }"
+                [class.is-valid]="phone.valid && phone.touched" [class.is-invalid]="phone.invalid && phone.touched"
+                #phone="ngModel" maxlength="24" minlength="8">
+              <ng-container *ngIf="phone.invalid && phone.touched">
+                <div class="invalid-feedback" *ngIf="phone.errors?.['minlength']">
+                  {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+                </div>
+              </ng-container>
+            </div>
+            <div class="col-4">
+              <label class="form-label" for="office">{{ 'UserDetails.Office' | translate }}</label>
+              <input type="text" class="form-control" name="office" [ngModel]="entity.office"
+                placeholder="{{ 'UserDetails.OfficePlaceholder' | translate }}" [ngModelOptions]="{ updateOn: 'blur' }"
+                [class.is-valid]="office.valid && office.touched" [class.is-invalid]="office.invalid && office.touched"
+                #office="ngModel" maxlength="24" minlength="8">
+              <ng-container *ngIf="office.invalid && office.touched">
+                <div class="invalid-feedback" *ngIf="office.errors?.['minlength']">
+                  {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-map fa-lg fa-fw me-1"></i> {{ 'UserDetails.AddressInfo' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="mb-2">
+            <div class="row">
+              <div class="col-6">
+                <label class="form-label" for="countryId">{{ 'UserDetails.Country' | translate }}</label>
+                <select class="form-select" name="countryId" [ngModel]="entity.countryId" #countryId="ngModel"
+                  [class.is-valid]="countryId.valid && countryId.touched" (ngModelChange)="loadStates($event)"
+                  [class.is-invalid]="countryId.invalid && countryId.touched" [ngModelOptions]="{ updateOn: 'change' }">
+                  <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                  <option [ngValue]=c.id *ngFor="let c of countries">{{ c.name }}</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label" for="stateId">{{ 'UserDetails.State' | translate }}</label>
+                <select class="form-select" name="stateId" [ngModel]="entity.stateId" #stateId="ngModel"
+                  [class.is-valid]="stateId.valid && stateId.touched"
+                  [class.is-invalid]="stateId.invalid && stateId.touched" [ngModelOptions]="{ updateOn: 'change' }">
+                  <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                  <option [ngValue]=s.id *ngFor="let s of states">{{ s.name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <div class="row">
+              <div class="col-6">
+                <label class="form-label" for="city">{{ 'UserDetails.City' | translate }}</label>
+                <input type="text" class="form-control" name="city" [ngModel]="entity.city"
+                  placeholder="{{ 'UserDetails.CityPlaceholder' | translate }}" [ngModelOptions]="{ updateOn: 'blur' }"
+                  [class.is-valid]="city.valid && city.touched" [class.is-invalid]="city.invalid && city.touched"
+                  #city="ngModel" maxlength="164" minlength="3">
+                <ng-container *ngIf="city.invalid && city.touched">
+                  <div class="invalid-feedback" *ngIf="name.errors?.['minlength']">
+                    {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+                  </div>
+                </ng-container>
+              </div>
+
+              <div class="col-6">
+                <label class="form-label" for="zip">{{ 'UserDetails.Zipcode' | translate }}</label>
+                <input type="text" class="form-control" name="zip" [ngModel]="entity.zip"
+                  placeholder="{{ 'UserDetails.ZipcodePlaceholder' | translate }}"
+                  [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="zip.valid && zip.touched"
+                  [class.is-invalid]="zip.invalid && zip.touched" #zip="ngModel" maxlength="16" minlength="5">
+                <ng-container *ngIf="zip.invalid && zip.touched">
+                  <div class="invalid-feedback" *ngIf="zip.errors?.['minlength']">
+                    {{ 'Labels.FieldMinLength' | translate:{ min: 5 } }}
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="addressLine1">{{ 'UserDetails.AddressLine1' | translate }}</label>
+            <input type="text" class="form-control" name="addressLine1" [ngModel]="entity.addressLine1"
+              placeholder="{{ 'UserDetails.AddressLine1Placeholder' | translate }}"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="addressLine1.valid && addressLine1.touched"
+              [class.is-invalid]="addressLine1.invalid && addressLine1.touched" #addressLine1="ngModel" maxlength="164"
+              minlength="8">
+            <ng-container *ngIf="addressLine1.invalid && addressLine1.touched">
+              <div class="invalid-feedback" *ngIf="addressLine1.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="addressLine2">{{ 'UserDetails.AddressLine2' | translate }}</label>
+            <input type="text" class="form-control" name="addressLine2" [ngModel]="entity.addressLine2"
+              placeholder="{{ 'UserDetails.AddressLine2Placeholder' | translate }}"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="addressLine2.valid && addressLine2.touched"
+              [class.is-invalid]="addressLine2.invalid && addressLine2.touched" #addressLine2="ngModel" maxlength="164"
+              minlength="8">
+            <ng-container *ngIf="addressLine2.invalid && addressLine2.touched">
+              <div class="invalid-feedback" *ngIf="addressLine2.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-globe fa-lg fa-fw me-1"></i> {{ 'UserDetails.AccountInformation' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="operationType" [value]=0 [ngModel]="entity.operationType"
+              [ngModelOptions]="{ updateOn: 'change' }" (ngModelChange)="updateUser(form)">
+            <label class="form-check-label" for="operationType">{{ 'UserDetails.Gateway' | translate }}</label>
+          </div>
+
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="operationType" [value]=1 [ngModel]="entity.operationType"
+              [ngModelOptions]="{ updateOn: 'change' }" (ngModelChange)="updateUser(form)">
+            <label class="form-check-label" for="operationType">{{ 'UserDetails.Distributor' | translate }}</label>
+            <input type="hidden" name="companyId" [ngModel]="entity.companyId" *ngIf="entity.operationType === 1"
+              aria-hidden="true">
+          </div>
+
+          <div class="mb-2" *ngIf="entity.operationType === 0">
+            <label class="form-label" for="companyId">* {{ 'UserDetails.CompanyId' | translate }}</label>
+            <select class="form-select" name="companyId" [ngModel]="entity.companyId" #companyId="ngModel"
+              [class.is-valid]="companyId.valid && companyId.touched" [ngModelOptions]="{ updateOn: 'change' }"
+              [class.is-invalid]="companyId.invalid && companyId.touched" required>
+              <option [ngValue]=undefined>{{ 'Labels.Select' | translate }}</option>
+              <option *ngFor="let cia of companies" [ngValue]=cia.id>{{cia.name}}</option>
+            </select>
+            <ng-container *ngIf="companyId.invalid && companyId.touched">
+              <div class="invalid-feedback" *ngIf="companyId.errors?.['required']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="sessionTimeout">{{ 'UserDetails.SessionTimeout' | translate }}</label>
+            <input type="number" class="form-control" name="sessionTimeout" [ngModel]="entity.sessionTimeout"
+              placeholder="{{ 'UserDetails.SessionTimeoutPlaceholder' | translate }}"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="sessionTimeout.valid && sessionTimeout.touched"
+              [class.is-invalid]="sessionTimeout.invalid && sessionTimeout.touched" #sessionTimeout="ngModel" min="0"
+              max="9999">
+            <ng-container *ngIf="sessionTimeout.invalid && sessionTimeout.touched">
+              <div class="invalid-feedback" *ngIf="sessionTimeout.errors?.['min']">
+                {{ 'UserDetails.InvalidSessionTimeout' | translate:{ min: 3 } }}
+              </div>
+            </ng-container>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-user-shield fa-lg fa-fw me-1"></i> {{ 'UserDetails.Roles' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <ng-container *ngFor="let role of roles; let idx = index" ngModelGroup="roles" #group="ngModelGroup">
+            <div class="form-check mb-2" ngModelGroup="{{idx}}">
+              <input type="hidden" [ngModel]="role.id" name="id" />
+              <input type="hidden" [ngModel]="role.companyId" name="companyId" />
+              <input type="hidden" [ngModel]="role.name" name="name" />
+              <input class="form-check-input" type="checkBox" name="isSelected" [ngModel]="role.isSelected"
+                [checked]="role.isSelected">
+              <label class="form-check-label" for="{{role.id}}">{{ role.name }}</label>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

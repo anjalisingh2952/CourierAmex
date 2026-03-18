@@ -1,0 +1,438 @@
+<div class="manifest-details" *ngIf="entity">
+  <ng-template #LOADER>
+    <ngx-skeleton-loader />
+  </ng-template>
+
+  <form class="manifest-form" (ngSubmit)="handleSubmit(form)" (keydown.enter)="$event.preventDefault()" #form="ngForm"
+    autocomplete="off">
+    <input type="hidden" name="id" [ngModel]="entity.id" />
+    <input type="hidden" name="manifestDate" [ngModel]="entity.manifestDate" />
+    <input type="hidden" name="closed" [ngModel]="entity.closed" />
+    <input type="hidden" name="status" [ngModel]="entity.status" />
+    <input type="hidden" name="address" [ngModel]="entity.address" />
+    <input type="hidden" name="companyId" *ngIf="!showCompanies" [ngModel]="entity.companyId">
+
+    <div class="mb-3 d-md-flex fw-bold">
+      <div class="mt-md-0 mt-2">
+        <button type="submit" class="btn btn-link btn-sm text-decoration-none text-dark"
+          *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+          <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' |
+          translate }} (F12)</button>
+      </div>
+      <div class="ms-md-0 mt-md-0 mt-2">
+        <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="goBack()">
+          <i class="fa fa-arrow-left fa-lg me-2 text-dark"></i> {{ 'Labels.GoBack' |
+          translate }}</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+
+        <div class="panel panel-inverse">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa fa-boxes-packing fa-lg fa-fw me-1"></i> {{ 'ManifestDetails.Info' |
+              translate }}
+            </h4>
+          </div>
+          <div class="panel-body">
+            <div *ngIf="!isLoading; else LOADER">
+              <div class="mb-2" *ngIf="showCompanies">
+                <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' | translate }}</label>
+                <select class="form-select" name="companyId" [ngModel]="entity.companyId" #companyId="ngModel"
+                  [class.is-valid]="companyId.valid && companyId.touched" (ngModelChange)="companyChange($event)"
+                  [class.is-invalid]="companyId.invalid && companyId.touched" required>
+                  <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                  <option [ngValue]=c.id *ngFor="let c of companies">{{ c.name }}</option>
+                </select>
+                <ng-container *ngIf="companyId.invalid && companyId.touched">
+                  <div class="invalid-feedback" *ngIf="companyId.errors?.['required']">
+                    {{ 'Labels.FieldRequired' | translate }}
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6">
+                <div class="mb-2" *ngIf="!isLoading; else LOADER">
+                  <label class="form-label" for="manifestNumber">* {{ 'ManifestDetails.Number' | translate }}</label>
+                  <input manifestNumberValidator="{{entity.id}}" type="text" class="form-control" name="manifestNumber"
+                    [ngModel]="entity.manifestNumber"
+                    placeholder="{{ 'ManifestDetails.NumberPlaceholder' | translate }}"
+                    [class.is-valid]="manifestNumber.valid && manifestNumber.touched"
+                    [class.is-invalid]="manifestNumber.invalid && manifestNumber.touched" #manifestNumber="ngModel"
+                    maxlength="50" required>
+                  <ng-container *ngIf="manifestNumber.invalid && manifestNumber.touched">
+                    <div class="invalid-feedback" *ngIf="manifestNumber.errors?.['required']">
+                      {{ 'Labels.FieldRequired' | translate }}
+                    </div>
+                    <div class="invalid-feedback" *ngIf="manifestNumber.errors?.['exists']">
+                      {{ 'ManifestDetails.DuplicateNumber' | translate }}
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="mb-2" *ngIf="!isLoading; else LOADER">
+                  <label class="form-label" for="name">* {{ 'ManifestDetails.Details' | translate }}</label>
+                  <input type="text" class="form-control" name="name" [ngModel]="entity.name"
+                    placeholder="{{ 'ManifestDetails.DetailsPlaceholder' | translate }}"
+                    [class.is-valid]="name.valid && name.touched" [class.is-invalid]="name.invalid && name.touched"
+                    #name="ngModel" maxlength="50" required>
+                  <ng-container *ngIf="name.invalid && name.touched">
+                    <div class="invalid-feedback" *ngIf="name.errors?.['required']">
+                      {{ 'Labels.FieldRequired' | translate }}
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-6">
+                <div class="mb-2" *ngIf="!isLoading; else LOADER">
+                  <label class="form-label" for="countryId">* {{ 'ManifestDetails.ShipType' | translate }}</label>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="shipType" [ngModel]="entity.shipType"
+                          [value]="0" #shipType="ngModel" required [class.is-valid]="shipType.valid && shipType.touched"
+                          [class.is-invalid]="shipType.invalid && shipType.touched"
+                          (ngModelChange)="updateShipType(form)">
+                        <label class="form-check-label" for="shipType">
+                          {{ 'ManifestDetails.ShipByAir' | translate }}</label>
+                        <i class="fa fa-plane ms-2" ngbTooltip="{{ 'ManifestDetails.ShipByAir' | translate }}"></i>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="shipType" [ngModel]="entity.shipType"
+                          [value]="1" #shipType="ngModel" required [class.is-valid]="shipType.valid && shipType.touched"
+                          [class.is-invalid]="shipType.invalid && shipType.touched"
+                          (ngModelChange)="updateShipType(form)">
+                        <label class="form-check-label" for="shipType">
+                          {{ 'ManifestDetails.ShipBySea' | translate }}</label>
+                        <i class="fa fa-ship ms-2" ngbTooltip="{{ 'ManifestDetails.ShipBySea' | translate }}"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div class="mb-2" *ngIf="!isLoading; else LOADER">
+                  <label class="form-label" for="shippingWay">* {{ 'ManifestDetails.ShippingWay' | translate }}</label>
+                  <select minValueValidator="1" class="form-select" name="shippingWay" [ngModel]="entity.shippingWay"
+                    #shippingWay="ngModel" [class.is-valid]="shippingWay.valid && shippingWay.touched"
+                    [class.is-invalid]="shippingWay.invalid && shippingWay.touched"
+                    [ngModelOptions]="{ updateOn: 'blur' }" required (ngModelChange)="updateEntity(form)">
+                    <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                    <option [ngValue]=c.id *ngFor="let c of shippingWayTypes">{{ c.name }}</option>
+                  </select>
+                  <ng-container *ngIf="shippingWay.invalid && shippingWay.touched">
+                    <div class="invalid-feedback"
+                      *ngIf="shippingWay.errors?.['required'] || shippingWay.errors?.['min']">
+                      {{ 'Labels.FieldRequired' | translate }}
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-4">
+
+        <div class="panel panel-inverse">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa fa-circle-info fa-lg fa-fw me-1"></i> {{ 'ManifestDetails.ExtraInfo' |
+              translate }}
+            </h4>
+          </div>
+          <div class="panel-body">
+
+            <div class="row mb-2" *ngIf="!isLoading; else LOADER">
+              <div class="col-4 fw-bold">
+                {{ 'ManifestDetails.Address' | translate }}
+              </div>
+              <div class="col-8 text-end">
+                {{ entity.address }}
+              </div>
+            </div>
+
+            <div class="row mb-2" *ngIf="!isLoading; else LOADER">
+              <div class="col-4 fw-bold">
+                {{ 'ManifestDetails.Date' | translate }}
+              </div>
+              <div class="col-8 text-end">
+                {{ entity.manifestDate | date:'MM/dd/yyyy hh:mm a' }}
+              </div>
+            </div>
+
+            <div class="row mb-2" *ngIf="!isLoading; else LOADER">
+              <div class="col-4 fw-bold">
+                {{ 'ManifestDetails.Status' | translate }}
+              </div>
+              <div class="col-8 text-end">
+                <ng-container [ngSwitch]="entity.closed">
+                  <span *ngSwitchCase="0" class="badge bg-green text-white">{{ 'ManifestDetails.Open' | translate
+                    }}</span>
+                  <span *ngSwitchCase="1" class="badge bg-dark">{{ 'ManifestDetails.Closed' | translate }}</span>
+                  <span *ngSwitchDefault class="badge bg-yellow text-dark">{{ 'ManifestDetails.Unknown' | translate
+                    }}</span> </ng-container>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col-md-8">
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-boxes-packing fa-lg fa-fw me-1"></i> {{ 'ManifestDetails.PackageManifest' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="mb-2">
+                <label class="form-label" for="packageNumbers"> {{ 'ManifestDetails.PackageNumber' | translate
+                  }}</label>
+                <input [disabled]="entity.closed==1" type="number" class="form-control" name="packageNumbers"
+                  [(ngModel)]="packageNumber" placeholder="{{ 'ManifestDetails.PackageNumberPlaceholder' | translate }}"
+                  maxlength="50" (keyup.enter)="OnPackageNumberChange()" required #packageNumberModel="ngModel"
+                  [class.is-valid]="packageNumberModel.valid && packageNumberModel.touched"
+                  [class.is-invalid]="packageNumberModel.invalid && packageNumberModel.touched" />
+
+                <div *ngIf="packageNumberModel.invalid && packageNumberModel.touched" class="invalid-feedback">
+                  {{ 'This field is required' | translate }}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="manifest-packages" *ngIf="entity.id > 0">
+    <div class="panel panel-inverse">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <i class="fa fa-circle-info fa-lg fa-fw me-1"></i> Manifest Packages
+        </h4>
+      </div>
+      <div class="panel-body">
+        <div class="col-md-10" style="float:left" *ngIf="!loading">
+          <p-table [loading]="loading" [scrollable]="true" scrollHeight="550px"
+            styleClass="cl1 primeng-table p-datatable-sm small-table" #dt 
+            [value]="packageList"
+            [(selection)]="selectedPackageId" dataKey="id" [rowHover]="true" [rows]="10" 
+            [showCurrentPageReport]="true" [paginator]="false"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+            [filterDelay]="0"
+            [globalFilterFields]="['customerCode','packageNumber']" selectionMode="single"
+             >
+            <!-- <ng-template pTemplate="caption">
+              <div class="flex justify-content-between">
+                  (onRowSelect)="onRowSelect($event)" 
+            (onRowUnselect)="onRowUnselect($event)"
+                <div class="p-input-icon-left">
+                  <i class="pi pi-search"></i>
+                  <input type="text" pInputText [(ngModel)]="searchValue"
+                    (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Keyboard Search" />
+                </div>
+              </div>
+            </ng-template> -->
+            <ng-template pTemplate="header">
+              <tr>
+                <!-- <th style="min-width: 7rem">-Select-<p-tableHeaderCheckbox />({{selectedPackageId.length || 0}})
+                </th> -->
+                <th pSortableColumn="customerCode" style="min-width: 8rem">
+                  <div class="flex justify-content-between align-items-center">
+                    Customer account
+                    <!-- <p-columnFilter type="text" field="name" display="menu" class="ml-auto" /> -->
+                  </div>
+                </th>
+                <th pSortableColumn="packageNumber" style="min-width: 8rem">
+                  <div class="flex justify-content-between align-items-center">
+                    Package number
+                    <!-- <p-columnFilter type="text" field="country.name" display="menu" class="ml-auto" /> -->
+                  </div>
+                </th>
+
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Courier
+                  </div>
+                </th>
+                <th style="min-width: 8rem">
+                  <div class="flex justify-content-between align-items-center">
+                    Courier name
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Origin
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Description
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Remarks
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Insurance
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Creation date
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Modification date
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    User who created it
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Destination
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Weight
+                  </div>
+                </th>
+                <th>
+                  <div class="flex justify-content-between align-items-center">
+                    Price
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-packagelist let-i="rowIndex">
+              <tr class="p-selectable-row row-{{i}}"  [ngClass]="{ 'selectedRow': selectedRow === i }" (click)="onRowClick(packagelist,i)">
+                <!-- <td>
+                  <p-tableCheckbox [value]="packagelist" />
+                </td> -->
+                <td >
+                  <span class="p-column-title">Customer Code</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.customerCode }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Package Number</span>
+                  {{ packagelist.packageNumber }}
+                </td >
+                <td>
+                  <span class="p-column-title">courier</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.courier }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Courier Name</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.courierName }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Origin</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.origin }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Description</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.description }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Remarks</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.observations }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Insurance</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.insurance }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Creation date</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.createdDate | date:'MM/dd/yyyy hh:mm a'
+                    }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Modification date </span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.modifiedDate | date:'MM/dd/yyyy hh:mm a'
+                    }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">User who created it </span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.createdBy }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Destination</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.destinationId }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Weight</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.weight }}</span>
+                </td>
+                <td>
+                  <span class="p-column-title">Price</span>
+                  <span class="ml-1 vertical-align-middle">{{ packagelist.Price }}</span>
+                </td>
+
+
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="8">No package found.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+        </div>
+        <div class="col-md-2" style="float:left">
+          <ul class="fa-ul">
+            <li class="mt-2"><button class="btn btn-primary w-100" (click)=" getWebPrintJob()">Print</button></li>
+            <a #tlprint style="display: none;"></a>
+            <iframe #tlprintFrame style="display: none;"></iframe>
+            <li class="mt-2"><button [disabled]="entity.closed==1" (click)="deleteEntity(1)" class="btn btn-danger w-100">Delete</button></li>
+            <li class="mt-2"><button [disabled]="entity.closed==1" (click)="deleteEntity(2)" class="btn btn-danger w-100">Delete All</button></li>
+            <li class="mt-2">
+              <div class="searchfield"><input type="text" placeholder="Enter Package Number"
+                  [(ngModel)]="searchPackageNumber" name="search" class="form-control w-100"></div>
+            </li>
+            <li class="mt-2"><button class="btn btn-primary w-100" (click)="scrollToPackage()">Search</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

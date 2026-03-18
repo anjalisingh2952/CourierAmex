@@ -1,0 +1,77 @@
+<div class="container">
+    <div class="col-md-12">
+        <div class="panelpanel-default">
+            <div class="panel-body scrollable-panel">
+                <table class="table table-striped align-middle text-nowrap">
+                    <thead>
+                        <tr>
+                            <th style="width: 1rem;"></th>
+                            <th>Filter</th>
+                            <th *ngFor="let column of parentColumns">{{ column }}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <ng-container *ngFor="let data of groupedData">
+                            <tr [ngClass]="{'table-success': data.selected}" data-toggle="collapse" data-target="#demo1" class="accordion-toggle">
+                                <td>
+                                    <button class="btn btn-default btn-xs" (click)="toggleExpandCollapse(data)">
+                                        <span [ngClass]="data.expanded ? 'fas fa-angle-down' : 'fas fa-angle-right'"></span>
+                                    </button>
+                                </td>
+                                <td><input type="checkbox"  [checked]="data.selected" (change)="parentCheckboxChange(data)"></td>
+                                <ng-container *ngFor="let key of getKeys(data.parent)">
+                                    <td *ngIf="parentColumns.includes(key)" class="text-truncate"
+                                        style="max-width: 150px;">
+                                        {{ data.parent[key] }}
+                                    </td>
+                                </ng-container>
+                            </tr>
+
+                            <tr>
+                                <td colspan="12" class="hiddenRow">
+                                    <div class="accordian-body" [ngClass]="{'collapse': !data.expanded}" id="demo1">
+                                        <table class="table table-striped tablebordered align-middle text-nowrap">
+                                            <thead>
+                                                <tr class="info">
+                                                    <th>Filter</th>
+                                                    <th *ngFor="let column of childColumns">{{ column }}</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                                <tr  [ngClass]="{'table-primary': child.selected}" data-toggle="collapse" class="accordion-toggle"
+                                                    data-target="#demo10" *ngFor="let child of data.child">
+                                                    <td><input type="checkbox"[checked]="child.selected" (change)="childCheckboxChange(child,data)">
+                                                    </td>
+                                                    <ng-container *ngFor="let key of getKeys(child)">
+                                                        <td *ngIf="childColumns.includes(key)" class="text-truncate"
+                                                            style="max-width: 150px;">
+                                                            {{ child[key] }}</td>
+                                                    </ng-container>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+    .hiddenRow {
+        padding: 0 !important;
+    }
+</style>

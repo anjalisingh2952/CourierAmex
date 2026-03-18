@@ -1,0 +1,97 @@
+<div class="package-details credit-pending">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'PendingManifestOrPreStudy.Title' | translate }} <small>{{
+                'PendingManifestOrPreStudy.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{ 'PendingManifestOrPreStudy.SubTitle' | translate }}</h4>
+        </div>
+        <div class="panel-body">
+            <div class="col-12">
+                <form #reportForm="ngForm" (ngSubmit)="generateReport(reportForm)">
+
+                    <div class="col-md-3 float-left" *ngIf="!isGatewayUser">
+                        <label class="block pt-2 form-label mb-0 col-md-3">* {{'PendingManifestOrPreStudy.select' |
+                            translate
+                            }}</label>
+                        <div class="input-group mb-10px">
+                            <ng-container *ngIf="companies$ | async as entities">
+                                <select #selectedCompanyVal="ngModel" [(ngModel)]="selectedCompany"
+                                    minValueValidator="1" class="form-select" name="companyId" required
+                                    [class.is-invalid]="selectedCompanyVal.invalid && selectedCompanyVal.touched"
+                                    required>
+                                    <option [ngValue]=0 disabled>{{ 'Labels.Select' | translate }}</option>
+                                    <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                                </select>
+                                <ng-container *ngIf="selectedCompanyVal.invalid && selectedCompanyVal.touched">
+                                    <div class="invalid-feedback">
+                                        {{ 'Labels.FieldRequired' | translate }}
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="col-md-3 float-left">
+                        <label class="block pt-2 form-label mb-0 col-md-3">* {{'PendingManifestOrPreStudy.Report' |
+                            translate
+                            }}</label>
+                        <div class="">
+                            <div class="col-md-5 float-left">
+                                <input type="radio" name="reportTypem" class="form-check-input" [(ngModel)]="reportType"
+                                    value="manifest">
+                                <label>Pending Manifest</label>
+                            </div>
+                            <div class="col-md-6 float-left">
+                                <input type="radio" name="reportTypes" class="form-check-input" [(ngModel)]="reportType"
+                                    value="preStudy">
+                                <label>Pending Pre Study</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-md-2 float-left">
+                        <label class="block pt-2 form-label mb-0 col-md-4">*{{'CreditPending.From' | translate
+                            }}</label>
+                        <div class="input-group">
+                            <input #dateInputFrom name="startDateFrom" type="date" [(ngModel)]="startDate"
+                                class="form-control" required="" #dateInputFromval="ngModel"
+                                [ngClass]="{'is-invalid': dateInputFromval.invalid && dateInputFromval.touched}"
+                                />
+                            <span class="input-group-text" (click)="openDatePickerFrom()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <div class="invalid-feedback" *ngIf="dateInputFromval.invalid && dateInputFromval.touched">
+                                {{ 'Labels.FieldRequired' | translate }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-md-2 float-left">
+                        <label class="block pt-2 form-label mb-0 col-md-4">*{{'CreditPending.To' | translate
+                            }}</label>
+                        <div class="input-group">
+                            <input required #dateInputTo #dateInputToval="ngModel" type="date" name="endDateTo"
+                                [(ngModel)]="endDate" class="form-control"
+                                [ngClass]="{'is-invalid': dateInputToval.invalid && dateInputToval.touched}" />
+                            <span class="input-group-text" (click)="openDatePickerTo()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="dateInputToval.invalid && dateInputToval.touched">
+                            {{ 'Labels.FieldRequired' | translate }}
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-2 float-left">
+                        <button type="submit" class="btn btn-primary mt-25px">{{'CreditPending.Report' |
+                            translate}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

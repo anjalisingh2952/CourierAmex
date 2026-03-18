@@ -1,0 +1,9 @@
+<div class="user-profile">
+  <user-profile-header [isLoading]="isLoading" [tabs]="tabs" [tab]="tab" (onTabChange)="onTabChange($event)"></user-profile-header>
+  
+  <div class="profile-content">
+    <user-profile-about [isLoading]="isLoading" *ngIf="tab.name === 'about'"></user-profile-about>
+    
+    <user-profile-security [isLoading]="isLoading" [entity]="entity" *ngIf="tab.name === 'security'" (onFormSubmit)="changePassword($event)"></user-profile-security>
+  </div>
+</div>

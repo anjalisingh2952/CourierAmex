@@ -1,0 +1,56 @@
+<form class="reset-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" autocomplete="off">
+  {{ 'Labels.PasswordRequirementsTitle' | translate }}<br>
+  <div [innerHTML]="'Labels.PasswordRequirements' | translate "></div>
+
+  <div class="mb-20px">
+    <div class="form-floating">
+      <input type="password" class="form-control fs-13px h-45px border-0" name="password" [ngModel]="request.password"
+        [ngModelOptions]="{ updateOn: 'blur' }" placeholder="{{ 'Placeholders.Password' | translate }}"
+        [class.is-valid]="password.valid && password.touched" [class.is-invalid]="password.invalid && password.touched"
+        #password="ngModel" maxlength="64" minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+      <label for="password" class="d-flex align-items-center text-gray-600 fs-13px">{{'Labels.Password' |
+        translate}}</label>
+    </div>
+    <ng-container *ngIf="password.invalid && password.touched">
+      <div class="mt-2 text-danger" *ngIf="password.errors?.['required']">
+        {{ 'Labels.FieldRequired' | translate }}
+      </div>
+      <div class="mt-2 text-danger" *ngIf="password.errors?.['minlength']">
+        {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+      </div>
+      <div class="mt-2 text-danger" *ngIf="password.errors?.['pattern']">
+        {{ 'Labels.PasswordStrength' | translate }}
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="mb-20px">
+    <div class="form-floating">
+      <input equalValidator="password" type="password" class="form-control fs-13px h-45px border-0" name="confirm"
+        [ngModel]="request.confirm" placeholder="{{ 'Placeholders.ConfirmPassword' | translate }}"
+        [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="confirm.valid && confirm.touched"
+        [class.is-invalid]="confirm.invalid && confirm.touched" #confirm="ngModel" maxlength="256" minlength="8"
+        required>
+      <label for="confirm" class="d-flex align-items-center text-gray-600 fs-13px">{{'Labels.ConfirmPassword' |
+        translate}}</label>
+    </div>
+    <ng-container *ngIf="confirm.invalid && confirm.touched">
+      <div class="mt-2 text-danger" *ngIf="confirm.errors?.['required']">
+        {{ 'Labels.FieldRequired' | translate }}
+      </div>
+      <div class="mt-2 text-danger" *ngIf="confirm.errors?.['minlength']">
+        {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+      </div>
+      <div class="mt-2 text-danger" *ngIf="confirm.errors?.['notEqual']">
+        {{ 'Labels.ConfirmPasswordMatch' | translate }}
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="mb-20px">
+    <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg" [disabled]="!form.valid">
+      {{'Labels.Submit' | translate}}</button>
+  </div>
+
+  <div class="text-gray-500" [innerHTML]="'Labels.LoginAccount' | translate:loginLink"></div>
+</form>

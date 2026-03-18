@@ -1,0 +1,23 @@
+<div class="package-details" *ngIf="{ 
+  entity: entity$ | async, 
+  companies: companies$ | async,
+  commodities: commodities$ | async
+  } as data">
+  <ng-container *ngIf="data.entity && data.companies">
+    <shared-breadcrumb></shared-breadcrumb>
+    <h1 class="page-header">{{ 'PackageDetails.Title' | translate }} <small>{{ 'PackageDetails.SubTitle' |
+        translate
+        }}</small>
+    </h1>
+    
+    <package-form [entity]="data.entity" [companies]="data.companies" [commodities]="data.commodities || []"
+      [additionalInfo]="additionalInfo" 
+      [isLocked]="isLocked"
+      (onSave)="save($event)" (onCompanyChange)="onCompanyChange($event)"
+      (onCustomerChange)="onCustomerChange($event)" (onTrackingNumberChange)="onTrackingNumberChange($event)"
+      (onWeightChange)="onWeightChange($event)" (onWidthChange)="onWidthChange($event)"
+      (onHeightChange)="onHeightChange($event)" (onLongChange)="onLongChange($event)"
+      (onGoBack)=" goBack()">
+    </package-form>
+  </ng-container>
+</div>

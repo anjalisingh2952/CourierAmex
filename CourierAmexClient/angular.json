@@ -1,0 +1,126 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "courier-amex": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/web.config"
+            ],
+            "styles": [
+              "./node_modules/ngx-toastr/toastr.css",
+              "src/styles/styles.scss",
+              "./node_modules/primeicons/primeicons.css",
+              "./node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+              "./node_modules/primeng/resources/primeng.min.css",
+              "datatables.net-dt/css/dataTables.dataTables.css",
+              "datatables.net-buttons-dt/css/buttons.dataTables.css",
+              "node_modules/datatables.net-buttons-dt/css/buttons.dataTables.css"
+            ],
+            "scripts": [ 
+             "src/assets/js/epos-2.27.0.js",
+             "node_modules/jquery/dist/jquery.js",
+             "node_modules/datatables.net/js/dataTables.js",
+             "node_modules/datatables.net-buttons/js/dataTables.buttons.js",
+             "node_modules/datatables.net-buttons/js/buttons.html5.js",
+             "node_modules/datatables.net-buttons/js/buttons.print.js",
+             "node_modules/jszip/dist/jszip.js",
+             "node_modules/pdfmake/build/pdfmake.js",
+             "node_modules/pdfmake/build/vfs_fonts.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "4mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kb",
+                  "maximumError": "8kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "courier-amex:build:production"
+            },
+            "development": {
+              "proxyConfig": "proxy.conf.json",
+              "buildTarget": "courier-amex:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "courier-amex:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+}

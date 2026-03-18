@@ -1,0 +1,65 @@
+.col-md-3.float-left,.col-md-2.float-left {
+    float: left;
+    padding: 5px;
+}
+.p-input-icon-left {
+    margin-left: 5px;
+}
+.p-inputtext{
+    border-radius: 0px;
+}
+/* Hide the default date picker icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+/* Optional: Add some padding so the text is aligned properly */
+input[type="date"] {
+    position: relative;
+    padding-right: 30px; /* Adjust if necessary */
+}
+.multiselect-custom-virtual-scroll {
+    width: 100% !important;
+}
+.p-multiselect {
+    width: 100%;
+    height: 35px;
+    text-align: center;
+    font-size: 0.75rem;
+}
+.primeng-table .p-datatable-tbody > tr:hover {
+    color: rgb(75, 85, 99);
+    background: rgb(243, 244, 246);
+}
+thead, tbody, tfoot, tr, td, th {
+    font-size: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+    border-width: 0 0 1px 0 !important;
+    padding: 5px !important;
+}
+.serach-cus button,.serach-cus .p-button-icon {
+    padding: 5px !important;
+    font-size: 12px !important;
+}
+.serach-cus button {
+    padding: 5px !important;
+    font-size: 12px !important;
+}
+.serach-cus {
+    padding: 5px !important;
+    font-size: 12px !important;
+}
+.p-button {
+    font-size: 12px !important;
+    padding: 5px !important;
+}
+input.p-inputtext.p-component.p-element.ng-untouched.ng-pristine.ng-valid {
+    padding: 5px;
+    font-size: 12px;
+    padding-left: 30px;
+}
+i.pi.pi-search {
+    font-size: 12px;
+    padding-top: 3px;
+}

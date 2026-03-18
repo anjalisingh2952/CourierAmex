@@ -1,0 +1,5 @@
+<ol class="breadcrumb float-xl-end">
+  <li class="breadcrumb-item" *ngFor="let breadcrumb of (breadcrumbs$ | async)">
+    <a [href]="breadcrumb.url">{{ breadcrumb.label | translate }}</a>
+  </li>
+</ol>

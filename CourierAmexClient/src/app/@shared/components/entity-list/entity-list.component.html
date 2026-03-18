@@ -1,0 +1,42 @@
+<div class="entity-list" *ngIf="rows">
+  <ng-container *ngIf="showHeader">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ title }} <small>{{ subTitle }}</small></h1>
+
+    <div class="mb-3 d-md-flex fw-bold" *ngIf="hasAdd">
+      <div class="mt-md-0 mt-2">
+        <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="addNew()">
+          <i class="fa fa-plus fa-lg me-1 text-dark"></i>
+          {{ addLabel }} 
+        </button>
+      </div>
+    </div>
+    <ng-content></ng-content>
+  </ng-container>
+
+  <shared-keyword-search [criteria]="state?.searchTerm ?? ''" *ngIf="activeSearch"
+    (onSearch)="onKeywordSearch($event)"></shared-keyword-search>
+
+    <ng-container *ngIf="hasPagination">
+      <shared-pagination [Pagination]="pagination" (onPaginationChange)="onPagerChange($event)">
+        <ng-container *ngIf="filterTemplate" [ngTemplateOutlet]="filterTemplate"></ng-container>
+      </shared-pagination>
+    </ng-container>
+
+    <ng-container *ngIf="!hasPagination && filterTemplate">
+      <ng-container [ngTemplateOutlet]="filterTemplate"></ng-container>
+    </ng-container>    
+
+  <div class="card border-0 p-3 mb-3">
+    <app-tabular-data [emptyLabel]="emptyLabel" [state]="state" [columns]="columns" [rows]="rows"
+      (sort)="onSort($event)" (select)="onSelect($event)" [selectedItem]="selectedItem">
+    </app-tabular-data>
+  </div>
+
+  <ng-container *ngIf="hasPagination">
+    <shared-pagination [type]="'Footer'" [Pagination]="pagination"
+    (onPaginationChange)="onPagerChange($event)"></shared-pagination>
+  </ng-container>
+
+</div>

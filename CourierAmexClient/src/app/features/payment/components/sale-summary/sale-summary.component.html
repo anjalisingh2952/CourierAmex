@@ -1,0 +1,142 @@
+<div class="rounded shadow-lg">
+  <div class="modal-header">
+    <h3 class="text-center">{{ 'Payment.ClosingCashRegister' | translate }}</h3>
+    <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+  </div>
+
+  <div class="p-3">
+    <div class="mb-4 row">
+      <div class="form-label col-4 row">
+        <strong class="col-md-5">{{ 'Payment.TotalPayments' | translate }}: <span class="text-primary form-label">
+            {{ totalPayment}}</span></strong>
+        <div class="col-md-7">
+          <strong class="d-block">{{ 'Payment.TotalPaidLocal' | translate }}:
+            <span class="text-primary form-label">{{ paidLocal | number: '1.2-2' }}</span>
+          </strong>
+          <strong class="d-block mt-2">{{ 'Payment.TotalPaidDollars' | translate }}:
+            <span class="text-primary form-label">{{ paidDollar | number: '1.2-2' }}</span>
+          </strong>
+        </div>
+      </div>
+      <p class="form-label col-8"><strong></strong>
+      </p>
+    </div>
+  </div>
+  <div class="row  ps-3 g-3 mb-4">
+    <div class="row ps-3 mb-4">
+      <div class="col-md-3 mt-2" *ngFor="let sale of saleDetail">
+        <div class="card shadow-sm p-3">
+          <h5><span class="text-white bg-primary rounded d-inline-block p-1">{{ sale.description }}</span></h5>
+          <p class="form-label">{{ 'Payment.AmountPaidInLocal' | translate }}:
+            <strong>{{sale.amountLocal | number: '1.2-2'}}</strong>
+          </p>
+          <p class="form-label">{{ 'Payment.AmountPaidInDollars' | translate }}:
+            <strong>{{sale.amountDollar | number: '1.2-2'}}</strong>
+          </p>
+          <p class="form-label">{{ 'Payment.TotalPayments' | translate }}:
+            <strong>{{sale.totalPayments | number: '1.2-2'}}</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-5" *ngIf="saleDetail?.length">
+      <div class="card-header text-center bg-primary text-white">
+        <div class="p-2"><strong>{{ 'Payment.CashSummaryEfectivo' | translate }}</strong></div>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered text-center">
+          <thead class="table-dark">
+            <tr>
+              <th>{{ 'CustomerDetails.CustomerCategory' | translate }}</th>
+              <th>{{ 'Payment.Local' | translate }}</th>
+              <th>{{ 'Payment.Dollar' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>{{ 'Payment.Opened' | translate }}</strong></td>
+              <td [ngClass]="{'text-success': cashInfo.TotalLocalSum >= 0, 'text-danger': cashInfo.TotalLocalSum < 0}">
+                {{cashInfo.TotalLocalSum | number: '1.2-2'}}
+              </td>
+              <td
+                [ngClass]="{'text-success': cashInfo.TotalDollerSum >= 0, 'text-danger': cashInfo.TotalDollerSum < 0}">
+                {{cashInfo.TotalDollerSum | number: '1.2-2'}}
+              </td>
+            </tr>
+
+            <tr>
+              <td><strong>{{ 'Payment.Paid' | translate }}</strong></td>
+              <td [ngClass]="{'text-success': cashInfo.PaidLocal >= 0, 'text-danger': cashInfo.PaidLocal < 0}">
+                {{cashInfo.PaidLocal | number: '1.2-2'}}
+              </td>
+              <td [ngClass]="{'text-success': cashInfo.PaidDollar >= 0, 'text-danger': cashInfo.PaidDollar < 0}">
+                {{cashInfo.PaidDollar | number: '1.2-2'}}
+              </td>
+            </tr>
+
+            <tr>
+              <td><strong>{{ 'Payment.Change' | translate }}</strong></td>
+              <td
+                [ngClass]="{'text-success': cashInfo.TotalChangeInLocal >= 0, 'text-danger': cashInfo.TotalChangeInLocal < 0}">
+                {{cashInfo.TotalChangeInLocal | number: '1.2-2'}}
+              </td>
+              <td
+                [ngClass]="{'text-success': cashInfo.TotalChangeInDollar >= 0, 'text-danger': cashInfo.TotalChangeInDollar < 0}">
+                {{cashInfo.TotalChangeInDollar | number: '1.2-2'}}
+              </td>
+            </tr>
+
+            <tr>
+              <td><strong>{{ 'Payment.CashIn' | translate }}</strong></td>
+              <td
+                [ngClass]="{'text-success': cashInfo.CashInAmountLocal >= 0, 'text-danger': cashInfo.CashInAmountLocal < 0}">
+                {{cashInfo.CashInAmountLocal | number: '1.2-2'}}
+              </td>
+              <td
+                [ngClass]="{'text-success': cashInfo.CashInAmountDollar >= 0, 'text-danger': cashInfo.CashInAmountDollar < 0}">
+                {{cashInfo.CashInAmountDollar | number: '1.2-2'}}
+              </td>
+            </tr>
+
+            <tr>
+              <td><strong>{{ 'Payment.CashOut' | translate }}</strong></td>
+              <td
+                [ngClass]="{'text-success': cashInfo.CashOutAmountLocal >= 0, 'text-danger': cashInfo.CashOutAmountLocal < 0}">
+                {{cashInfo.CashOutAmountLocal | number: '1.2-2'}}
+              </td>
+              <td
+                [ngClass]="{'text-success': cashInfo.CashOutAmountDollar >= 0, 'text-danger': cashInfo.CashOutAmountDollar < 0}">
+                {{cashInfo.CashOutAmountDollar | number: '1.2-2'}}
+              </td>
+            </tr>
+
+            <tr class="table-info">
+              <td><strong>{{ 'Payment.Summary' | translate }}</strong></td>
+              <td
+                [ngClass]="{'text-success': (cashInfo.TotalLocalSum + cashInfo.CashOutAmountLocal + cashInfo.CashInAmountLocal) >= 0, 'text-danger': (cashInfo.TotalLocalSum - cashInfo.CashOutAmountLocal + cashInfo.CashInAmountLocal) < 0}">
+                <strong>{{cashInfo.TotalLocalSum + cashInfo.CashOutAmountLocal + cashInfo.CashInAmountLocal | number: '1.2-2' }}</strong>
+              </td>
+              <td
+                [ngClass]="{'text-success': (cashInfo.TotalDollerSum + cashInfo.CashOutAmountDollar + cashInfo.CashInAmountDollar) >= 0, 'text-danger': (cashInfo.TotalDollerSum - cashInfo.CashOutAmountDollar + cashInfo.CashInAmountDollar) < 0}">
+                <strong>{{cashInfo.TotalDollerSum + cashInfo.CashOutAmountDollar + cashInfo.CashInAmountDollar | number: '1.2-2' }}</strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label">{{ 'Payment.ClosingNote' | translate }}</label>
+      <textarea class="form-control" placeholder="Add a closing note..."></textarea>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-start gap-2 pb-4 ps-3 pe-4">
+    <button (click)="onCancel()" class="btn btn-primary">{{ 'Payment.Discard' | translate }}</button>
+    <button class="btn btn-primary" (click)="exportToExcel()">{{ 'Payment.DailySales' | translate }} <i
+        class="fa-solid fa-download ms-1"></i></button>
+    <button class="btn btn-primary" (click)="ClosePointOfSale()">{{ 'Payment.ClosePointOfSale' | translate }}</button>
+  </div>
+</div>

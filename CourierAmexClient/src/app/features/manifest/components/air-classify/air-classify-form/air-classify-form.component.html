@@ -1,0 +1,111 @@
+<div class="air-classify" *ngIf="entity">
+  <ng-template #LOADER>
+    <ngx-skeleton-loader />
+  </ng-template>
+
+  <form class="air-classify-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" autocomplete="off">
+    <div class="row">
+
+      <div class="col-md-6">
+        <div class="panel panel-inverse">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa fa-plane ms-22"></i> {{ 'AirClassify.SubTitle' | translate }}
+            </h4>
+          </div>
+
+          <div class="panel-body overflow-auto">
+            <div class="mb-2" *ngIf="showCompanies ">
+              <label class="form-label" for="companyId">* {{ 'ManifestDetails.Company' | translate }}</label>
+              <select minValueValidator="1" class="form-select" name="companyId" [ngModel]="entity.companyId"
+                #companyId="ngModel" [class.is-valid]="companyId.valid && companyId.touched"
+                (ngModelChange)="companyChange($event)" [class.is-invalid]="companyId.invalid && companyId.touched"
+                required>
+                <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                <option [ngValue]=c.id *ngFor="let c of companies">{{ c.name }}</option>
+              </select>
+              <ng-container>
+                <div class="invalid-feedback">
+                  {{ 'Labels.FieldRequired' | translate }}
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label" for="manifestId">* {{ 'Sidebar.Manifest' | translate }}</label>
+              <select minValueValidator="1" class="form-select" name="manifestId" [ngModel]="entity.id"
+                #manifestId="ngModel" [class.is-valid]="manifestId.valid && manifestId.touched"
+                (ngModelChange)="manifestChange($event)" [class.is-invalid]="manifestId.invalid && manifestId.touched"
+                required>
+                <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                <option [ngValue]=m.id *ngFor="let m of manifests">{{ m.manifestNumber }}</option>
+              </select>
+              <ng-container *ngIf="manifestId.invalid && manifestId.touched">
+                <div class="invalid-feedback" *ngIf="manifestId.errors?.['required'] || manifestId.errors?.['min']">
+                  {{ 'Labels.FieldRequired' | translate }}
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="panel-heading">
+              <div class="panel-heading-btn">
+                <button type="button" (click)="openMasterGuideModal()"
+                  class="btn btn-link btn-sm text-decoration-none text-dark" *ngIf="(hasAdd ) || (hasUpdate )">
+                  <i class="fa fa-solid fa-list me-2 text-dark"></i> {{ 'AirClassify.MasterGuide' |
+                      translate }}
+                </button>
+                <button type="button" (click)="openChildGuideModal()"
+                  class="btn btn-link btn-sm text-decoration-none text-dark" *ngIf="(hasAdd ) || (hasUpdate )">
+                  <i class="fa fa-solid fa-ellipsis me-2 text-dark"></i> {{ 'AirClassify.Guide' |
+                      translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="panel panel-inverse">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa fa-pladddne fa-list"></i> {{ 'AirClassify.Guides' | translate }}
+            </h4>
+          </div>
+
+          <div class="panel-body overflow-auto">
+            <div class="mb-2">
+              <label class="form-label" for="guideId">* {{ 'AirClassify.Guide' | translate }}</label>
+              <select minValueValidator="1" class="form-select" name="guideId" [(ngModel)]="entity.shippingWayId"
+                #guideId="ngModel" [class.is-valid]="guideId.valid && guideId.touched"
+                (ngModelChange)="airGuideChange($event)" [class.is-invalid]="guideId.invalid && guideId.touched"
+                required>
+                <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                <option *ngFor="let ag of airGuides" [ngValue]="ag.id">{{ ag.guide }}</option>
+              </select>
+
+              <ng-container *ngIf="guideId.invalid && guideId.touched">
+                <div class="invalid-feedback" *ngIf="guideId.errors?.['required'] || guideId.errors?.['min']">
+                  {{ 'Labels.FieldRequired' | translate }}
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="panel-heading">
+              <div class="panel-heading-btn">
+                <button type="button" class="btn btn-primary me-2" *ngIf="(hasAdd ) || (hasUpdate)"
+                  (click)="modifyChildModel()">
+                  <i class="fa fa-plus"></i><span class="ps-2">{{ 'AirGuide.ModifyGuide' | translate }}</span>
+                </button>
+                <button type="button" class="btn btn-danger" *ngIf="(hasAdd ) || (hasUpdate )"
+                  (click)="deleteChildGuide()">
+                  <i class="fa fa-trash"></i><span class="ps-2">{{ 'AirGuide.DeleteGuide' | translate }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

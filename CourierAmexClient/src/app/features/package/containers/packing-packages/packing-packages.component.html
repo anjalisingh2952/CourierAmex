@@ -1,0 +1,79 @@
+<div class="package-details" *ngIf="{ 
+    entity: entity$ | async, 
+    companies: companies$ | async,
+    manifests: manifests$ | async,
+    packages: packages$ | async
+    } as data">
+  <ng-container>
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">
+      {{ 'PackingPackages.Title' | translate }}
+      <small>{{ 'PackingPackages.SubTitle' | translate }}</small>
+    </h1>
+
+    <div class="row">
+
+      <div class="col-lg-8 col-md-7 col-sm-12 mb-3">
+        <app-packing-packages-form (onCompanyChange)="onCompanyChange($event)"
+          (onManifestChange)="onManifestChange($event)" (onAirGuideChange)="onAirGuideChange($event)"
+          [companies]="data.companies || []" [manifests]="data.manifests || []"
+          [entity]="data.entity || { shipType: 0, id: 0, status: 0 }">
+        </app-packing-packages-form>
+      </div>
+
+      <div class="col-lg-4 col-md-5 col-sm-12">
+        <div class="panel panel-inverse">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa-solid fa-boxes-packing fa-lg fa-fw me-1"></i>
+              {{ 'PackageDetails.SubTitle' | translate }}
+            </h4>
+          </div>
+          <div class="panel-body">
+            <app-packing-packages-list [listDetailForModal]="modalListDetail"
+              (fetchModalData)="onFetchModalData($event)" [packages]="data.packages || []">
+            </app-packing-packages-list>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-inverse">
+      <div class="panel-heading">
+        <h4 class="panel-title" [ngSwitch]="isManifestConsolidatedType">
+          <i class="fa-solid fa-boxes-packing fa-lg fa-fw me-1"></i>
+          <span *ngSwitchCase="true">
+            {{ 'PackingPackages.SelectDaughterGuid' | translate }}
+          </span>
+          <span *ngSwitchCase="false">
+            {{ 'PackingPackages.ReferenceStockSelection' | translate }}
+          </span>
+        </h4>
+      </div>
+      <div class="panel-body">
+        <app-packing-packages-section-selection (selectedCategory)="handleSelectedCategory($event)"
+          (childGuideId)="handleChildGuideId($event)" (packageResponse)="handlePackageResponse($event)"
+          (onPalletChange)="handlePalletChange($event)" (isPackagingStarted)="handlePackagingStarted($event)" [closePackage]="closePackage" [isPackageList]="isPackageList" [manifestId]="manifestId" [airGuideId]="airGuideId">
+        </app-packing-packages-section-selection>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="panel panel-inverse">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <i class="fa-solid fa-boxes-packing fa-lg fa-fw me-1"></i>
+          {{ 'PackageDetails.Title' | translate }}
+        </h4>
+      </div>
+      <div class="panel-body">
+        <app-package-list-detail [pendingPackages]="((data?.packages?.totalPackage || 0) - (data?.packages?.sortedPackage || 0)) || ''"
+        (closePacking)="handleClosePacking($event)" (refreshList)="refreshPackages()" (packageSearch)="packPackage($event)"
+          [packageList]="packageList" [isPackagingStarted]="isPackagingStarted" (isPackageList)="handlePackageList($event)">
+        </app-package-list-detail>
+      </div>
+    </div>
+  </div>
+</div>

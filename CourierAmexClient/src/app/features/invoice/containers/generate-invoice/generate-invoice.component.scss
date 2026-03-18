@@ -1,0 +1,144 @@
+.float-left {
+    float: left;
+    padding-left: 5px;
+    margin-top: 2px;
+
+    .form-check-inline {
+        margin-right: 4px;
+    }
+
+    .card-body {
+        padding: 5px;
+    }
+
+}
+
+.small-table .p-datatable-tbody>tr>td {
+    font-size: 12px;
+    /* Adjust font size */
+    padding: 4px 8px;
+    /* Adjust padding (top-bottom, left-right) */
+}
+
+.small-table th,
+.small-table td {
+    font-size: 12px;
+    padding: 5px;
+}
+
+.primeng-table .p-datatable-tbody>tr {
+    background-color: #f4f4f9;
+    /* Row background */
+    transition: background-color 0.3s;
+}
+
+.primeng-table .p-datatable-tbody>tr.p-highlight {
+    background-color: #d1e7dd !important;
+    /* Active row background */
+    color: #084c61;
+    font-weight: bold;
+}
+
+.primeng-table .p-datatable-tbody>tr:hover {
+    color: rgb(75, 85, 99);
+    background: rgb(243, 244, 246);
+}
+
+thead,
+tbody,
+tfoot,
+tr,
+td,
+th {
+    font-size: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+    border-width: 0 0 1px 0 !important;
+    padding: 0.3rem 0.3rem !important;
+}
+.custom-table-view ::ng-deep .p-button {
+    padding: 5px;
+    font-size: 12px;
+    height: auto !important;
+}
+// .custom-table-view ::ng-deep {
+//     max-height: 400px;
+//     overflow: auto;
+// }
+.gap-all {
+    text-align: right;
+    float: right;
+    font-size: 12px;
+    padding: 0;
+}
+.gap-all::ng-deep .p-button {
+    padding: 0px;
+    color: #fff;
+}
+.gap-all::ng-deep .p-button .pi {
+    font-size: 10px;
+    margin-right: 2px !important;
+}
+.card-header span {
+    float: left;
+}
+.modify-table-view {
+    min-height: 350px;
+}
+.modify-table-view::ng-deep ul {
+    padding: 2px;
+}
+.modify-table-view::ng-deep li {
+    padding: 5px;
+    font-size: 12px;
+}
+.modify-table-view::ng-deep .p-dropdown-label {
+    font-size: 12px;
+    padding: 5px;
+}
+.modify-table-view::ng-deep .p-inputtext {
+    padding: 5px;
+    font-size: 12px;
+}
+.card-table {
+    padding: 5px 0px;
+}
+.modify-table .card-table {
+    padding: 10px;
+}
+.modify-table-view::ng-deep td {
+    padding: 10px !important;
+}
+.modify-table-view::ng-deep .p-datatable .p-datatable-thead>tr>th {
+    background-color: #fff;
+}
+.custom-table-view::ng-deep .p-datatable .p-datatable-thead>tr>th {
+    background-color: #fff;
+}
+.modify-table .panel{
+    margin: 0px 0px 1px 0px;
+}
+
+.cardtable{
+    padding: 0px;
+}
+.cardtable::ng-deep .panel-body.scrollable-panel {
+    padding: 0px;
+}
+
+
+.cardtable::ng-deep .table-success {
+    color: #000;
+    --bs-table-bg: #1769af;
+}
+.cardtable::ng-deep .table-striped > tbody > .table-success:nth-of-type(odd) > * {
+    --bs-table-bg-type: #1769af;
+}
+.cardtable::ng-deep .table-striped > tbody > .table-primary:nth-of-type(odd) > * {
+    --bs-table-bg-type: #dbf0f7;
+    color: #000;
+}
+.cardtable::ng-deep .table-striped > tbody > .table-primary:nth-of-type(even) > * {
+    --bs-table-bg-type: #dbf0f7;
+    color: #000;
+}

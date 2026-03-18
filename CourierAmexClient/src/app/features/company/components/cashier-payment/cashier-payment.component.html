@@ -1,0 +1,151 @@
+<div class="panel panel-inverse">
+  <div class="panel-heading">
+    <h4 class="panel-title"><i class="fa-solid fa-users fa-lg fa-fw me-1"></i>
+      {{'ClientCashierDetails.SubPaymentTypeList' | translate }}</h4>
+    <div class="">
+      <button type="button" class="btn btn-primary me-2" (click)="openModal(openModalRef)">
+        {{'Labels.Manage' | translate }}
+      </button>
+    </div>
+  </div>
+  <div>
+    <ng-container>
+      <div class="table-responsive large-table-container p-2">
+        <table class="table table-hover text-nowrap" aria-label="Simple Table">
+          <thead>
+            <tr>
+              <th class="pt-0 pb-2 border-bottom">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of selectedSubPaymentTypesList">
+              <td class="text-truncate" style="max-width: 150px;">{{ row.description }}</td>
+            </tr>
+
+            <tr *ngIf="selectedSubPaymentTypesList?.length === 0">
+              <td colspan="3" class="fst-italic text-gray text-center">
+                {{ emptyLabel }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #openModalRef>
+  <div class="modal-content">
+    <div class="modal-header border-0">
+      <h5 class="modal-title">{{ 'Payment.ManageCashier' | translate }}</h5>
+      <button type="button" (click)="closeModal()" class="btn-close" aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body row">
+      <div class="col-md-5 col-12">
+        <div class="panel panel-inverse">
+          <div class="panel-heading">
+            <h4 class="panel-title"><i class="fa-solid fa-money-check-dollar fa-lg fa-fw me-1"></i>
+              {{'ClientCashierDetails.AssignedSubPaymentTypes' | translate }}</h4>
+          </div>
+
+
+          <div class="table-responsive large-table-container p-2">
+            <table class="table table-hover text-nowrap" aria-label="Simple Table">
+              <thead>
+                <tr>
+                  <th class="pt-0 pb-2 border-bottom">Action  <input class="mt-1" type="checkbox"
+                    [(ngModel)]="selectAll"
+                    (change)="toggleSelectAll()"
+                    ngbTooltip="{{ 'Tooltips.SelectAll' | translate }}" /></th>
+                  <th class="pt-0 pb-2 border-bottom">Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of selectedSubPaymentTypesList">
+                  <td class="text-truncate" style="max-width: 150px;">
+                    <input type="checkbox" [(ngModel)]="row.selected"
+                      ngbTooltip="{{ 'Tooltips.Select' | translate }}" />
+                  </td>
+                  <td class="text-truncate" style="max-width: 150px;">{{ row.description }}</td>
+                </tr>
+
+                <tr *ngIf="selectedSubPaymentTypesList?.length === 0">
+                  <td colspan="3" class="fst-italic text-gray text-center">
+                    {{ emptyLabel }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <!-- <ng-container>
+            <app-entity-list [showHeader]="false" [activeSearch]="false" [hasPagination]="false" [state]="state"
+              [columns]="columnsSelectedType" [rows]="selectedSubPaymentTypesList">
+            </app-entity-list>
+          </ng-container> -->
+        </div>
+        <ng-template #actionTemplateForselected let-params="params">
+          <input type="checkbox" class="form-check-input me-2" />
+        </ng-template>
+      </div>
+      <div class="col-md-2 col-12 d-flex flex-column align-items-center mt-5" style="height: 100px;">
+        <button class="btn btn-primary mb-2" (click)="assignedSubPayment()">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <button class="btn btn-primary" (click)="removeSubPayment()">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="col-md-5 col-12">
+        <ng-container>
+          <div class="panel panel-inverse">
+            <div class="panel-heading">
+              <h4 class="panel-title"><i class="fa-solid fa-money-check-dollar fa-lg fa-fw me-1"></i>
+                {{'ClientCashierDetails.AllSubPaymentTypes' | translate }}</h4>
+            </div>
+
+            <div class="table-responsive large-table-container p-2">
+              <table class="table table-hover text-nowrap" aria-label="Simple Table">
+                <thead>
+                  <tr>
+                    <th class="pt-0 pb-2 border-bottom">Action  <input class="mt-1" type="checkbox"
+                      [(ngModel)]="selectAlllForAllList"
+                      (change)="toggleSelectAllForAllList()"
+                      ngbTooltip="{{ 'Tooltips.SelectAll' | translate }}" /></th>
+                    <th class="pt-0 pb-2 border-bottom">Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of subPaymentTypesList">
+                    <td class="text-truncate" style="max-width: 150px;"> <input type="checkbox" [(ngModel)]="row.selected"
+                        ngbTooltip="{{ 'Tooltips.Select' | translate }}" />
+                    </td>
+                    <td class="text-truncate" style="max-width: 150px;">{{ row.description }}</td>
+
+                  </tr>
+
+                  <tr *ngIf="subPaymentTypesList?.length === 0">
+                    <td colspan="3" class="fst-italic text-gray text-center">
+                      {{ emptyLabel }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #actionTemplateForList>
+          <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"></i>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="modal-footer border-0">
+      <button class="btn btn-primary">{{ 'Payment.OpenSale' | translate }}</button>
+      <button class="btn btn-secondary" (click)="closeModal()">{{ 'Close' | translate }}</button>
+    </div>
+  </div>
+</ng-template>

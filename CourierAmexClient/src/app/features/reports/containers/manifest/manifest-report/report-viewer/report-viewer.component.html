@@ -1,0 +1,80 @@
+<div class="row">
+
+    <div class="col-12 ">
+        <!-- <button (click)="exportHtmlTableToExcel('manifestTable', 'Manifestreport.xlsx')" class="btn btn-success"> <i class="fas fa-file-excel"></i> Export to Excel</button> -->
+        <div class="row">
+
+            <div class="col-6"></div>
+            <div cl ass="col-4 w-auto">
+                <img (click)="exportToExcel2()" src="assets/img/xls.png" alt="Export to Excel" 
+                                        class="float-end cursor-pointer" 
+                                        title="Export to Excel"
+                                        style="width: 35px; height: 35px; cursor: pointer; transition: transform 0.2s;"
+                                        onmouseover="this.style.transform='scale(1.1)'" 
+                                        onmouseout="this.style.transform='scale(1)'">
+                                    
+            </div>
+
+            <div class="col-4"></div>
+            </div>
+   
+<br>
+<div class="col-12 ">
+
+<div id="manifestTable" class="d-flex justify-content-center align-items-center vh-10">
+    <div class="a4-container shadow-lg">
+        <!-- Header Section -->
+        <div class="text-center border-bottom pb-3 mb-3">
+            <h4 class="fw-bold text-uppercase">{{this.companyName}}</h4>
+            <h5 class="fw-semibold text-muted">{{this.reportName}}</h5>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <p><strong>AWB#:</strong> <span class="text-primary">{{entity.manifestNumber}}</span></p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <p><strong>Date:</strong> <span class="text-secondary">{{entity.date}}</span></p>
+            </div>
+        </div>
+
+        <div class="border rounded p-3 mb-3 bg-white">
+            <p class="mb-1"><strong>GENERAL ADDRESS:</strong> {{entity.address}}</p>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-responsive">
+            <table class="table table-bordered ">
+                <tbody>
+                    <ng-container *ngFor="let row of entityList; let i = index">
+                        <tr class="text-center text-white" *ngIf="i === 0 || entityList[i].childGuide !== entityList[i - 1].childGuide">
+                            <th>Child Guide:</th>
+                            <th colspan="13">{{ row.childGuide }}</th>
+                        </tr>
+                        <tr class="text-center text-white" *ngIf="i === 0 || entityList[i].childGuide !== entityList[i - 1].childGuide">
+                            <th *ngFor="let header of headers">{{ header }}</th>
+                        </tr>
+                        <tr class="tr-bg-white"> 
+                            <td>{{i+1}}</td>       
+                            <td class="text-left">{{ row.packageNumbers }}</td>
+                            <td class="text-left">{{ row.customerName }}</td>
+                            <td class="text-left">{{ row.courier }}</td>
+                            <td class="text-left">{{ row.origin }}</td>
+                            <td class="text-left">{{ row.courierNumber }}</td>
+                            <td class="text-left">{{ row.packageNumbers }}</td>
+                            <td class="text-left">{{ row.description }}</td>
+                            <td class="text-left">{{ row.weight }}</td>
+                            <td class="text-left">{{ row.cubicFeet }}</td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer Section -->
+        <!-- <div class="text-end border-top pt-2 mt-3">
+            <p class="mb-0"><strong>Peso Parcial:</strong> {{totalWeight}} &nbsp;&nbsp;&nbsp; <strong>Volumen:</strong> {{totalVolumeWeight}}</p>
+        </div> -->
+    </div>
+    </div>
+</div>

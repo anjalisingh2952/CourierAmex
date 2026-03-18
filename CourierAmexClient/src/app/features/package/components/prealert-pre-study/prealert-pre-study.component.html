@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <i class="fa fa-boxes fa-lg fa-fw me-1"></i> {{ 'PackageDetails.Title' |
+                    translate }}
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="row align-items-center">
+                    <div class="col-2 col-md-2">
+                        <div class="package-details" *ngIf="{ 
+                            entity: entity$ | async, 
+                            companies: companies$ | async,
+                            manifests: manifests$ | async,
+                            packages: packages$ | async
+                            } as data">
+                            <ng-container *ngIf="data.entity && data.companies">
+                                <app-pre-study-form [entity]="data.entity" [companies]="data.companies"
+                                    [manifests]="data.manifests || []" (onCompanyChange)="onCompanyChange($event)"
+                                    (onManifestChange)="onManifestChange($event)">
+                                </app-pre-study-form>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="col-3 col-md-3 w-auto"> <button class="btn btn-primary" (click)="getPackageItems()">Manifest Report</button></div>
+                    <div class="col-2 w-auto">
+                        <img (click)="exportToExcel()" src="assets/img/xls.png" alt="Export to Excel" 
+                            class="float-end cursor-pointer" 
+                            title="Export to Excel"
+                            style="width: 35px; height: 35px; cursor: pointer; transition: transform 0.2s;"
+                            onmouseover="this.style.transform='scale(1.1)'" 
+                            onmouseout="this.style.transform='scale(1)'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-12">
+        <div class="panel panel-inverse">
+            <!-- <div class="panel-heading">
+                <h4 class="panel-title">
+                    <i class="fa fa-boxes fa-lg fa-fw me-1"></i>  {{ 'PackageDetails.Title' |
+                    translate }} 
+                </h4>
+            </div> -->
+            <div class="panel-body">
+                <div class="row">
+                    <div  class="col-12">
+                        <ng-container *ngIf="entities$ | async as entities">
+                            <app-entity-list [title]="''" [subTitle]="''" [state]="state"[columns]="columns" [rows]="closedPackageList" [showHeader]="false" [hasPagination]="false" [activeSearch]="false"
+                                (stateChange)="onStateChange($event)" >
+                            </app-entity-list>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                    

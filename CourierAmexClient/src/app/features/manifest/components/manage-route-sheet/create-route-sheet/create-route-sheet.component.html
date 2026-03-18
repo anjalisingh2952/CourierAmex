@@ -1,0 +1,97 @@
+<div class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">ROUTE MAP CREATION</h5>
+      </div>
+      <div class="modal-body">
+        <form #routeSheetForm="ngForm">
+          <!-- Route Sheet Name -->
+          <div class="mb-3">
+            <label class="form-label">Enter the route map name</label>
+            <input type="text" class="form-control" name="routeSheetName" [(ngModel)]="routeSheetName">
+            <!-- <div *ngIf="routeSheetName.invalid && routeSheetName.touched" class="invalid-feedback">
+              Route sheet name is required.
+            </div> -->
+          </div>
+
+          <!-- Select Zone -->
+          <div class="mb-3">
+            <label class="form-label">Select Zone</label>
+            <select class="form-select" name="selectedZone" [(ngModel)]="selectedZone" #selectedZone="ngModel" required
+              [class.is-valid]="selectedZone.valid && selectedZone.touched"
+              [class.is-invalid]="selectedZone.invalid && selectedZone.touched" (change)="onZoneChange($event)">
+              <option [ngValue]="0" selected hidden>Select Zone</option>
+              <option *ngFor="let zone of zones" [value]="zone.id">{{ zone.name }}</option>
+            </select>
+            <div *ngIf="selectedZone.invalid && selectedZone.touched" class="invalid-feedback">
+              Please select a zone.
+            </div>
+          </div>
+
+          <!-- Destination & Point of Sale -->
+          <div class="mb-3 row">
+            <div [ngClass]="{'col-6': isBranch, 'col-12': !isBranch}">
+              <label class="form-label">Select Destination</label>
+              <select class="form-select" name="selectedDestination" [(ngModel)]="selectedDestination"
+                #selectedDestination="ngModel" required
+                [class.is-valid]="selectedDestination.valid && selectedDestination.touched"
+                [class.is-invalid]="selectedDestination.invalid && selectedDestination.touched"
+                (change)="onDeliveryTypeChange($event)">
+                <option [ngValue]="0" selected hidden>Select Destination</option>
+                <option *ngFor="let type of deliveryTypes" [value]="type.deliveryType">{{ type.description }}</option>
+              </select>
+              <div *ngIf="selectedDestination.invalid && selectedDestination.touched" class="invalid-feedback">
+                Please select a destination.
+              </div>
+            </div>
+
+            <div *ngIf="isBranch" class="col-6">
+              <label class="form-label">Select Point Of Sale</label>
+              <select class="form-select" name="selectedPOS" [(ngModel)]="selectedPOS" #selectedPOS="ngModel" required
+                [class.is-valid]="selectedPOS.valid && selectedPOS.touched"
+                [class.is-invalid]="selectedPOS.invalid && selectedPOS.touched" (change)="onPointOfSaleChange($event)">
+                <option [ngValue]="0" selected hidden>Select Point of Sale</option>
+                <option *ngFor="let POS of pointOfSaleList" [value]="POS.pointOfSaleId">{{ POS.pointOfSaleName }}</option>
+              </select>
+              <div *ngIf="selectedPOS.invalid && selectedPOS.touched" class="invalid-feedback">
+                Please select a point of sale.
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!isBranch" class="card">
+            <div class="panel panel-inverse">
+              <div class="panel-heading">
+                <h4 class="panel-title">Select Stop</h4>
+              </div>
+            </div>
+            <div class="card-body p-2">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Filter</th>
+                    <th>Stop</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let area of areas">
+                    <td>
+                      <input type="radio" name="selectedStop" [(ngModel)]="selectedStop" [value]="area">
+                    </td>
+                    <td>{{ area.name }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="createRoute()" [disabled]="routeSheetForm.invalid">Create Route Map</button>
+        <button type="button" class="btn btn-danger" (click)="cancel()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

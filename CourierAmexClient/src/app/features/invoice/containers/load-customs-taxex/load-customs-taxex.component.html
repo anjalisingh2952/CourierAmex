@@ -1,0 +1,130 @@
+<div class="package-details LoadCustomsTaxex">
+  <ng-container>
+    <shared-breadcrumb></shared-breadcrumb>
+    <h1 class="page-header">
+      {{ 'LoadCustomsTaxex.Title' | translate }}
+      <small>{{ 'LoadCustomsTaxex.SubTitle' | translate }}</small>
+    </h1>
+  </ng-container>
+
+  <div class="manifest-packages">
+    <div class="panel panel-inverse">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <i class="fa fa-circle-info fa-lg fa-fw me-1"></i> Load Customs Taxex
+          <span class="badge bg-primary ms-1">{{ packageList.length }}</span>
+        </h4>
+      </div>
+      <div class="panel-body">
+        <div class="row mb-4">
+          <div class="col-12">
+            <form class="package-form" #reportForm="ngForm" autocomplete="off">
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-4 float-left mt-3">
+                      <div class="input-group mb-10px">
+                        <input
+                          type="checkbox"
+                          (change)="toggleLoadByPackage()"
+                          [(ngModel)]="LoadByPackage"
+                          name="LoadByPackage"
+                          class="form-check-input"
+                          value="0"
+                        />
+                        <label class="pl-5">{{ 'LoadCustomsTaxex.LoadByPackage' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4 float-left mt-3">
+                      <div class="input-group mb-10px">
+                        <input
+                          type="checkbox"
+                          (change)="toggleLoadByBag()"
+                          [(ngModel)]="LoadByBag"
+                          name="LoadByBag"
+                          class="form-check-input"
+                          value="0"
+                        />
+                        <label class="pl-5">{{ 'LoadCustomsTaxex.LoadByBag' | translate }}</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4 float-left mt-3">
+                      <div class="input-group mb-10px">
+                        <input type="file" (change)="uploadRxcel($event)" #fileInput name="uploadfile" class="form-control" required />
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 mt-3">
+                    <button type="button" class="btn btn-primary" (click)="saveData()">Save</button>
+                     <button type="button" class="btn btn-primary ms-3" (click)="clearFile()">Clear File</button>
+
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <!-- Error Table -->
+            <div *ngIf="errorList.length > 0" class="table-responsive mt-4">
+              <h5 class="text-danger">❌ Error Records (Fix Required)</h5>
+              <table class="table table-bordered table-striped border-danger">
+                <thead class="table-danger">
+                  <tr>
+                    <th>CRTRACK</th>
+                    <th>Transaction</th>
+                    <th>FOB</th>
+                    <th>CIF</th>
+                    <th>Amount</th>
+                    <th>DUA</th>
+                    <th>Error Description</th> 
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of errorList">
+                    <td>{{ item.crtrack }}</td>
+                    <td>{{ item.transaction }}</td>
+                    <td>{{ item.fob }}</td>
+                    <td>{{ item.cif }}</td>
+                    <td>{{ item.amount }}</td>
+                    <td>{{ item.dua}}</td>
+                    <td>{{ item.errorMessage }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Valid Package Table -->
+            <div *ngIf="packageList.length > 0" class="table-responsive mt-4">
+              <h5 class="text-success">✅ Valid Packages</h5>
+              <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                  <tr>
+                    <th>CRTRACK</th>
+                    <th>Transaction</th>
+                    <th>FOB</th>
+                    <th>CIF</th>
+                    <th>Amount</th>
+                    <th>DUA</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of packageList">
+                    <td>{{ item.crtrack }}</td>
+                    <td>{{ item.transaction }}</td>
+                    <td>{{ item.fob }}</td>
+                    <td>{{ item.cif }}</td>
+                    <td>{{ item.amount }}</td>
+                    <td>{{ item.dua }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 

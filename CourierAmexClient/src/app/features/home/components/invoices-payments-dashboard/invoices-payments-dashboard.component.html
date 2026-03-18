@@ -1,0 +1,133 @@
+<div class="row">
+  <div class="col-12 col-lg-3 mb-4">
+    <div class="p-3 rounded-3 border shadow-sm h-100">
+      <div class="p-1">
+        <h3 class="fw-bold mb-2 d-flex align-items-center">Invoice</h3>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fas fa-search"></i>
+          </span>
+          <input type="text" class="form-control" placeholder="Search anything..." [(ngModel)]="searchTerm"
+            (input)="onSearch()" />
+          <button class="btn btn-primary" type="button" (click)="onSearch()">Search</button>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="fw-bold mb-2 align-items-center">Year</h3>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-outline-secondary btn-sm" (click)="scrollYears(-1)">←</button>
+          <div class="d-flex overflow-auto flex-nowrap w-100" #yearScroll>
+            <button *ngFor="let year of yearsChart" class="btn btn-outline-primary btn-sm me-2"
+              [class.active]="selectedYears.includes(year)" (click)="selectYear(year)">
+              {{ year }}
+            </button>
+          </div>
+          <button class="btn btn-outline-secondary btn-sm" (click)="scrollYears(1)">→</button>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h6 class="fw-bold mb-2">Month</h6>
+        <div class="row row-cols-3 g-2">
+          <div class="col" *ngFor="let month of months">
+            <button class="btn btn-outline-secondary w-100 btn-sm" [class.active]="selectedMonths.includes(month)"
+              (click)="selectMonth(month)">
+              {{ month }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h6 class="fw-bold mb-2">Status</h6>
+        <div class="row row-cols-2 g-2">
+          <div class="col" *ngFor="let status of statuses">
+            <button class="btn btn-outline-dark w-100 btn-sm" [class.active]="selectedStatuses.includes(status)"
+              (click)="selectStatus(status)">
+              {{ status }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-9">
+    <div class="container-fluid p-3">
+      <div class="row gy-4">
+        <div class="col-12 col-md-6 col-lg-6">
+          <div class="h-100">
+            <div style="border: 1px solid #dee2e6; border-radius: 4px; max-height: 280px; overflow: scroll;">
+              <div>
+                <app-entity-list [state]="state" [columns]="columns" (stateChange)="onStateChange($event)"
+                  [pagination]="pagination" [activeSearch]="false" [showHeader]="false" [rows]="invoices">
+                </app-entity-list>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-6">
+          <div class="p-2 border shadow-sm text-center">
+            <h5 class="mb-3">Status of Invoices</h5>
+            <div class="d-flex justify-content-center align-items-center" style="height: 240px;">
+              <div style="position: relative; height: 240px; width: 240px;">
+                <canvas baseChart [data]="pieChartData" [type]="pieChartType" [options]="pieChartOptions">
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3 p-3 border shadow-sm h-100">
+            <h5>Amounts per year</h5>
+            <canvas baseChart [data]="montosChartData" [type]="montosChartType" [options]="montosChartOptions"></canvas>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3 p-3 border shadow-sm h-100">
+            <h5>Invoices per Month</h5>
+            <canvas baseChart [data]="facturasMesChartData" [type]="facturasMesChartType"
+              [options]="facturasMesChartOptions"></canvas>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3 p-3 border shadow-sm h-100">
+            <h5>Billed vs. Paid per Month</h5>
+            <canvas baseChart [data]="facturadoPagadoChartData" [type]="facturadoPagadoChartType"
+              [options]="facturadoPagadoChartOptions"></canvas>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="mb-3 p-3 border shadow-sm h-100">
+            <h5>Number of Invoices Paid per Cashier</h5>
+            <canvas baseChart [data]="facturasCajaChartData" [type]="facturasCajaChartType"
+              [options]="facturasCajaChartOptions"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.status">
+    <ng-container *ngSwitchCase="0">
+      <span *ngIf="params.row.documentType === 'PAGO' || params.row.documentType === 'ADELANTO'; else pendingStatus"
+        class="badge bg-success text-white">
+        {{ 'Status.PAID' | translate }}
+      </span>
+      <ng-template #pendingStatus>
+        <span class="badge bg-warning text-white">{{ 'Status.PENDING' | translate }}</span>
+      </ng-template>
+    </ng-container>
+    <span *ngSwitchCase="1" class="badge bg-danger text-white">{{ 'Status.CANCELLED' | translate }}</span>
+    <span *ngSwitchCase="2" class="badge bg-success text-white">{{ 'Status.PAID' | translate }}</span>
+    <span *ngSwitchCase="3" class="badge bg-secondary text-white">{{ 'Status.PENDINGCREDIT' | translate }}</span>
+    <span *ngSwitchDefault class="badge bg-info text-white">{{ 'Manifests.Unknown' | translate }}</span>
+  </ng-container>
+</ng-template>

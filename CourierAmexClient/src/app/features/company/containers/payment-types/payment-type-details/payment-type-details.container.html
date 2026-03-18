@@ -1,0 +1,13 @@
+<div class="payment-type-details" *ngIf="{ entity: entity$ | async, companies: companies$ | async} as data" >
+    <ng-container *ngIf="data.entity && data.companies">
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'PaymentTypeDetails.Title' | translate }} 
+            <small>
+                {{ 'PaymentTypeDetails.SubTitle' | translate }}
+            </small>
+    </h1>
+    <payment-type-form [entity]="data.entity" [companies]="data.companies" (onSave)="save($event)" 
+        (onCompanyChange)="onCompanyChange($event)" (onGoBack)="goBack()">
+    </payment-type-form>
+    </ng-container>
+</div>

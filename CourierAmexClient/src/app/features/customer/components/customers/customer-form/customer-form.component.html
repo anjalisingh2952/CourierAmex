@@ -1,0 +1,453 @@
+<form class="customer-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" *ngIf="entity" autocomplete="off">
+  <input type="hidden" name="id" [ngModel]="entity.id" />
+  <input type="hidden" name="countryId" [ngModel]="entity.countryId">
+  
+  <div class="mb-3 d-md-flex fw-bold">
+    <div class="mt-md-0 mt-2">
+      <button type="submit" class="btn btn-link btn-sm text-decoration-none text-dark"
+        *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+        <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' |
+        translate }}</button>
+    </div>
+    <div class="ms-md-0 mt-md-0 mt-2">
+      <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="goBack()">
+        <i class="fa fa-arrow-left fa-lg me-2 text-dark"></i> {{ 'Labels.GoBack' |
+        translate }}</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-address-card fa-lg fa-fw me-1"></i> {{ 'CustomerDetails.AccountInfo' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="mb-2">
+            <input type="hidden" name="code" [ngModel]="entity.code" />
+            <label class="form-label">{{ 'CustomerDetails.Code' | translate }}</label>
+            <label class="form-label text-red-600 fs-18px ms-2" *ngIf="entity.code">{{entity.code}}</label>
+            <label class="form-label text-red-600 fs-18px ms-2" *ngIf="!entity.code">{{ 'CustomerDetails.NewCustomer' |
+              translate }}</label>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="shipType">{{ 'CustomerDetails.ShipType' | translate }}</label>
+            <div class="row">
+              <div class="col-6">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkBox" name="shipByAir" [ngModel]="entity.shipByAir"
+                    [checked]="entity.shipByAir">
+                  <label class="form-check-label" for="shipByAir">
+                    {{ 'CustomerDetails.ShipByAir' | translate }}</label>
+                  <i class="fa fa-plane ms-2" ngbTooltip="{{ 'CustomerDetails.ShipByAir' | translate }}"></i>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="checkBox" name="shipBySea" [ngModel]="entity.shipBySea"
+                    [checked]="entity.shipBySea">
+                  <label class="form-check-label" for="shipBySea">
+                    {{ 'CustomerDetails.ShipBySea' | translate }}</label>
+                  <i class="fa fa-ship ms-2" ngbTooltip="{{ 'CustomerDetails.ShipBySea' | translate }}"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-user fa-lg fa-fw me-1"></i> {{ 'CustomerDetails.Info' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <input type="hidden" name="companyId" *ngIf="!showCompanies" [ngModel]="entity.companyId">
+          <div class="mb-2" *ngIf="showCompanies">
+            <label class="form-label" for="companyId">* {{ 'CustomerDetails.Company' | translate }}</label>
+            <select class="form-select" name="companyId" [ngModel]="entity.companyId" #companyId="ngModel"
+              [class.is-valid]="companyId.valid && companyId.touched" (ngModelChange)="companyChange($event)"
+              [class.is-invalid]="companyId.invalid && companyId.touched" [ngModelOptions]="{ updateOn: 'change' }"
+              required>
+              <option [ngValue]=-1>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=c.id *ngFor="let c of companies">{{ c.name }}</option>
+            </select>
+            <ng-container *ngIf="companyId.invalid && companyId.touched">
+              <div class="invalid-feedback" *ngIf="companyId.errors?.['required']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="mb-2">
+                <label class="form-label" for="documentTypeId">* {{ 'CustomerDetails.DocumentTypeId' | translate
+                  }}</label>
+                <select class="form-select" name="documentTypeId" [ngModel]="entity.documentTypeId"
+                  #documentTypeId="ngModel" [ngModelOptions]="{ updateOn: 'change' }"
+                  [class.is-valid]="documentTypeId.valid && documentTypeId.touched"
+                  (ngModelChange)="updateDocumentType($event, form)"
+                  [class.is-invalid]="documentTypeId.invalid && documentTypeId.touched" required>
+                  <option [ngValue]=-1>{{ 'Labels.Select' | translate }}</option>
+                  <option [ngValue]=e.id *ngFor="let e of documentTypes">{{ e.name }}</option>
+                </select>
+                <ng-container *ngIf="documentTypeId.invalid && documentTypeId.touched">
+                  <div class="invalid-feedback" *ngIf="documentTypeId.errors?.['required']">
+                    {{ 'Labels.FieldRequired' | translate }}
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-2">
+                <label class="form-label" for="documentId">* {{ 'CustomerDetails.DocumentId' | translate }}</label>
+                <input type="text" class="form-control" name="documentId" [ngModel]="entity.documentId"
+                  [ngModelOptions]="{ updateOn: 'blur' }"
+                  placeholder="{{ 'CustomerDetails.DocumentIdPlaceholder' | translate }}"
+                  [class.is-valid]="documentId.valid && documentId.touched"
+                  [class.is-invalid]="documentId.invalid && documentId.touched" #documentId="ngModel" maxlength="64"
+                  minlength="3" required>
+                <ng-container *ngIf="documentId.invalid && documentId.touched">
+                  <div class="invalid-feedback" *ngIf="documentId.errors?.['required']">
+                    {{ 'Labels.FieldRequired' | translate }}
+                  </div>
+                  <div class="invalid-feedback" *ngIf="documentId.errors?.['minlength']">
+                    {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="name">* {{ 'CustomerDetails.Firstname' | translate }}</label>
+            <input type="text" class="form-control" name="name" [ngModel]="entity.name"
+              [ngModelOptions]="{ updateOn: 'blur' }"
+              placeholder="{{ 'CustomerDetails.FirstnamePlaceholder' | translate }}"
+              [class.is-valid]="name.valid && name.touched" [class.is-invalid]="name.invalid && name.touched"
+              #name="ngModel" maxlength="64" minlength="3" [class.bg-gray-300]="entity.id > 0" required>
+            <ng-container *ngIf="name.invalid && name.touched">
+              <div class="invalid-feedback" *ngIf="name.errors?.['required']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+              <div class="invalid-feedback" *ngIf="name.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <div class="row">
+              <div class="col-6">
+                <label class="form-label" for="lastname">* {{ 'CustomerDetails.Lastname' | translate }}</label>
+                <input type="text" class="form-control" name="lastname" [ngModel]="entity.lastname"
+                  [ngModelOptions]="{ updateOn: 'blur' }"
+                  placeholder="{{ 'CustomerDetails.LastnamePlaceholder' | translate }}"
+                  [class.is-valid]="lastname.valid && lastname.touched" [class.bg-gray-300]="entity.id > 0"
+                  [class.is-invalid]="lastname.invalid && lastname.touched" #lastname="ngModel" maxlength="64"
+                  minlength="3" required>
+                <ng-container *ngIf="lastname.invalid && lastname.touched">
+                  <div class="invalid-feedback" *ngIf="lastname.errors?.['required']">
+                    {{ 'Labels.FieldRequired' | translate }}
+                  </div>
+                  <div class="invalid-feedback" *ngIf="lastname.errors?.['minlength']">
+                    {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+                  </div>
+                </ng-container>
+              </div>
+
+              <div class="col-6">
+                <label class="form-label" for="lastname2">{{ 'CustomerDetails.Lastname2' | translate }}</label>
+                <input type="text" class="form-control" name="lastname2" [ngModel]="entity.lastname2"
+                  [ngModelOptions]="{ updateOn: 'blur' }"
+                  placeholder="{{ 'CustomerDetails.Lastname2Placeholder' | translate }}"
+                  [class.is-valid]="lastname2.valid && lastname2.touched"
+                  [class.is-invalid]="lastname2.invalid && lastname2.touched" #lastname2="ngModel" maxlength="64"
+                  minlength="3">
+                <ng-container *ngIf="lastname2.invalid && lastname2.touched">
+                  <div class="invalid-feedback" *ngIf="lastname2.errors?.['minlength']">
+                    {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="email">{{ 'CustomerDetails.Email' | translate }}</label>
+            <input type="text" class="form-control" name="email" [ngModel]="entity.email"
+              placeholder="{{ 'CustomerDetails.EmailPlaceholder' | translate }}" [ngModelOptions]="{ updateOn: 'blur' }"
+              [class.is-valid]="email.valid && email.touched" [class.is-invalid]="email.invalid && email.touched"
+              #email="ngModel" maxlength="64" minlength="3" [pattern]="EMAIL_REGEX">
+            <ng-container *ngIf="email.invalid && email.touched">
+              <div class="invalid-feedback" *ngIf="email.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+              </div>
+              <div class="invalid-feedback" *ngIf="email.errors?.['pattern']">
+                {{ 'CustomerDetails.InvalidEmail' | translate }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="clientCategoryId">* {{ 'CustomerDetails.CustomerCategory' | translate
+              }}</label>
+            <select class="form-select" name="clientCategoryId" [ngModel]="entity.clientCategoryId"
+              #clientCategoryId="ngModel" [ngModelOptions]="{ updateOn: 'blur' }"
+              [class.is-valid]="clientCategoryId.valid && clientCategoryId.touched"
+              [class.is-invalid]="clientCategoryId.invalid && clientCategoryId.touched" required>
+              <option [ngValue]=undefined>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=e.id *ngFor="let e of customerCategories">{{ e.name }}</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="status">* {{ 'Labels.Status' | translate }}</label>
+            <select class="form-select" name="status" [ngModel]="entity.status" #status="ngModel"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="status.valid && status.touched"
+              [class.is-invalid]="status.invalid && status.touched" required>
+              <option [ngValue]=null>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=1>{{ 'Status.Draft' | translate }}</option>
+              <option [ngValue]=2>{{ 'Status.Active' | translate }}</option>
+              <option [ngValue]=3>{{ 'Status.Inactive' | translate }}</option>
+            </select>
+            <ng-container *ngIf="status.invalid && status.touched">
+              <div class="invalid-feedback" *ngIf="status.errors?.['required']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+            </ng-container>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-map fa-lg fa-fw me-1"></i> {{ 'CustomerDetails.AddressInfo' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="mb-2">
+            <label class="form-label" for="stateId">* {{ 'CustomerDetails.State' | translate }}</label>
+            <select class="form-select" name="stateId" [ngModel]="entity.stateId" #stateId="ngModel"
+              [class.is-valid]="stateId.valid && stateId.touched" (ngModelChange)="loadZones($event)"
+              [class.is-invalid]="stateId.invalid && stateId.touched" [ngModelOptions]="{ updateOn: 'change' }" required>
+              <option [ngValue]=undefined>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=s.id *ngFor="let s of states">{{ s.name }}</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <div class="row">
+              <div class="col-6">
+                <label class="form-label" for="zoneId">* {{ 'CustomerDetails.Zone' | translate }}</label>
+                <select class="form-select" name="zoneId" [ngModel]="entity.zoneId" #zoneId="ngModel"
+                  [class.is-valid]="zoneId.valid && zoneId.touched" (ngModelChange)="loadAreas($event)"
+                  [class.is-invalid]="zoneId.invalid && zoneId.touched" [ngModelOptions]="{ updateOn: 'change' }"
+                  required>
+                  <option [ngValue]=undefined>{{ 'Labels.Select' | translate }}</option>
+                  <option [ngValue]=z.id *ngFor="let z of zones">{{ z.name }}</option>
+                </select>
+                <ng-container *ngIf="zoneId.invalid && zoneId.touched">
+                  <div class="invalid-feedback" *ngIf="zoneId.errors?.['required']">
+                    {{ 'Labels.FieldRequired' | translate }}
+                  </div>
+                </ng-container>
+              </div>
+              <div class="col-6">
+                <label class="form-label" for="areaId">* {{ 'CustomerDetails.Area' | translate }}</label>
+                <select class="form-select" name="areaId" [ngModel]="entity.areaId" #areaId="ngModel"
+                  [class.is-valid]="areaId.valid && areaId.touched" (ngModelChange)="updateCustomer(form)"
+                  [class.is-invalid]="areaId.invalid && areaId.touched" [ngModelOptions]="{ updateOn: 'change' }" required>
+                  <option [ngValue]=undefined>{{ 'Labels.Select' | translate }}</option>
+                  <option [ngValue]=a.id *ngFor="let a of areas">{{ a.name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="addressLine1">{{ 'CustomerDetails.AddressLine1' | translate }}</label>
+            <input type="text" class="form-control" name="addressLine1" [ngModel]="entity.addressLine1"
+              placeholder="{{ 'CustomerDetails.AddressLine1Placeholder' | translate }}"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="addressLine1.valid && addressLine1.touched"
+              [class.is-invalid]="addressLine1.invalid && addressLine1.touched" #addressLine1="ngModel" maxlength="164"
+              minlength="8">
+            <ng-container *ngIf="addressLine1.invalid && addressLine1.touched">
+              <div class="invalid-feedback" *ngIf="addressLine1.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="addressLine2">{{ 'CustomerDetails.AddressLine2' | translate }}</label>
+            <input type="text" class="form-control" name="addressLine2" [ngModel]="entity.addressLine2"
+              placeholder="{{ 'CustomerDetails.AddressLine2Placeholder' | translate }}"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="addressLine2.valid && addressLine2.touched"
+              [class.is-invalid]="addressLine2.invalid && addressLine2.touched" #addressLine2="ngModel" maxlength="164"
+              minlength="8">
+            <ng-container *ngIf="addressLine2.invalid && addressLine2.touched">
+              <div class="invalid-feedback" *ngIf="addressLine2.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-plus fa-lg fa-fw me-1"></i> {{ 'CustomerDetails.AdditionalInfo' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="mb-2">
+            <label class="form-label" for="contact">{{ 'CustomerDetails.Contact' | translate }}</label>
+            <input type="text" class="form-control" name="contact" [ngModel]="entity.contact"
+              placeholder="{{ 'CustomerDetails.ContactPlaceholder' | translate }}"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="contact.valid && contact.touched"
+              [class.is-invalid]="contact.invalid && contact.touched" #contact="ngModel" maxlength="200" minlength="3">
+            <ng-container *ngIf="contact.invalid && contact.touched">
+              <div class="invalid-feedback" *ngIf="contact.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+              </div>
+            </ng-container>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-file-invoice fa-lg fa-fw me-1"></i> {{ 'CustomerDetails.BillingInfo' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+
+          <div class="form-check mb-2">
+            <label class="form-label" for="billCompany">{{ 'CustomerDetails.BillCompany' | translate }}</label>
+            <input class="form-check-input" type="checkBox" name="billCompany" [ngModel]="entity.billCompany"
+              [checked]="entity.billCompany">
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="companyName">{{ 'CustomerDetails.CompanyName' | translate }}</label>
+            <input type="text" class="form-control" name="companyName" [ngModel]="entity.companyName"
+              placeholder="{{ 'CustomerDetails.CompanyNamePlaceholder' | translate }}"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="companyName.valid && companyName.touched"
+              [class.is-invalid]="companyName.invalid && companyName.touched" #companyName="ngModel" maxlength="200"
+              minlength="3">
+            <ng-container *ngIf="companyName.invalid && companyName.touched">
+              <div class="invalid-feedback" *ngIf="companyName.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 3 } }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="billableEmail">{{ 'CustomerDetails.BillableEmail' | translate }}</label>
+            <input type="text" class="form-control" name="billableEmail" [ngModel]="entity.billableEmail"
+              placeholder="{{ 'CustomerDetails.BillableEmailPlaceholder' | translate }}"
+              [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="billableEmail.valid && billableEmail.touched"
+              [class.is-invalid]="billableEmail.invalid && billableEmail.touched" #billableEmail="ngModel"
+              maxlength="100" minlength="5">
+            <ng-container *ngIf="billableEmail.invalid && billableEmail.touched">
+              <div class="invalid-feedback" *ngIf="billableEmail.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 5 } }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="customerPayTypeId">{{ 'CustomerDetails.CustomerPayType' | translate
+              }}</label>
+            <select class="form-select" name="customerPayTypeId" [ngModel]="entity.customerPayTypeId"
+              #customerPayTypeId="ngModel" [class.is-valid]="customerPayTypeId.valid && customerPayTypeId.touched"
+              [class.is-invalid]="customerPayTypeId.invalid && customerPayTypeId.touched"
+              [ngModelOptions]="{ updateOn: 'change' }">
+              <option [ngValue]=-1>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=e.id *ngFor="let e of customerPayTypes">{{ e.name }}</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-truck-fast fa-lg fa-fw me-1"></i> {{ 'CustomerDetails.DeliveryInfo' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="mb-2">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkBox" name="useDelivery" [ngModel]="entity.useDelivery"
+                [checked]="entity.useDelivery">
+              <label class="form-check-label" for="useDelivery">
+                {{ 'CustomerDetails.UseDelivery' | translate }}</label>
+              <i class="fa fa-truck-ramp-box ms-2" ngbTooltip="{{ 'CustomerDetails.UseDelivery' | translate }}"></i>
+            </div>
+          </div>
+
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkBox" name="useBusShipment" [ngModel]="entity.useBusShipment"
+              [checked]="entity.useBusShipment" (ngModelChange)="updateCustomer(form)">
+            <label class="form-check-label" for="useBusShipment">
+              {{ 'CustomerDetails.UseBusShipment' | translate }}</label>
+            <i class="fa fa-bus ms-2" ngbTooltip="{{ 'CustomerDetails.UseBusShipment' | translate }}"></i>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="select-supplierId">{{ 'CustomerDetails.BusShipmentSupplier' | translate
+              }}</label>
+            <input type="hidden" name="supplierId" [ngModel]="entity.supplierId">
+            <select class="form-select" name="select-supplierId" [ngModel]="entity.supplierId" #supplierId="ngModel"
+              [class.is-valid]="supplierId.valid && supplierId.touched"
+              [class.is-invalid]="supplierId.invalid && supplierId.touched" [ngModelOptions]="{ updateOn: 'change' }"
+              (ngModelChange)="loadLocations($event)" [disabled]="!entity.useBusShipment">
+              <option [ngValue]=-1>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=e.id *ngFor="let e of suppliers">{{ e.name }}</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="select-locationId">{{ 'CustomerDetails.BusShipmentLocation' | translate
+              }}</label>
+            <input type="hidden" name="locationId" [ngModel]="entity.locationId">
+            <select class="form-select" name="select-locationId" [ngModel]="entity.locationId" #locationId="ngModel"
+              [class.is-valid]="locationId.valid && locationId.touched"
+              [class.is-invalid]="locationId.invalid && locationId.touched" [ngModelOptions]="{ updateOn: 'change' }"
+              (ngModelChange)="updateLocation($event, form)" [disabled]="!entity.useBusShipment">
+              <option [ngValue]=-1>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=e.id *ngFor="let e of locations">{{ e.name }}</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</form>

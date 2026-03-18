@@ -1,0 +1,22 @@
+<div class="client-category-details" *ngIf="{ 
+  entity: entity$ | async, 
+  companies: companies$ | async,
+  products: products$ | async 
+  } as data">
+  <ng-container *ngIf="data.entity && data.companies">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'ClientCategoryDetails.Title' | translate }} <small>{{ 'ClientCategoryDetails.SubTitle' |
+        translate
+        }}</small>
+    </h1>
+
+    <company-client-category-form [entity]="data.entity" [companies]="data.companies" [products]="data.products ?? []"
+      (onSave)="save($event)" (onCompanyChange)="onCompanyChange($event)"
+      (onAddExcludedProducts)="onAddExcludedProducts($event)"
+      (onRemoveExcludedProducts)="onRemoveExcludedProducts($event)"
+      (onAddIncludedProducts)="onAddIncludedProducts($event)"
+      (onRemoveIncludedProducts)="onRemoveIncludedProducts($event)"
+      (onGoBack)="goBack()"></company-client-category-form>
+  </ng-container>
+</div>

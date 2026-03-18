@@ -1,0 +1,120 @@
+<!--<div class="exchange-rate" *ngIf="{ entity: entity$ | async, 
+    companies: companies$ | async, 
+    currencies: currencies$ | async, 
+    } as data" >
+    <ng-container *ngIf="data.companies">
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'ExchangeRateList.Title' | translate }} 
+            <small>
+                {{ 'ExchangeRateList.SubTitle' | translate }}
+            </small>
+        </h1>
+       <app-exchange-rate-forms
+       [companies]="data.companies"
+       [entity]="data.entity" 
+       [currencies]="data.currencies || []"  
+       (onSave)="save($event)"
+       (onCompanyChange)="onCompanyChange($event)"
+       ></app-exchange-rate-forms>
+    </ng-container>
+</div>-->
+<div class="exchange-rate" 
+*ngIf="{ 
+  entity: entity$ | async, 
+  companies: companies$ | async, 
+  currencies: currencies$ | async, 
+  templates: templates$ | async
+} as data">
+    <ng-container *ngIf="data.entity && data.companies">
+      <shared-breadcrumb></shared-breadcrumb>
+  
+      <h1 class="page-header">{{ 'ExchangeRateList.Title' | translate }} 
+        <small>
+            {{ 'ExchangeRateList.SubTitle' | translate }}
+        </small>
+    </h1>
+    <div class="data-form" *ngIf="isAdd" >
+      <app-exchange-rate-forms 
+        [entity]="data.entity" 
+        [companies]="data.companies" 
+        [currencies]="data.currencies || []"  
+        [templates]="data.templates || [] "  
+        (onSave)="save($event)"
+        (onCompanyChange)="onCompanyChange($event)" 
+        (onGoBack)="goBack()"></app-exchange-rate-forms>
+        </div>
+        <div class="ExchangeRateList" *ngIf="!isAdd">
+            <div class="mb-3 d-md-flex fw-bold ng-star-inserted">
+                <div class="mt-md-0 mt-2">
+                    <button (click)="addNew()" type="button" class="btn btn-link btn-sm text-decoration-none text-dark">
+                        <i _ngcontent-ng-c4016744786="" class="fa fa-plus fa-lg me-1 text-dark"></i> {{'Labels.New'  | translate }} 
+                    </button>
+                </div>
+            </div>
+            <div class="panel panel-inverse" >
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-money-check-dollar fa-lg fa-fw me-1"></i> {{
+                        'ExchangeRateList.ExchangeRateHistory' | translate }}
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    
+                    <p-table  styleClass="cl1 primeng-table p-datatable-sm small-table" #dt1 [value]="exchangeRateList" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true"
+                    [rows]="10"
+                    [rowsPerPageOptions]="[10, 20, 50]" 
+                    dataKey="id"
+                    [globalFilterFields]="['companyName', 'saleRate', 'buyRate', 'currencyCode','date']"
+                    >
+                    <!-- <ng-template pTemplate="caption">
+                        <div class="flex">
+                            <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (onClick)="clear(dt1)" />
+                            <span class="p-input-icon-left ml-auto">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" [(ngModel)]="searchValue" placeholder="Search keyword" />
+                            </span>
+                        </div>
+                    </ng-template> -->
+                        <ng-template pTemplate="header">
+                            <tr>
+
+                                <th> <div class="flex align-items-center">
+                                    Company Name
+                                    <p-columnFilter type="text" field="companyName" display="menu" />
+                                </div>
+                               </th>
+                                <th><div class="flex align-items-center">
+                                    Sale Rate
+                                    <p-columnFilter type="text" field="saleRate" display="menu" />
+                                </div></th>
+                                <th><div class="flex align-items-center">
+                                    Buy Rate
+                                    <p-columnFilter type="text" field="buyRate" display="menu" />
+                                </div></th>
+                                <th><div class="flex align-items-center">
+                                    Currency Code
+                                    <p-columnFilter type="text" field="currencyCode" display="menu" />
+                                </div></th>
+                                <th><div class="flex align-items-center">
+                                    Date
+                                    <p-columnFilter type="text" field="date" display="menu" />
+                                </div></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-values>
+                            <tr>
+                                <td>{{ values.companyName }}</td>
+                                <td>{{ values.saleRate | number }}</td>
+                                <td>{{ values.buyRate | number}}</td>
+                                <td>{{ values.currencyCode }}</td>
+                                <td>{{ values.date | date:'MM/dd/yyyy hh:mm a' }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+            </div>
+
+        </div>
+    </ng-container>
+  </div>

@@ -1,0 +1,26 @@
+.large-table-fake-top-scroll-container {
+    max-width: 200px;
+    overflow-x: scroll;
+    overflow-y: auto;
+  }
+  .large-table-fake-top-scroll-container div {
+    background-color: var(--bs-table-bg);;
+    font-size: 1px;
+    line-height: 1px;
+  }
+  .selected {
+    background-color: #6c757d !important; /* secondary color */
+    transition: background 0.3s ease-in-out;
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  .table-hover > tbody > tr.selected:hover > * {
+    background-color: #6c757d !important; /* Keeps original background */
+    color: #20252a !important;
+    font-weight: normal;
+}
+
+.selected td {
+  color: #ffffff !important; /* white */
+  font-weight:600;
+}

@@ -1,0 +1,30 @@
+<div class="area-list" *ngIf="{ countries: countries$ | async, states: states$ | async, zones: zones$ | async } as data">
+  <shared-breadcrumb></shared-breadcrumb>
+
+  <h1 class="page-header">{{ 'Areas.Title' | translate }} <small>{{ 'Areas.SubTitle' | translate }}</small></h1>
+
+  <div class="mb-3 d-md-flex fw-bold" *ngIf="hasAdd">
+    <div class="mt-md-0 mt-2" *ngIf="hasAdd">
+      <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="addNew()">
+        <i class="fa fa-plus fa-lg me-1 text-dark"></i>
+        {{ 'Labels.New' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <shared-keyword-search [criteria]="pagination.c ?? ''" (onSearch)="onKeywordSearch($event)"></shared-keyword-search>
+
+  <shared-pagination [Pagination]="pagination" (onPaginationChange)="onPagerChange($event)">
+    <shared-dropdown [label]="'Areas.Country' | translate" [entities]="data.countries ?? []" (onSelectEntity)="selectCountry($event)"></shared-dropdown>
+    <shared-dropdown [label]="'Areas.State' | translate" [entities]="data.states ?? []" (onSelectEntity)="selectState($event)"></shared-dropdown>
+    <shared-dropdown [label]="'Areas.Zone' | translate" [entities]="data.zones ?? []" (onSelectEntity)="selectZone($event)"></shared-dropdown>
+  </shared-pagination>
+
+  <div class="card border-0 p-3 mb-3" *ngIf="entities$ | async as entities">
+    <area-table [entities]="entities" [pagination]="pagination" (onSortBy)="sortBy($event)"
+      (onEdit)="editEntity($event)" (onDelete)="deleteEntity($event)"></area-table>
+  </div>
+
+  <shared-pagination [type]="'Footer'" [Pagination]="pagination"
+    (onPaginationChange)="onPagerChange($event)"></shared-pagination>
+</div>

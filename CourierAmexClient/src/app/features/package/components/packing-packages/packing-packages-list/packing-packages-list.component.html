@@ -1,0 +1,50 @@
+<div class="package-form d-flex flex-wrap" *ngIf="packages">
+    <div class="col-6">
+        <div class="d-flex justify-content-between p-2">
+            <div class="form-label">{{'PackageStatusDetails.ShippingType' | translate}}:</div>
+            <div>
+                <span class="message">
+                    {{ manifestType | translate }}
+                </span>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between p-2">
+            <div class="form-label">{{'PackageStatusDetails.Total' | translate}}:</div>
+            <div><span class="message">{{packages.totalPackage || 0}}</span></div>
+        </div>
+        <div class="d-flex justify-content-between p-2">
+            <div class="form-label">{{'PackageStatusDetails.Drown' | translate}}:</div>
+            <div><span class="message">{{ packages.TotalSorted || 0 }}</span></div>
+        </div>
+        <div class="d-flex justify-content-between p-2">
+            <div class="form-label">{{'PackageStatusDetails.PendingToDrown' | translate}}:</div>
+            <div><span class="message">{{ packages.pendingToBeSorted || 0 }}</span></div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="d-flex justify-content-between p-2">
+            <div class="form-label">{{'PackageStatusDetails.CreationDate' | translate}}:</div>
+            <div><span class="message">{{ (packages.date || "") | date }}</span></div>
+        </div>
+        <div class="d-flex justify-content-between p-2">
+            <div class="form-label">{{'PackageStatusDetails.Bags' | translate}}:</div>
+            <div><span class="message">{{packages.bags || 0}}</span></div>
+        </div>
+        <div class="d-flex justify-content-between p-2">
+            <div class="form-label">{{'PackageStatusDetails.Packaged' | translate}}:</div>
+            <div><span class="message">{{ packages.sortedPackage || 0 }}</span></div>
+        </div>
+        <div class="d-flex justify-content-between p-2">
+            <div class="form-label">{{'PackageStatusDetails.Pending' | translate}}:</div>
+            <div><span class="message">{{ packages.totalPackage - packages.sortedPackage || 0 }}</span></div>
+        </div>
+    </div>
+    <div class="col-12 d-flex justify-content-end gap-4 mt-3">
+        <button type="button" class="btn btn-primary btn-sm" (click)="openModalWithPendingData()">
+            Pending
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" (click)="openModalWithData()">
+            Summary
+        </button>
+    </div>
+</div>

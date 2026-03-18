@@ -1,0 +1,25 @@
+<shared-breadcrumb></shared-breadcrumb>
+
+<h1 class="page-header">{{ 'Countries.Title' | translate }} <small>{{ 'Countries.SubTitle' | translate }}</small></h1>
+
+<div class="mb-3 d-md-flex fw-bold" *ngIf="hasAdd">
+  <div class="mt-md-0 mt-2" *ngIf="hasAdd">
+    <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="addNew()">
+      <i class="fa fa-plus fa-lg me-1 text-dark"></i>
+      {{ 'Labels.New' | translate }}
+    </button>
+  </div>
+</div>
+
+<shared-keyword-search [criteria]="pagination.c ?? ''" (onSearch)="onKeywordSearch($event)"></shared-keyword-search>
+
+<shared-pagination [Pagination]="pagination" (onPaginationChange)="onPagerChange($event)">
+</shared-pagination>
+
+<div class="card border-0 p-3 mb-3" *ngIf="entities$ | async as countries">
+  <country-table [entities]="countries" [pagination]="pagination" (onSortBy)="sortBy($event)"
+    (onEdit)="editEntity($event)" (onDelete)="deleteEntity($event)"></country-table>
+</div>
+
+<shared-pagination [type]="'Footer'" [Pagination]="pagination"
+  (onPaginationChange)="onPagerChange($event)"></shared-pagination>

@@ -521,7 +521,6 @@ Thumbs.db
 /test-results/
 /playwright-report/
 /playwright/.cache/
+/CourierAmexClient/wwwroot
+/CourierAmexClient/dist
 .env
-Courier/CourierAmexClient/src/assets/config/settings.json
-Courier/CourierAmexClient/package-lock.json
-/Courier/CourierAmexClient/src/app/features/payment/containers/dist/index.js

@@ -1,0 +1,72 @@
+<div class="bg-white rounded panel panel-inverse">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <i class="fas fa-money-check fa-lg fa-fw me-1"></i> {{ 'Payment.GeneratePaymentProof'
+              |
+              translate }}
+    </h4>
+  </div>
+  <div class="items-center row panel-body mt-3 mb-3">
+    <div class="col-3">
+      <label for="invoiceNumber1" class="form-label block text-sm font-bold text-gray-700">* {{
+              'PackageDetails.PackageNumber'
+              | translate }}</label>
+      <input type="text" name="selectedId" #selectedId="ngModel" type="number" [(ngModel)]="selectedPackageId"
+        [class.is-valid]="selectedId.valid && selectedId.touched"
+        [class.is-invalid]="selectedId.invalid && selectedId.touched"
+        class="ms-4 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="Enter Package Number" required (keydown.enter)="loadInvoice()" />
+
+    </div>
+    <div class="col-2 flex justify-end">
+      <button (click)="loadInvoice()"
+        class="border-0 w-full md:w-auto bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        {{ 'GenerateReport.LoadDocument' | translate }}
+      </button>
+    </div>
+
+    <div class="col-5">
+      <div class="d-flex align-items-center mb-3">
+        <label for="invoiceNumber1" class="form-label text-sm font-bold text-gray-700 me-3 w-25">* Customer Name</label>
+        <input type="text" name="selectedId" #selectedId="ngModel" [(ngModel)]="customerName"
+          [class.is-valid]="selectedId.valid && selectedId.touched"
+          [class.is-invalid]="selectedId.invalid && selectedId.touched"
+          class="form-control w-75 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Customer Name" disabled />
+      </div>
+
+      <div class="d-flex align-items-center">
+        <label for="invoiceNumber1" class="form-label text-sm font-bold text-gray-700 me-3 w-25">* Customer Email</label>
+        <input type="text" name="selectedId" #selectedId="ngModel" [(ngModel)]="email"
+          [class.is-valid]="selectedId.valid && selectedId.touched"
+          [class.is-invalid]="selectedId.invalid && selectedId.touched"
+          class="form-control w-75 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Email" disabled />
+      </div>
+    </div>
+
+    <div class="col-2">
+      <button (click)="sendEmail()"
+        class="border-0 w-full md:w-auto bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        {{ 'GenerateReport.SendEmail' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+<div class="flex-grow w-full h-full bg-white shadow-sm rounded">
+  <div *ngIf="pdfSrc; else noData" class="h-full w-full">
+    <iframe [src]="pdfSrc" class="w-full w-100 h-full border-0" style="height: 100vh;" title="Invoice PDF">
+    </iframe>
+  </div>
+  <div id="html-container" *ngIf="!pdfSrc"></div>
+  <ng-template #noData>
+    <div class="d-flex flex-column align-items-center justify-content-center py-4 ">
+      <i class="fa-solid fa-file-invoice-dollar text-muted mb-2" style="font-size: 3rem;"></i>
+      <label class="text-muted text-center form-label">
+        {{ 'GenerateReport.NoReport' | translate }}
+        <br>
+        {{ 'GenerateReport.SelectDocument' | translate }}
+      </label>
+    </div>
+  </ng-template>
+</div>

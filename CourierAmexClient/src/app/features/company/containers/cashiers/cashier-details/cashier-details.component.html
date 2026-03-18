@@ -1,0 +1,29 @@
+<div class="package-details" *ngIf="{ 
+  entity: entity$ | async, 
+  companies: companies$ | async
+  } as data">
+  <ng-container *ngIf="data.entity && data.companies">
+
+    <shared-breadcrumb></shared-breadcrumb>
+    <h1 class="page-header">{{ 'ClientCashierDetails.Title' | translate }}
+      <small>{{ 'ClientCashierDetails.SubTitle' | translate }}</small>
+    </h1>
+
+    <cashier-form [entity]="data.entity" [companies]="data.companies" (onSave)="save($event)"
+      (onCompanyChange)="onCompanyChange($event)" (onGoBack)="goBack()">
+    </cashier-form>
+
+
+    <div class="row">
+      <div class="col-md-6">
+        <cashier-users [users]="users" [entity]="data.entity">
+        </cashier-users>
+      </div>
+
+      <div class="col-md-6">
+        <app-cashier-payment [entity]="data.entity" [users]="users"></app-cashier-payment>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

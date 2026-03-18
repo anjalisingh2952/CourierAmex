@@ -1,0 +1,31 @@
+<ng-container>
+  <shared-breadcrumb></shared-breadcrumb>
+  <h1 class="page-header">{{ 'ReOpenRoadMap.Title' | translate }}
+    <small>{{ 'ReOpenRoadMap.SubTitle' | translate}}</small>
+  </h1>
+  <div class="p-0">
+    <div class="">
+      <div class="col-12 panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa-solid fa-route fa-lg fa-fw me-1"></i> {{ 'RouteSheet.ClosedInRoute' | translate }}
+          </h4>
+        </div>
+        <div class="p-2">
+          <ng-container>
+            <app-entity-list [title]="'Packages.Title' | translate" [state]="state" [pagination]="pagination"
+              [columns]="columns" [showHeader]="false" [rows]="routeSheetDetails" (stateChange)="onStateChange($event)"
+              [activeSearch]="true">
+            </app-entity-list>
+          </ng-container>
+          <ng-template #actionTemplate let-params="params">
+            <input type="checkbox" class="form-check-input me-2" [id]="'factura-' + params.row.id"
+              [(ngModel)]="params.row.selected" (change)="onCheckboxChange(params.row)">
+          </ng-template>
+        </div>
+        <div class="d-flex justify-content-center justify-content-md-end mt-3">
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

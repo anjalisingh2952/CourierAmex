@@ -1,0 +1,55 @@
+<div class="col-12 d-flex flex-column h-100">
+    <!-- Breadcrumb Section -->
+    <div>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">
+            {{ 'InvoiceHistory.Title' | translate }}
+            <small>{{ 'InvoiceHistory.SubTitle' | translate }}</small>
+        </h1>
+    </div>
+
+    <div class="row h-100">
+        <!-- Left Column -->
+        <div class="col-12 col-lg-6 d-flex flex-column h-100 mb-3 mb-lg-0">
+            <!-- Top Section (Entity List) -->
+            <div class="flex-grow-1 mb-3">
+                <ng-container *ngIf="entities$ | async as entities">
+                    <app-entity-list [title]="'Packages.Title' | translate" [filterTemplate]="filterTemplate"
+                        [state]="state" [columns]="columns" [pagination]="pagination" [showHeader]="false"
+                        [rows]="entities" (stateChange)="onStateChange($event)">
+                    </app-entity-list>
+                </ng-container>
+
+                <!-- Filter Template -->
+                <ng-template #filterTemplate>
+                    <ng-container *ngIf="companies$ | async as entities">
+                        <shared-dropdown [entities]="entities" [selectedEntity]="entities[0] || undefined"
+                            (onSelectEntity)="selectCompany($event)" *ngIf="showCompanies">
+                        </shared-dropdown>
+                    </ng-container>
+                </ng-template>
+
+                <!-- Action Template -->
+                <ng-template #actionTemplate let-params="params">
+                    <i class="fa fa-eye text-primary fs-15px me-2 pointer"
+                        ngbTooltip="{{ 'Tooltips.View' | translate }}" (click)="viewDetail(params.row)">
+                    </i>
+                </ng-template>
+            </div>
+
+            <!-- Bottom Section (Invoices and Credits List) -->
+            <div class="flex-grow-1">
+                <app-invoices-cradits-list class="rounded" [invoiceCraditsDetail]="InvoiceCraditsDetail">
+                </app-invoices-cradits-list>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-12 col-lg-6 d-flex flex-column h-100">
+            <!-- Top Section (Customer Detail) -->
+            <div class="flex-grow-1 mb-3">
+                <app-customer-detail [balanceLocal]="balanceLocal" [detail]="selectedCustomer"></app-customer-detail>
+            </div>
+        </div>
+    </div>
+</div>

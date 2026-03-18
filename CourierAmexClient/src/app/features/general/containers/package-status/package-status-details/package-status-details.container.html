@@ -1,0 +1,15 @@
+<div class="package-status-details" *ngIf="{ 
+  entity: entity$ | async
+  } as data">
+  <ng-container *ngIf="data.entity">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'PackageStatusDetails.Title' | translate }} <small>{{ 'PackageStatusDetails.SubTitle' |
+        translate
+        }}</small>
+    </h1>
+
+    <company-package-status-form [entity]="data.entity" (onSave)="save($event)"
+      (onGoBack)="goBack()"></company-package-status-form>
+  </ng-container>
+</div>

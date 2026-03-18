@@ -1,0 +1,65 @@
+<ng-container *ngIf="entities$ | async as entities">
+    <app-entity-list [title]="'PackageAssignPrices.Title' | translate"
+        [subTitle]="'PackageAssignPrices.SubTitle' | translate" [filterTemplate]="filterTemplate" [state]="state"
+        [columns]="columns" [rows]="packageList" [hasPagination]="false" [activeSearch]="false"  (stateChange)="onStateChange($event)">
+        <div class="mb-3 d-md-flex fw-bold">
+            <div class="mt-md-0 mt-2">
+                &nbsp;
+                <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark"
+                    (click)="saveChanges()">
+                    <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' | translate }}</button>
+                &nbsp;({{editedRows.length}})
+                <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark"
+                (click)="cancelChanges()">
+                <i class="fa fa-trash fa-lg me-2 text-dark"></i> {{ 'Labels.Cancel' | translate }}</button>
+    
+            </div>
+        </div>
+    </app-entity-list>
+</ng-container>
+
+<ng-template #filterTemplate>
+    <div class="package-details" *ngIf="{ 
+            entity: entity$ | async, 
+            companies: companies$ | async,
+            manifests: manifests$ | async,
+            packages: packages$ | async
+            } as data">
+        <ng-container *ngIf="data.entity && data.companies">
+            <app-assign-prices-form [entity]="data.entity" [companies]="data.companies"
+                [manifests]="data.manifests || []" (onCompanyChange)="onCompanyChange($event)"
+                (onManifestChange)="onManifestChange($event)">
+            </app-assign-prices-form>
+        </ng-container>
+    </div>
+</ng-template>
+
+
+
+<ng-template #descriptionCellTemplate let-params="params">
+    <ng-container *ngIf="!params.row.isEdit">
+        {{params.row.description}}&nbsp;
+        <i class="fa fa-pencil text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.Edit' | translate }}"
+            (click)="enterEditMode(params.row, 'description')"></i>
+    </ng-container>
+    <ng-container *ngIf="params.row.isEdit">
+        <input type="text" name="description" (ngModelChange)="descriptionRowChange(params.row, $event)"
+            [(ngModel)]="params.row.description">
+    </ng-container>
+</ng-template>
+
+
+
+
+<ng-template #priceCellTemplate let-params="params">
+    <ng-container *ngIf="!params.row.isEdit">
+        {{params.row.price}}&nbsp;
+        <i class="fa fa-pencil text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.Edit' | translate }}"
+            (click)="enterEditMode(params.row, 'price')"></i>
+    </ng-container>
+    <ng-container *ngIf="params.row.isEdit && params.row.shipType !== -1">
+        <input type="text" name="price" (ngModelChange)="priceChange(params.row, $event)"
+            [(ngModel)]="params.row.price">
+    </ng-container>
+</ng-template>
+

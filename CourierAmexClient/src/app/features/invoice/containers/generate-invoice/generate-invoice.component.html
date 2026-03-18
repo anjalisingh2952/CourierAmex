@@ -1,0 +1,662 @@
+<div class="package-details generate-invoice">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'GenerateInvoice.Title' | translate }} <small>{{ 'GenerateInvoice.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+    <div class="generate-invoice-body" *ngIf="isGatewayUser">
+        <div class="row">
+            <div class="col-7" #generateInvoiceContainer>
+
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-boxes fa-lg fa-fw me-1"></i> {{ 'GenerateInvoice.FindPackage' |
+                            translate }}
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-4 float-left">
+                            <div class="card">
+                                <h5 class="card-header">{{ 'GenerateInvoice.FindPackage' |
+                                    translate }}</h5>
+                                <div class="card-body">
+                                    <div class="col-2 col-md-2 mt-3 w-auto">
+                                        <div class="form-check mb-2 form-check-inline" *ngIf=" companyId==2">
+                                            <input [(ngModel)]="filteringBy" (click)="ResetForFilterType()"
+                                                class="form-check-input" type="radio" name="filteringBy" id="Services"
+                                                value="services">
+                                            <label class="form-check-label" for="Services">
+                                                Services
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-2 form-check-inline">
+                                            <input [(ngModel)]="filteringBy" (click)="ResetForFilterType()"
+                                                class="form-check-input" type="radio" name="filteringBy" id="Manifest"
+                                                value="manifest" [checked]="true">
+                                            <label class="form-check-label" for="Manifest">
+                                                Manifest
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check mb-2 form-check-inline">
+                                            <input [(ngModel)]="filteringBy" (click)="ResetForFilterType()"
+                                                class="form-check-input" type="radio" name="filteringBy" id="Customer"
+                                                value="customer" [checked]="true">
+                                            <label class="form-check-label" for="Customer">
+                                                Customer
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="mb-1 row">
+                                        <label for="inputPassword" class="col-sm-5 col-form-label">Manifest</label>
+                                        <div class="col-sm-7">
+                                            <select id="drpManifest" (ngModelChange)="manifestChange($event)"
+                                                [disabled]="filteringBy !== 'manifest'" class="form-select"
+                                                name="manifest" [(ngModel)]="selectedManifestId">
+                                                <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                                                <option [ngValue]=m.id *ngFor="let m of manifestsList">{{
+                                                    m.manifestNumber }}</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="mb-1 row" *ngIf="filteringBy !== 'manifest'">
+                                        <label for="inputPassword" class="col-sm-5 col-form-label">Customer</label>
+                                        <div class="col-sm-7">
+                                            <input id="txtCustomerCode" type="text"
+                                                (keydown.enter)="getInvoiceDataByCustomer()"
+                                                [(ngModel)]="selectedCustomerId" class="form-control"
+                                                name="customerCode">
+                                        </div>
+                                    </div>
+                                    <div class="mb-1 row">
+                                        <label for="inputPassword" class="col-sm-5 col-form-label">Tracking
+                                            Number</label>
+                                        <div class="col-sm-7">
+                                            <input (keydown.enter)="handleTrackingNumberInput()"
+                                                [(ngModel)]="selectedPackageNumber" type="text" class="form-control"
+                                                name="TrackingNumber">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 float-left">
+                            <ng-container>
+                                <div class="card">
+                                    <h5 class="card-header">{{ 'GenerateInvoice.Packages' |
+                                        translate }}</h5>
+                                    <div class="card-body">
+                                        <div class="mb-1 row">
+                                            <label for="Total" class="col-sm-5 col-form-label">Total</label>
+                                            <div class="col-sm-7">
+                                                <input readonly type="text" [value]="packageInvoiceSummary.total"
+                                                    class="form-control" name="total">
+                                            </div>
+                                        </div>
+                                        <div class="mb-1 row">
+                                            <label for="Billed" class="col-sm-5 col-form-label">Billed</label>
+                                            <div class="col-sm-7">
+                                                <input readonly type="text" [value]="packageInvoiceSummary.billed"
+                                                    class="form-control" name="Billed">
+                                            </div>
+                                        </div>
+                                        <div class="mb-1 row">
+                                            <label for="Pending" class="col-sm-5 col-form-label">Pending</label>
+                                            <div class="col-sm-7">
+                                                <input readonly type="text" [value]="packageInvoiceSummary.pending"
+                                                    class="form-control" name="Pending">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <div class="w-auto mt-2 float-left">
+                                <button class="btn btn-primary packageInvoice"
+                                    (click)="DisplayPackageInvoice(generateInvoiceContainer)">Package
+                                    Invoice</button>
+                            </div>
+                            <div class="w-auto mt-2 float-left" *ngIf="companyId != 2">
+                                <!-- <button [ngClass]="{'disabled': filteringBy === 'services'}"
+                                    class="btn btn-secondary">Manifest Invoice</button> -->
+                                <button class="btn btn-secondary" (click)="onManifestInvoiceClick()">Manifest
+                                    Invoice</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 float-left">
+                            <ng-container *ngIf="(filteringBy != 'services' && companyId==2 )">
+                                <div class="card">
+                                    <h5 class="card-header">{{ 'GenerateInvoice.NobilledinCR' |
+                                        translate }}</h5>
+                                    <div class="card-body">
+                                        <div class="mb-1 row">
+                                            <label for="Manifest Referance" class="col-sm-7 col-form-label">Manifest
+                                                Referance</label>
+                                            <div class="col-sm-5">
+                                                <input type="text" [(ngModel)]="MiamiReferance" class="form-control"
+                                                    name="MiamiReferance">
+                                            </div>
+                                        </div>
+                                        <div class="mb-1 row">
+                                            <label for="Amount" class="col-sm-7 col-form-label">Amount</label>
+                                            <div class="col-sm-5">
+                                                <input type="text" [(ngModel)]="MiamiAmount" class="form-control"
+                                                    name="MiamiAmount">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="w-auto mt-2 float-left">
+                                    <button class="btn btn-primary"
+                                        (click)="onMiamiInvoiceClick(generateInvoiceContainer)">Miami Invoice</button>
+                                </div>
+                                <div class="w-auto mt-2 float-left">
+                                    <button (click)="onNotBilledClick(generateInvoiceContainer)"
+                                        class="btn btn-secondary">Not Billed</button>
+                                </div>
+                            </ng-container>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+
+                            <span> <i class="fa fa-table fa-lg fa-fw me-1"></i> {{ 'GenerateInvoice.Packages' |
+                                translate }}</span>
+                            <div class="gap-all flex flex-wrap justify-content-end gap-2"
+                                *ngIf="invoiceData.length > 0">
+                                <p-button label="Expand All" icon="pi pi-plus" [text]="true" (onClick)="expandAll()" />
+                                <p-button label="Collapse All" icon="pi pi-minus" [text]="true"
+                                    (onClick)="collapseAll()" />
+                            </div>
+                        </h4>
+                    </div>
+
+                    <div class="panel-body cardtable">
+                        <div class="cardbody">
+                            <div class="card">
+
+                                <p-table emptyMessage="No records found" class="custom-table-view"
+                                    styleClass="cl1 primeng-table p-datatable-sm small-table"
+                                    [(selection)]="selectedItems" [value]="groupedData || []" dataKey="id"
+                                    [expandedRowKeys]="expandedRows" (onRowSelect)="onCustomerChecked($event)"
+                                    (onRowUnselect)="onCustomerUnchecked($event)" [rowExpandMode]="'multiple'"
+                                    dataKey="id" [rowHover]="true" [rows]="5" [showCurrentPageReport]="true"
+                                    [rowsPerPageOptions]="[5,10, 25, 50]" [paginator]="false"
+                                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                                    [filterDelay]="0" [scrollable]="true" scrollHeight="400px">
+
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="4" class="text-center">No records found</td>
+                                        </tr>
+                                    </ng-template>
+
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th style="width: 1rem"></th>
+                                            <th>Filter</th>
+                                            <th pSortableColumn="customer">Customer <p-sortIcon field="customer" /></th>
+                                            <th pSortableColumn="fullName">Full Name <p-sortIcon field="fullName" />
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowIndex="rowIndex" let-groupedData
+                                        let-expanded="expanded">
+                                        <tr [pSelectableRow]="groupedData" class="p-selectable-row">
+                                            <td>
+                                                <p-button type="button" pRipple [pRowToggler]="groupedData"
+                                                    [text]="true" [rounded]="true" [plain]="true"
+                                                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                                                    class="p-button-text p-button-rounded p-button-plain mr-2" />
+                                            </td>
+                                            <td>
+                                                <p-tableCheckbox [disabled]="invoiceInProgress || companyId != 2"
+                                                    [value]="groupedData" />
+                                            </td>
+                                            <td>{{ groupedData.customer }}</td>
+                                            <td>{{ groupedData.fullName }}</td>
+
+
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="rowexpansion" let-groupedData>
+                                        <tr class="cl2">
+                                            <td colspan="7">
+                                                <div class="p-3">
+                                                    <p-table emptyMessage="No records found"
+                                                        [(selection)]="selectedItems"
+                                                        (onRowSelect)="onPackageChecked($event)"
+                                                        (onRowUnselect)="onPackageUnchecked($event)"
+                                                        [value]="groupedData?.packages || []" dataKey="id"
+                                                        [scrollable]="true" scrollHeight="400px"
+                                                        [tableStyle]="{'table-layout': 'fixed', 'width': '100%'}"
+                                                        tableStyleClass="p-datatable-gridlines">
+
+
+
+                                                        <ng-template pTemplate="header">
+                                        <tr>
+                                            <th style="width: 40px;">Filter</th>
+                                            <th style="width: 100px;" pSortableColumn="packageNumber">Package No.</th>
+                                            <th style="width: 220px;" pSortableColumn="description">Description</th>
+                                            <th style="width: 150px;" pSortableColumn="courier">Courier</th>
+
+                                            <th style="width: 120px;" pSortableColumn="origin">Origin</th>
+                                            <th style="width: 60px;" pSortableColumn="weight">Weight</th>
+                                            <th style="width: 115px;" pSortableColumn="manifestNumber">Manifest No.</th>
+
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-packages>
+                                        <tr [pSelectableRow]="packages" class="p-selectable-row">
+                                            <td>
+                                                <!-- <p-tableCheckbox [disabled]="invoiceInProgress" [value]="packages" /> -->
+                                                <p-checkbox [disabled]="invoiceInProgress"
+                                                    [(ngModel)]="packages.selected" [binary]="true"
+                                                    (onChange)="onPackageChecked(packages)"></p-checkbox>
+                                            </td>
+                                            <td>{{ packages.packageNumber }}</td>
+                                            <td title="{{ packages.description }}">{{ packages.description | slice:0:50
+                                                }}...</td>
+                                            <td>{{ packages.courier }}</td>
+                                            <td>{{ packages.origin }}</td>
+                                            <td>{{ packages.weight }}</td>
+                                            <td>{{ packages.manifestNumber }}</td>
+
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="6">There are no order for this product yet.</td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                            </td>
+                            </tr>
+                            </ng-template>
+                            </p-table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-5">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-boxes fa-lg fa-fw me-1"></i> {{ 'GenerateInvoice.Invoice' |
+                        translate }}
+                    </h4>
+                    <div class="panel-heading-btn">
+
+                        <button class="btn btn-xs btn-icon btn-warning" (click)="isCollapsed1 = !isCollapsed1">
+                            <i class="fa" [ngClass]="isCollapsed1 ? 'fa-minus' : 'fa-plus'"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body" *ngIf="isCollapsed1">
+                    <div class="col-3 float-left">
+                        <div class="col-auto float-left">
+                            <label class="form-check-label" for="Total">
+                                Invoice Date
+                            </label>
+                            <input readonly type="text" class="form-control" name="Total"
+                                [(ngModel)]="InvoiceSummary.parent.invoiceDate">
+                        </div>
+                        <div class="col-auto float-left">
+                            <label class="form-check-label" for="Billed">
+                                Customer
+                            </label>
+                            <input readonly type="text" class="form-control" name="Billed"
+                                [(ngModel)]="InvoiceSummary.parent.customer">
+                        </div>
+                        <div class="col-auto float-left">
+                            <label class="form-check-label" for="Billed">
+                                Weight
+                            </label>
+                            <input readonly type="text" class="form-control" name="Billed"
+                                [(ngModel)]="InvoiceSummary.child.weight">
+                        </div>
+                        <div class="col-auto float-left">
+                            <label class="form-check-label" for="Billed">
+                                Volume
+                            </label>
+                            <input readonly type="text" class="form-control" name="Billed"
+                                [(ngModel)]="InvoiceSummary.child.volume">
+                        </div>
+
+                    </div>
+                    <div class="col-8 float-left">
+
+                        <div class="col-md-6 float-left">
+                            <label class="form-check-label" for="Billed">
+                                Exchange rate
+                            </label>
+                            <input readonly type="text" class="form-control" name="Billed"
+                                [(ngModel)]="InvoiceSummary.parent.saleExchangeRate">
+                        </div>
+                        <div class="col-md-6 float-left">
+                            <label class="form-check-label" for="Billed">
+                                Invoice
+                            </label>
+                            <input readonly type="text" class="form-control" name="Billed"
+                                [(ngModel)]="InvoiceSummary.parent.invoiceNumber">
+                        </div>
+
+                        <div class="col-md-12 float-left">
+                            <label class="form-check-label" for="Billed">
+                                Name
+                            </label>
+                            <input readonly type="text" class="form-control" name="Billed"
+                                [(ngModel)]="InvoiceSummary.parent.fullName">
+                        </div>
+                        <div class="col-md-6 float-left">
+                            <label class="form-check-label" for="zone">
+                                Zone
+                            </label>
+                            <input type="text" class="form-control" name="zone"
+                                [(ngModel)]="InvoiceSummary.parent.zone">
+                        </div>
+                        <div class="col-md-6 float-left">
+                            <label class="form-check-label" for="area">
+                                Area
+                            </label>
+                            <input type="text" class="form-control" name="area"
+                                [(ngModel)]="InvoiceSummary.parent.area">
+                        </div>
+                        <div class="col-md-12 float-left">
+                            <label class="form-check-label" for="address">
+                                Addresss
+                            </label>
+                            <input readonly type="text" class="form-control" name="address"
+                                [(ngModel)]="InvoiceSummary.parent.address">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-table fa-lg fa-fw me-1"></i> {{ 'GenerateInvoice.ModifyPackages' |
+                        translate }}
+                    </h4>
+                    <div class="panel-heading-btn">
+
+                        <button class="btn btn-xs btn-icon btn-warning" (click)="isCollapsed2 = !isCollapsed2">
+                            <i class="fa" [ngClass]="isCollapsed2 ? 'fa-minus' : 'fa-plus'"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body card-table" *ngIf="isCollapsed2">
+
+                    <p-table emptyMessage="No records found" class="table table-hover text-dark modify-table-view"
+                        #table [value]="articles || []" editMode="row" dataKey="id" [paginator]="false" [rows]="5"
+                        responsiveLayout="scroll" [scrollable]="true" scrollHeight="400px"
+                        (onEditComplete)="onEditComplete($event)">
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="4" class="text-center">No records found</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th></th>
+                                <th *ngIf="false">ID</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <!-- <th>Actions</th>                         -->
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-article let-editing="editing" let-i="rowIndex"
+                            let-ri="rowIndex">
+                            <tr [pEditableRow]="article">
+                                <td><i class="fa fa-trash" (click)="removeRow(i)"></i></td>
+                                <td *ngIf="false">{{ article.id }}</td>
+                                <td [pEditableColumn]="article.description" pEditableColumnField="description">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <p-dropdown [options]="manifestProductsList" optionLabel="description"
+                                                optionValue="id" placeholder="Select One" [(ngModel)]="article.id"
+                                                (onChange)="onProductChange(article)">
+                                            </p-dropdown>
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ article.description.description || article.description }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+
+                                <td [pEditableColumn]="article.quantity" pEditableColumnField="quantity">
+
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="number" [(ngModel)]="article.quantity"
+                                                (onFocusOut)="onFocusOut(article)" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ article.quantity }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td [pEditableColumn]="article.price" pEditableColumnField="price"
+                                    [pEditableColumnRowIndex]=ri [pEditableRow]="article.price">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="number" [(ngModel)]="article.price" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ article.price | currency }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td [pEditableColumn]="article.total">
+
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText readonly type="number" [(ngModel)]="article.price" />
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ article.quantity*article.price | currency }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+
+                            </tr>
+
+                        </ng-template>
+                        <ng-template pTemplate="footer">
+                            <tr *ngIf="articles.length>0">
+                                <td><i (click)="addRow()" class="fa fa-plus"></i></td>
+                                <td [pEditableColumn]="descriptionGroupArr" pEditableColumnField="description">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <p-dropdown [options]="descriptionGroupArr" optionLabel="description"
+                                                placeholder="Select One" [(ngModel)]="description">
+                                            </p-dropdown>
+                                        </ng-template>
+
+                                    </p-cellEditor>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+
+                </div>
+
+            </div>
+
+
+
+
+            <div class="panel panel-inverse" *ngIf="companyId == 2">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-table fa-lg fa-fw me-1"></i> {{
+                        'GenerateInvoice.CustomerInformationElectronicInvoice' |
+                        translate }}
+                    </h4>
+                    <div class="panel-heading-btn">
+
+                        <button class="btn btn-xs btn-icon btn-warning" (click)="isCollapsed3 = !isCollapsed3">
+                            <i class="fa" [ngClass]="isCollapsed3 ? 'fa-minus' : 'fa-plus'"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body" *ngIf="isCollapsed3">
+                    <div class="col-md-6 float-left">
+                        <label class="form-check-label" for="electronicInvoiceName">
+                            Name:
+                        </label>
+                        <input type="text" readonly [value]="electronicInvoice.fullName" class="form-control"
+                            name="electronicInvoiceName">
+                    </div>
+                    <div class="col-md-6 float-left">
+                        <label class="form-check-label" for="electronicInvoiceEmail">
+                            Email:
+                        </label>
+                        <input type="text" [(ngModel)]="electronicInvoice.email" class="form-control"
+                            name="electronicInvoiceEmail">
+                    </div>
+                    <div class="col-md-6 float-left">
+                        <label class="form-check-label" for="electronicInvoiceDocumentNumber">
+                            Identification:
+                        </label>
+                        <input type="text" [(ngModel)]="electronicInvoice.documentNumber" class="form-control"
+                            name="electronicInvoiceDocumentNumber">
+                    </div>
+                    <div class="col-md-6 float-left">
+                        <label class="form-check-label" for="electronicInvoiceDocumentType">
+                            Type:
+                        </label>
+                        <select class="form-select" (change)="onDocTypeChange($event)"
+                            [(ngModel)]="electronicInvoice.documentType">
+                            <option value="0">Select Type</option>
+                            <option value="1">Physical ID </option>
+                            <option value="2">Legal ID</option>
+                            <option value="3">NITE</option>
+                            <option value="4">Issuing DIMEX</option>
+                            <option value="5">Passport</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="panel panel-inverse" *ngIf="articles.length > 0">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-table fa-lg fa-fw me-1"></i> {{
+                        'GenerateInvoice.InvoiceSummary' |
+                        translate }}
+                    </h4>
+                </div>
+                <div class="panel-body ">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <label class="form-check-label" for="Taxable">
+                                    Taxable Amount:
+                                </label>
+                                <input type="text" [value]="taxable | currency" readonly class="form-control"
+                                    name="Taxable">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-check-label" for="Exempt">
+                                    Exempt Amount:
+                                </label>
+                                <input type="text" [value]="exempt | currency" readonly class="form-control"
+                                    name="Exempt">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-check-label" for="VAT">
+                                    VAT:
+                                </label>
+                                <input type="text" [value]="salesTax | currency" readonly class="form-control"
+                                    name="VAT">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-check-label" for="subtotal">
+                                    Sub-Total:
+                                </label>
+                                <input type="text" [value]="subTotal | currency" readonly class="form-control"
+                                    name="subtotal">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-check-label" for="CustomTax">
+                                    Customs Tax:
+                                </label>
+                                <input type="text" [value]="customsTax | currency" readonly class="form-control"
+                                    name="CustomTax">
+                            </div>
+
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="col-md-12">
+                                <label class="form-check-label" for="Billed">
+                                    Total Amount USD:
+                                </label>
+                                <input type="text" [value]="total | currency" readonly class="form-control"
+                                    name="Billed">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-check-label" for="Billed">
+                                    Total Amount:
+                                </label>
+                                <input type="text" [value]="total | currency" readonly class="form-control"
+                                    name="Billed">
+                            </div>
+
+                        </div>
+                        <hr class="mt-3">
+                        <div class="col-md-12 d-flex justify-content-center align-items-center">
+                            <div class="d-flex gap-3">
+                                <button class="btn btn-primary" [disabled]="!canSaveInvoice"
+                                    (click)="SaveInvoice(generateInvoiceContainer)">Save
+                                    Invoice</button>
+                                <button class="btn btn-secondary"
+                                    (click)="CancelInvoice(generateInvoiceContainer)">Cancel</button>
+                                <button class="btn btn-secondary" (click)="ResetInvoiceItems()">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+<style>
+    tr.cl2.ng-star-inserted:hover {
+        background: inherit;
+    }
+</style>

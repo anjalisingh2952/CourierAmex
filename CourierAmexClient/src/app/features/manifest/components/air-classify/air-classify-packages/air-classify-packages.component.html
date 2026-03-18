@@ -1,0 +1,76 @@
+<div class="panel panel-inverse">
+  <div class="panel-heading">
+    <h4 class="panel-title"><i class="fa fa-boxes-stacked fa-lg fa-fw me-1"></i>
+      {{ textTitle | translate }}</h4>
+    <div class="panel-heading-btn">
+      <!-- <button type="button" class="btn btn-xs btn-icon btn-primary me-2">
+          <i class="fa fa-plus"></i>
+        </button> -->
+
+      <!-- <button type="button" class="btn btn-xs btn-icon btn-primary me-2" (click)="selectProducts('included')"
+          *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+          <i class="fa fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-xs btn-icon btn-danger" (click)="removeProducts('included')"
+          *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+          <i class="fa fa-trash"></i>
+        </button> -->
+    </div>
+  </div>
+  <div class="panel-body overflow-auto">
+    <!-- <ul class="list-group mb-4">
+        <li class="list-group-item" *ngIf="entity.includedProducts.length === 0">
+          {{ 'ClientCategoryDetails.NoIncludedProducts' | translate }}
+        </li>
+        <li class="list-group-item" *ngFor="let item of entity.includedProducts;">
+          <input class="form-check-input me-1" type="checkbox" [value]="item"
+            (change)="onCheckChanged($event, item, 'included')">
+          {{ item.name }}
+        </li>
+      </ul> -->
+    <div class="package-category-list">
+
+      <div class="table-responsive">
+        <table class="table table-hover text-nowrap" aria-label="Package Table">
+          <thead>
+            <tr>
+              <th class="pt-0 pb-2 border-bottom text-center" scope="row">
+                {{ 'Labels.Select' | translate }}
+                <input type="checkbox" class="form-check-input" [checked]="selectAll"
+                  (change)="onMasterPackageChecked()" />
+                ({{selectedCount}})
+              </th>
+              <th class="w-20 pt-0 pb-2 border-bottom" scope="row">{{ 'Packages.Number' | translate }}</th>
+              <th class="w-20 pt-0 pb-2 border-bottom" scope="row">{{ 'Packages.CustomerCode' | translate }}</th>
+              <th class="w-60 pt-0 pb-2 border-bottom" scope="row">{{ 'Packages.CustomerName' | translate }}</th>
+              <th class="w-60 pt-0 pb-2 border-bottom" scope="row">{{ 'Labels.Description' | translate }}</th>
+              <th class="w-20 pt-0 pb-2 border-bottom" scope="row">{{ 'PackageDetails.Weight' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pkg of packages">
+              <td class="text-center">
+                <input type="checkbox" class="form-check-input" [checked]="pkg.select"
+                  (change)="onPackageChecked(pkg)" />
+              </td>
+              <td>
+                {{ pkg.number }}
+              </td>
+              <td>
+                {{ pkg.customerCode }}
+              </td>
+              <td>
+                {{ pkg.customerName }}
+              </td>
+              <td>
+                {{ pkg.number }}
+              </td>
+              <td>
+                {{ pkg.description }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

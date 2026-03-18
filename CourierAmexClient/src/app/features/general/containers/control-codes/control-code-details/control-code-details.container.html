@@ -1,0 +1,12 @@
+<ng-container *ngIf="{ entities: entities$ | async } as data">
+
+  <div class="general-control-codes" *ngIf="data.entities">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'ControlCodes.Title' | translate }} <small>{{ 'ControlCodes.SubTitle' | translate
+        }}</small>
+    </h1>
+
+    <control-code-form [entities]="data.entities" (onSubmit)="handleSubmit($event)"></control-code-form>
+  </div>
+</ng-container>

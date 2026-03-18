@@ -1,0 +1,11 @@
+<div class="country-details" *ngIf="{ entity: entity$ | async } as data">
+  <ng-container *ngIf="data.entity">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'CountryDetails.Title' | translate }} <small>{{ 'CountryDetails.SubTitle' | translate
+        }}</small>
+    </h1>
+
+    <country-form [entity]="data.entity" (onSave)="save($event)" (onGoBack)="goBack()"></country-form>
+  </ng-container>
+</div>

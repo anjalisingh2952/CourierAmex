@@ -1,0 +1,80 @@
+<div class="mb-3 d-md-flex fw-bold">
+  <div class="mt-md-0 mt-2">
+    <button type="button" id="btnA" class="btn btn-link btn-sm text-decoration-none text-dark"
+      (click)="categoryUpdate('A')" *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+      <i class="fa fa-save fa-lg me-2 text-dark"></i> {{'PackageCategory.Category' | translate }}
+      <i class="fa-solid fa-a fa-lg me-2 text-dark"></i>
+      ({{countMap.get('A') || 0}})
+    </button>
+  </div>
+  <div class="mt-md-0 mt-2">
+    <button type="button" id="btnB" class="btn btn-link btn-sm text-decoration-none text-dark"
+      (click)="categoryUpdate('B')" *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+      <i class="fa fa-save fa-lg me-2 text-dark"></i> {{'PackageCategory.Category' | translate }}
+      <i class="fa-solid fa-b fa-lg me-2 text-dark"></i>
+      ({{countMap.get('B') || 0}})
+    </button>
+  </div>
+  <div class="mt-md-0 mt-2">
+    <button type="button" id="btnC" class="btn btn-link btn-sm text-decoration-none text-dark"
+      (click)="categoryUpdate('C')" *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+      <i class="fa fa-save fa-lg me-2 text-dark"></i> {{'PackageCategory.Category' | translate }}
+      <i class="fa-solid fa-c fa-lg me-2 text-dark"></i>
+      ({{countMap.get('C') || 0}})
+    </button>
+  </div>
+  <div class="mt-md-0 mt-2">
+    <button type="button" id="btnD" class="btn btn-link btn-sm text-decoration-none text-dark"
+      (click)="categoryUpdate('D')" *ngIf="(hasAdd && entity.id === 0) || (hasUpdate && entity.id > 0)">
+      <i class="fa fa-save fa-lg me-2 text-dark"></i> {{'PackageCategory.Category' | translate }}
+      <i class="fa-solid fa-d fa-lg me-2 text-dark"></i>
+      ({{countMap.get('D') || 0}})
+    </button>
+  </div>
+</div>
+
+<div class="package-category-list">
+
+  <shared-keyword-search [criteria]="criteria" (onSearch)="onKeywordSearch($event)"></shared-keyword-search>
+
+  <div class="table-responsive">
+    <table class="table table-hover text-nowrap" aria-label="Package Table">
+      <thead>
+        <tr>
+          <th class="pt-0 pb-2 border-bottom text-center" scope="row">
+            {{ 'Labels.Select' | translate }}
+            <input type="checkbox" class="form-check-input" [checked]="selectAll" (change)="onMasterPackageChecked()" />
+            ({{selectedCount}})
+          </th>
+          <th class="w-20 pt-0 pb-2 border-bottom" scope="row">{{ 'PackageCategory.Category' | translate }}</th>
+          <th class="w-20 pt-0 pb-2 border-bottom" scope="row">{{ 'Labels.Customer' | translate }}</th>
+          <th class="w-40 pt-0 pb-2 border-bottom" scope="row">{{ 'PackageCategory.CustomerName' | translate }}</th>
+          <th class="w-20 pt-0 pb-2 border-bottom" scope="row">{{ 'Labels.TrackingNumber' | translate }}</th>
+          <th class="w-50 pt-0 pb-2 border-bottom" scope="row">{{ 'Labels.Description' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pkg of filteredPackagesList">
+          <td class="text-center">
+            <input type="checkbox" class="form-check-input" [checked]="pkg.select" (change)="onPackageChecked(pkg)" />
+          </td>
+          <td>
+            {{ pkg.category }}
+          </td>
+          <td>
+            {{ pkg.customerCode }}
+          </td>
+          <td>
+            {{ pkg.customerName }}
+          </td>
+          <td>
+            {{ pkg.number }}
+          </td>
+          <td>
+            {{ pkg.description }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

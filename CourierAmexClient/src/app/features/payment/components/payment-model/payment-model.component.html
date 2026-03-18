@@ -1,0 +1,112 @@
+<div class="p-2">
+  <div class="modal-header">
+    <h3 class="text-center">{{ 'Payment.BillPayment' | translate }}</h3>
+    <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+  </div>
+  <div class="container mt-4">
+    <!-- Payment Info -->
+    <div class="mb-3">
+      <div class="form-group row mb-2">
+        <label class="col-sm-3 col-form-label">
+          {{ 'InvoiceHistory.TotalDollars' | translate }}
+        </label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" [value]="data.totalDollar | number:'1.0-2'" readonly
+            style="font-size: 15px;" />
+
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label">
+          {{ 'Payment.TotalLocal' | translate }}:
+        </label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control font-weight-bold" [value]="data.totalLocal | number:'1.0-2'"
+            style="font-size: 15px;" readonly />
+        </div>
+      </div>
+    </div>
+
+    <!-- Currency Selection -->
+    <div class="mb-3">
+      <label class="form-label">{{ 'Payment.PaymentCurrency' | translate }}:</label>
+      <div class="form-check form-check-inline ms-4">
+        <input class="form-check-input" type="radio" name="currency" value="188" [(ngModel)]="selectedCurrency"
+          (change)="onCurrencyChange('188')">
+        <label class="form-check-label">{{ 'Payment.Colones' | translate }}</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="currency" value="840" [(ngModel)]="selectedCurrency"
+          (change)="onCurrencyChange('840')">
+        <label class="form-check-label">{{ 'Payment.Dollars' | translate }}</label>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row mb-2">
+            <label class="col-sm-6 col-form-label">{{ 'Payment.MethodOfPayment' | translate }}</label>
+            <div class="col-sm-6">
+              <select class="form-control" [(ngModel)]="data.selectedPaymentId" name="selectedPaymentId"
+                #paymentId="ngModel" (change)="getSubPaymentType()"
+                [class.is-valid]="paymentId.valid && paymentId.touched"
+                [class.is-invalid]="paymentId.invalid && paymentId.touched">
+                <option value="0" hidden>{{ 'Payment.Select' | translate }}</option>
+                <option *ngFor="let item of paymentType" [value]="item.paymentId">{{ item.description }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group row">
+            <div class="col-1"></div>
+            <label class="col-sm-4 col-form-label">{{ 'Payment.PaymentType' | translate }}</label>
+            <div class="col-sm-7">
+              <select class="form-control" [(ngModel)]="data.selectedSubPaymentId" name="selectedSubPaymentId"
+                #subPaymentId="ngModel" (change)="onSubTypeChange()"
+                [class.is-valid]="subPaymentId.valid && subPaymentId.touched"
+                [class.is-invalid]="subPaymentId.invalid && subPaymentId.touched">
+                <option value="0" hidden>{{ 'Payment.Select' | translate }}</option>
+                <option *ngFor="let item of subPaymentType" [value]="item.subPaymentId">{{ item.description }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="(data.isPayModel && isPayTypeCash) || data.isPartialPayment" class="form-group row">
+      <label class="col-sm-3 col-form-label">
+        {{ 'Payment.PayReceived' | translate }} ({{ selectedCurrency === '840' ? 'In Dollars' : 'In Local' }}):
+      </label>
+      <div class="col-sm-9">
+        <input type="number" class="form-control" [(ngModel)]="data.payReceived" name="payReceived"
+          #payReceived="ngModel" (input)="validateAmount()" [class.is-valid]="payReceived.valid && payReceived.touched"
+          [class.is-invalid]="payReceived.invalid && payReceived.touched">
+        <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="!data.isPartialPayment && isPayTypeCash" class="form-group row mt-2">
+      <label class="col-sm-3 col-form-label">{{ 'Payment.Change' | translate }}:</label>
+      <div class="col-sm-9">
+        <input type="number" class="form-control" [(ngModel)]="data.change" name="changeAmount" readonly>
+      </div>
+    </div>
+    <div *ngIf="!isRefrence" class="form-group row mt-2">
+      <label class="col-sm-3 col-form-label">{{ 'Payment.Refrence' | translate }}:</label>
+      <div class="col-sm-9">
+        <textarea class="form-control" (input)="validateForm()" [(ngModel)]="data.refrence" name="reference"></textarea>
+        <div *ngIf="data.refrenceErrorMessage" class="text-danger mt-2">{{ data.refrenceErrorMessage }}</div>
+      </div>
+    </div>
+
+    <div class="text-center mt-2">
+      <button class="btn btn-primary me-3" (click)="onSubmit()"
+        [disabled]="!isFormValid">{{ 'Payment.Pay' | translate }}</button>
+      <button class="btn btn-secondary" (click)="onCancel()">{{ 'Payment.Exit' | translate }}</button>
+    </div>
+  </div>
+</div>

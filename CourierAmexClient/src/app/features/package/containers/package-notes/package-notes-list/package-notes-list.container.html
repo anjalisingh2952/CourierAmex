@@ -1,0 +1,89 @@
+<ng-container *ngIf="entities$ | async as packageNotes">
+  <app-entity-list
+    [title]="'PackageNotes.Title' | translate"
+    [subTitle]="'PackageNotes.SubTitle' | translate"
+    [addLabel]="'Labels.New' | translate"
+    [filterTemplate]="filterTemplate"
+    [hasAdd]="hasAdd"
+    [state]="state"
+    [pagination]="pagination"
+    [columns]="columns"
+    [rows]="packageNotes"
+    [showHeader]="true"
+    [activeSearch]="false"
+    (stateChange)="onStateChange($event)"
+    (add)="addNew()"
+  >
+    <div class="row mb-2">
+      <div class="col-12">
+        <label class="ml-10" for="customerCode">Customer Code: </label>
+        <input
+          id="customerCode"
+          type="text"
+          [(ngModel)]="customerCode"
+          (ngModelChange)="onCustomerCodeChange($event)"
+          class="form-control"
+        />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12">
+        <label class="ml-10" for="courierNumber">Courier: </label>
+        <input
+          id="courierNumber"
+          type="text"
+          [(ngModel)]="courierNumber"
+          (ngModelChange)="onCourierNumberChange($event)"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="row mb-3 d-flex justify-content-end">
+      <div class="col-auto">
+        <button type="button" class="btn btn-primary" (click)="onSearch()">
+          Search
+        </button>
+      </div>
+    </div>
+  </app-entity-list>
+</ng-container>
+
+<ng-template #filterTemplate>
+  <ng-container *ngIf="companies$ | async as companies">
+    <shared-dropdown
+      [entities]="companies"
+      (onSelectEntity)="selectEntity($event)"
+      *ngIf="showCompanies"
+      [selectedEntity]="companies[0] || undefined"
+    ></shared-dropdown>
+  </ng-container>
+</ng-template>
+
+<ng-template #actionTemplate let-params="params">
+  <i
+    class="fa fa-eye text-primary fs-15px me-2 pointer"
+    ngbTooltip="{{ 'Tooltips.View' | translate }}"
+    (click)="editEntity(params.row)"
+  ></i>
+  <i
+    class="fa fa-trash text-danger fs-15px me-2 pointer"
+    *ngIf="hasDelete"
+    ngbTooltip="{{ 'Tooltips.Delete' | translate }}"
+    (click)="deleteEntity(params.row)"
+  ></i>
+</ng-template>
+
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.status">
+    <span *ngSwitchCase="1" class="badge bg-dark"
+      >{{ 'Labels.Draft' | translate }}</span
+    >
+    <span *ngSwitchCase="2" class="badge bg-green text-white"
+      >{{ 'Labels.Active' | translate }}</span
+    >
+    <span *ngSwitchCase="3" class="badge bg-yellow text-dark"
+      >{{ 'Labels.Inactive' | translate }}</span
+    >
+  </ng-container>
+</ng-template>

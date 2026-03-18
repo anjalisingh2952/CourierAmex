@@ -1,0 +1,340 @@
+﻿<!DOCTYPE html>
+<html lang="" en"">
+<head>
+    <meta charset="" UTF-8"">
+    <meta name="" viewport"" content="" width=device-width, initial-scale=1.0"">
+    <title>Document</title>
+    <style type="" text /css"">
+
+        body {
+            margin: 0;
+            padding: 0;
+            color: #000
+        }
+
+        p {
+            margin: 1px 0;
+            word-wrap: break-word;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        .american-page {
+            width: 100%;
+            max-width: 870px;
+            margin: 0 auto 0;
+            font-family: 'open-sans',sans-serif;
+            font-size: 15px;
+            line-height: 23px;
+            color: #000;
+        }
+
+        .container {
+            max-width: 870px;
+            margin: 0 auto;
+            padding: 0 15px
+        }
+
+        .section {
+            padding: 40px 0 0
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .amricantop-img {
+            width: 100%;
+            height: 100%;
+        }
+
+            .amricantop-img img {
+                width: 90%;
+            }
+
+        .export-details-right {
+            margin-left: 20px;
+        }
+
+        .export-details {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detailsde_2 {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .detailsde_2-boxs_fold2 {
+            display: flex;
+        }
+
+            .detailsde_2-boxs_fold2 .detailsde-box {
+                margin-left: 18px;
+            }
+
+                .detailsde_2-boxs_fold2 .detailsde-box:first-child {
+                    margin: 0;
+                }
+
+        .detailsde_2-boxs .detailsde-box {
+            width: 25%;
+            text-align: right;
+        }
+
+        .detailsde_2-boxs {
+            display: flex;
+            gap: 10px;
+        }
+
+            .detailsde_2-boxs .detailsde-box:first-child {
+                text-align: left;
+            }
+
+        .subtotal_sleft {
+            width: 50%;
+            display: flex;
+            align-items: center;
+        }
+
+        .subtotal_l-1 {
+            width: 40%;
+        }
+
+        .subtotal_l-2 {
+            width: 50%;
+        }
+
+        .subtotal_l-1 img {
+            width: 100px;
+        }
+
+        .subtotal_l-2 img {
+            width: 100px;
+        }
+
+        .subtotal_sright {
+            width: 50%;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .subtotal_s {
+            display: flex;
+        }
+
+        .subtotal_r-2 {
+            text-align: right;
+        }
+
+        .ftr {
+            background: #00336c;
+            color: #fff;
+            padding: 30px 30px 20px 30px;
+            margin-top: auto;
+        }
+
+            .ftr p:last-child {
+                font-size: 12px;
+                text-align: center;
+                padding-top: 20px;
+            }
+
+        .subtotal_r-1 {
+            text-align: right;
+        }
+
+        .pd-top {
+            padding-top: 30px;
+        }
+
+        .export-details-left {
+            padding-top: 5px;
+        }
+
+        .detailsde-right {
+            margin-left: 20px;
+        }
+
+        .top-head-left {
+            width: 50%;
+        }
+
+        .top-headright-cnts {
+            width: 50%;
+            background: #00336c;
+            color: #fff;
+            padding: 10px;
+            border-radius: 2px;
+        }
+
+        .top-head-cnts {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        @media (max-width:767px) {
+            .detailsde_2-boxs_fold2 .detailsde-box {
+                margin: 0;
+            }
+
+            .detailsde_2-boxs_fold2 {
+                flex-wrap: wrap;
+                gap: 0 20px;
+            }
+
+            .subtotal_sleft {
+                width: 100%;
+            }
+
+            .subtotal_sright {
+                width: 100%;
+                justify-content: start;
+                padding-top: 10px;
+            }
+
+            .subtotal_s {
+                display: block;
+            }
+
+            .subtotal_r-2 {
+                margin-left: 20px;
+            }
+
+            .detailsde_2 {
+                flex-wrap: wrap;
+            }
+
+            .top-head-cnts {
+                flex-direction: column;
+            }
+
+            .top-headright-cnts {
+                width: 100%;
+            }
+
+            .font-bold{
+                font-weight : 500;
+            }
+
+            .parag
+            {
+                margin-left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="american-page">
+        <div class="section fold1 desktop-view">
+            <div class="container">
+                <div class="top-head-cnts">
+                    <div class="top-head-left">
+                        <div class="amricantop-img">
+                            <img src="data:image /png;base64,{{logoBase64}}" alt=" ">
+                        </div>
+                    </div>
+                    <div class="top-headright-cnts">
+                        <p> <b>{{Address}}</b></p>
+
+                        <p><b>Tel:</b> {{Tel}}</p>
+                        <p><b>CED:</b> 3-101-434453</p>
+                        <p><b>EMAIL:</b> {{Email}}</p>
+                    </div>
+                </div>
+                <div class="top-contents">
+                    <p><b>BILLING:</b> {{Billing}}</p>
+                    <p><b>Key: </b></p>
+                    <p>{{Key}}</p>
+                    <div class="export-details">
+                        <div class="export-details-left">
+                            <p><b>Consecutive Internal:</b> {{invoiceNumber}}</p>
+                            <p class="pd-top"><b>Invoice Date:</b> {{InvoiceDate}}</p>
+                        </div>
+                        <div class="export-details-right">
+                            <p><b>Client No. :</b>   {{Client}} </p>
+                            <p><b>Client:</b>  {{FullName}}</p>
+
+                        </div>
+                    </div>
+                    <p><b>Exchange Rate:</b> {{ExchangeRateSale}} </p>
+                    <p><b>Identification:</b> 205700868</p>
+                </div>
+            </div>
+        </div>
+
+        <div class=" section fold2 desktop-view">
+            <div class="container">
+
+                {{PackageDetailsHead}}
+                {{PackageDetails}}
+            </div>
+        </div>
+        <div class=" section fold3 desktop-view">
+            <div class="container">
+                {{ServiceHead}}
+                {{Services}}
+            </div>
+        </div>
+
+        <div class="section fold4 desktop-view">
+            <div class=" container">
+                
+                {{OtherChargesHead}}
+                {{OtherCharges}}
+            </div>
+        </div>
+        <div class="section fold5 desktop-view">
+            <div class="container">
+                {{CustomChargesHead}}
+                {{CustomCharges}}
+            </div>
+        </div>
+        <div class="section fold6 desktop-view">
+            <div class="container">
+                <div class="subtotal_s">
+                    <div class="subtotal_sleft">
+                        <div class="subtotal_l-1">
+                            <img src="data:image /png;base64,{{barcodeBase64}}" alt="" "">
+                        </div>
+                        <div class="subtotal_l-2">
+                            <img src="data:image /png;base64,{{frameBase64}}" alt="" "">
+                        </div>
+                    </div>
+
+                    <div class="subtotal_sright">
+                        <div class="subtotal_r-1">
+                            <p><b>SubTotal(Services): </b></p>
+                            <p><b>I.V.A:</b></p>
+                            <p><b>Other Charges:</b></p>
+                            <p><b>Customs Taxes:</b></p>
+                            <p><b>Total $:</b></p>
+                            <p><b>Total: </b></p>
+                        </div>
+                        <div class="subtotal_r-2">
+                            <p><b>{{SubTotal}}</b></p>
+                            <p><b>{{I.V.A:}}</b></p>
+                            <p><b>{{OtrosCargos}}</b></p>
+                            <p><b>{{CustomsTaxes}} </b></p>
+                            <p><b>{{Total$:}}</b></p>
+                            <p><b>{{Total:}}</b></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section fold7 desktop-view">
+            <p class="parag"><b>Note:</b></p>
+            <div class="ftr">
+                <p class="text-center">¡Thank you for your preference!</p>
+                <p>Resolution number for electronic billing: DGT-R-033-2019</p>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>

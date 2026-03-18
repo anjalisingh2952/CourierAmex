@@ -1,0 +1,78 @@
+<div class="tab-pane fade active show" id="profile-security" role="tabpanel" *ngIf="entity">
+  <ng-template #LOADER>
+    <ngx-skeleton-loader />
+  </ng-template>
+
+  <div class="row">
+    <div class="col-4 offset-3">
+      {{ 'Labels.PasswordRequirementsTitle' | translate }}<br>
+      <div [innerHTML]="'Labels.PasswordRequirements' | translate "></div>
+    </div>
+  </div>
+
+  <form class="profile-form" autocomplete="off" (ngSubmit)="handleSubmit(form)" #form="ngForm">
+    <input type="hidden" name="id" [ngModel]="entity.id">
+    <div class="row">
+      <div class="col-4 offset-3">
+        <div class="mb-2" *ngIf="!isLoading; else LOADER">
+          <label class="form-label" for="currentPassword">* {{ 'UserProfile.CurrentPassword' | translate }}</label>
+          <input type="password" class="form-control" name="currentPassword" [ngModel]="entity.currentPassword"
+            placeholder="{{ 'UserProfile.CurrentPasswordPlaceholder' | translate }}"
+            [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="currentPassword.valid && currentPassword.touched"
+            [class.is-invalid]="currentPassword.invalid && currentPassword.touched" #currentPassword="ngModel"
+            maxlength="64" required>
+          <ng-container *ngIf="currentPassword.invalid && currentPassword.touched">
+            <div class="invalid-feedback" *ngIf="currentPassword.errors?.['required']">
+              {{ 'Labels.FieldRequired' | translate }}
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="mb-2" *ngIf="!isLoading; else LOADER">
+          <label class="form-label" for="newPassword">* {{ 'UserProfile.NewPassword' | translate }}</label>
+          <input type="password" class="form-control" name="newPassword" [ngModel]="entity.newPassword"
+            placeholder="{{ 'UserProfile.NewPasswordPlaceholder' | translate }}" [ngModelOptions]="{ updateOn: 'blur' }"
+            [class.is-valid]="newPassword.valid && newPassword.touched"
+            [class.is-invalid]="newPassword.invalid && newPassword.touched" #newPassword="ngModel" maxlength="64"
+            minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+          <ng-container *ngIf="newPassword.invalid && newPassword.touched">
+            <div class="invalid-feedback" *ngIf="newPassword.errors?.['required']">
+              {{ 'Labels.FieldRequired' | translate }}
+            </div>
+            <div class="mt-2 text-danger" *ngIf="newPassword.errors?.['minlength']">
+              {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+            </div>
+            <div class="mt-2 text-danger" *ngIf="newPassword.errors?.['pattern']">
+              {{ 'Labels.PasswordStrength' | translate }}
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="mb-2" *ngIf="!isLoading; else LOADER">
+          <label class="form-label" for="confirmPassword">* {{ 'UserProfile.ConfirmPassword' | translate }}</label>
+          <input equalValidator="newPassword" type="password" class="form-control" name="confirmPassword"
+            [ngModel]="entity.confirmPassword" placeholder="{{ 'UserProfile.ConfirmPasswordPlaceholder' | translate }}"
+            [ngModelOptions]="{ updateOn: 'blur' }" [class.is-valid]="confirmPassword.valid && confirmPassword.touched"
+            [class.is-invalid]="confirmPassword.invalid && confirmPassword.touched" #confirmPassword="ngModel"
+            maxlength="64" minlength="8" required>
+          <ng-container *ngIf="confirmPassword.invalid && confirmPassword.touched">
+            <div class="invalid-feedback" *ngIf="confirmPassword.errors?.['required']">
+              {{ 'Labels.FieldRequired' | translate }}
+            </div>
+            <div class="invalid-feedback" *ngIf="confirmPassword.errors?.['minlength']">
+              {{ 'Labels.FieldMinLength' | translate:{ min: 8 } }}
+            </div>
+            <div class="mt-2 text-danger" *ngIf="confirmPassword.errors?.['notEqual']">
+              {{ 'Labels.ConfirmPasswordMatch' | translate }}
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="mt-20px" *ngIf="!isLoading; else LOADER">
+          <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg">
+            {{'Labels.Submit' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

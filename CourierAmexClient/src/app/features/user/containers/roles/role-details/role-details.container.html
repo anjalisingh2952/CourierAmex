@@ -1,0 +1,11 @@
+<div class="role-details" *ngIf="{ 
+  companies: companies$ | async,
+} as data">
+  <shared-breadcrumb></shared-breadcrumb>
+
+  <h1 class="page-header">{{ 'RoleDetails.Title' | translate }} <small>{{ 'RoleDetails.SubTitle' | translate }}</small>
+  </h1>
+
+  <settings-role-form [showCompanies]="showCompanies" [companies]="data.companies ?? []" [role]="role" (onSave)="save($event)"
+    (onGoBack)="goBack()"></settings-role-form>
+</div>

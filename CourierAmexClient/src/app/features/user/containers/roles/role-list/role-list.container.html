@@ -1,0 +1,30 @@
+<ng-container *ngIf="{ 
+  companies: companies$ | async,
+} as data">
+  <shared-breadcrumb></shared-breadcrumb>
+
+  <h1 class="page-header">{{ 'Roles.Title' | translate }} <small>{{ 'Roles.SubTitle' | translate }}</small></h1>
+
+  <div class="mb-3 d-md-flex fw-bold" *ngIf="hasAdd">
+    <div class="mt-md-0 mt-2" *ngIf="hasAdd">
+      <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="addNew()">
+        <i class="fa fa-plus fa-lg me-1 text-dark"></i>
+        {{ 'Labels.New' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <shared-keyword-search [criteria]="pagination.c ?? ''" (onSearch)="onKeywordSearch($event)"></shared-keyword-search>
+
+  <shared-pagination [Pagination]="pagination" (onPaginationChange)="onPagerChange($event)">
+    <shared-dropdown [entities]="data.companies || []" (onSelectEntity)="selectCompany($event)" *ngIf="showCompanies"></shared-dropdown>
+  </shared-pagination>
+
+  <div class="card border-0 p-3 mb-3" *ngIf="roles$ | async as roles">
+    <settings-role-table [showCompanies]="showCompanies" [roles]="roles" [pagination]="pagination" (onSortBy)="sortBy($event)"
+      (onEdit)="editItem($event)" (onDelete)="deleteItem($event)"></settings-role-table>
+  </div>
+
+  <shared-pagination [type]="'Footer'" [Pagination]="pagination"
+    (onPaginationChange)="onPagerChange($event)"></shared-pagination>
+</ng-container>

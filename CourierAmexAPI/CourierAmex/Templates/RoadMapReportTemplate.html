@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 2px solid black;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .info-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+
+        .section-title {
+            font-weight: bold;
+            background: #ddd;
+            padding: 5px;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #444;
+            color: white;
+        }
+
+        .barCode{
+            height : 55px
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">ROUTE SHEET</div>
+        <div class="subtitle">AMERICAN EXPORT IMPORT AND PURCHASING</div>
+        <div class="info-container">
+            <div>PRINT DATE: <strong>{{printDate}}</strong></div>
+            <div>PRINT TIME: <strong>{{printTime}}</strong></div>
+            <img class="barCode" src="{{Barcode}}" alt="" "">
+        </div>
+        <div class="info-container">
+            <div>DRIVER: <strong>____</strong></div>
+            <div>ROUTE SHEET: <strong>QUEPOS MARCH 26, 2025</strong></div>
+        </div>
+        <div class="info-container">
+            <div>TOTAL PCS: <strong>{{TotalPackages}}</strong></div>
+            <div>{{TotalPackages}} PACKAGES</div>
+        </div>
+        <div class="info-container">
+            <div>ZONE: <strong>{{Zone}}</strong></div>
+            <div>Stop: <strong>{{Stop}}</strong></div>
+        </div>
+    </div>
+
+        {{CustomerDetails}}
+
+
+</body>
+</html>

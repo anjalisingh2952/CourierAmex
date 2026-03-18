@@ -1,0 +1,212 @@
+<form class="document-pay-type-form" (ngSubmit)="handleSubmit(form)" #form="ngForm" *ngIf="document" autocomplete="off">
+    <input type="hidden" name="id" [ngModel]="document.id" />
+
+    <div class="mb-3 d-md-flex fw-bold">
+        <div class="mt-md-0 mt-2">
+          <button type="submit" class="btn btn-link btn-sm text-decoration-none text-dark"
+            *ngIf="(hasAdd && document.id === 0) || (hasUpdate && document.id > 0)">
+            <i class="fa fa-save fa-lg me-2 text-dark"></i> {{ 'Labels.SaveChanges' |
+            translate }}</button>
+        </div>
+        <div class="ms-md-0 mt-md-0 mt-2">
+          <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="goBack()">
+            <i class="fa fa-arrow-left fa-lg me-2 text-dark"></i> {{ 'Labels.GoBack' |
+            translate }}</button>
+        </div>
+      </div>
+
+      <div class="panel panel-inverse">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-id-card fa-lg fa-fw me-1"></i> {{ 'DocumentPayTypeDetails.Info' |
+            translate }}
+          </h4>
+        </div>
+        <div class="panel-body">
+          <input type="hidden" name="companyId" [ngModel]="document.companyId" *ngIf="!showCompanies" />
+          <div class="mb-3" *ngIf="showCompanies">
+            <label class="form-label" for="companyId">{{ 'DocumentPayTypeDetails.CompanyName' | translate }}</label>
+            <select class="form-select" name="companyId" (ngModelChange)="companyChange($event)" [ngModel]="document.companyId" #companyId="ngModel"
+              [ngModelOptions]="{ updateOn: 'change' }" [class.is-valid]="companyId.valid && companyId.touched"
+              [class.is-invalid]="companyId.invalid && companyId.touched" required [disabled]="disabledFields">
+              <option [ngValue]=undefined>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=c.id *ngFor="let c of companies;">{{ c.name }}</option>
+            </select>
+            <ng-container *ngIf="companyId.invalid && companyId.touched">
+              <div class="invalid-feedback" *ngIf="companyId.errors?.['required']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+            </ng-container>
+          </div>          
+
+          <div class="mb-3">
+            <label class="form-label" for="name">{{ 'Labels.Name' | translate }}</label>
+            <input type="text" class="form-control" name="name" [ngModel]="document.name"
+              [ngModelOptions]="{ updateOn: 'blur' }" placeholder="{{ 'DocumentTypeDetails.NamePlaceholder' | translate }}"
+              [class.is-valid]="name.valid && name.touched" [class.is-invalid]="name.invalid && name.touched"
+              #name="ngModel" maxlength="255" minlength="2" required>
+            <ng-container *ngIf="name.invalid && name.touched">
+              <div class="invalid-feedback" *ngIf="name.errors?.['required']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+              <div class="invalid-feedback" *ngIf="name.errors?.['minlength']">
+                {{ 'Labels.FieldMinLength' | translate:{ min: 2 } }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="currencyCode">* {{ 'DocumentPayTypeDetails.Currency' | translate }}</label>
+            <select minValueValidator="1" class="form-select" name="currencyCode" [ngModel]="document.currencyCode"
+              #currencyCode="ngModel" [class.is-valid]="currencyCode.valid && currencyCode.touched"
+              [class.is-invalid]="currencyCode.invalid && currencyCode.touched"
+              required>
+              <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=c.id *ngFor="let c of currencies">{{ c.name }}</option>
+            </select>
+            <ng-container *ngIf="currencyCode.invalid && currencyCode.touched">
+              <div class="invalid-feedback" *ngIf="currencyCode.errors?.['required'] || currencyCode.errors?.['min']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="payTypeId">* {{ 'DocumentPayTypeDetails.PaymentType' | translate }}</label>
+            <select minValueValidator="1" class="form-select" name="payTypeId" (ngModelChange)="paymentTypeChange($event)" [ngModel]="document.payTypeId"
+              #payTypeId="ngModel" [class.is-valid]="payTypeId.valid && payTypeId.touched"
+              [class.is-invalid]="payTypeId.invalid && payTypeId.touched"
+              required>
+              <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=p.id *ngFor="let p of paymentTypes">{{ p.name }}</option>
+            </select>
+            <ng-container *ngIf="payTypeId.invalid && payTypeId.touched">
+              <div class="invalid-feedback" *ngIf="payTypeId.errors?.['required'] || payTypeId.errors?.['min']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+            </ng-container>
+          </div>
+
+
+          <div class="mb-2" *ngIf="showBanks">
+            <label class="form-label" for="brandId">* {{ 'DocumentPayTypeDetails.Brand' | translate }}</label>
+            <select minValueValidator="1" class="form-select" name="brandId" [ngModel]="document.brandId"
+              #brandId="ngModel" [class.is-valid]="brandId.valid && brandId.touched"
+              [class.is-invalid]="brandId.invalid && brandId.touched"
+              required>
+              <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+              <option [ngValue]=b.id *ngFor="let b of brands">{{ b.name }}</option>
+            </select>
+            <ng-container *ngIf="brandId.invalid && brandId.touched">
+              <div class="invalid-feedback" *ngIf="brandId.errors?.['required'] || brandId.errors?.['min']">
+                {{ 'Labels.FieldRequired' | translate }}
+              </div>
+            </ng-container>
+          </div>
+
+          <ng-container *ngIf="showBanks">
+            <div class="mb-2" >
+              <label class="form-label" for="bankId">* {{ 'DocumentPayTypeDetails.Bank' | translate }}</label>
+              <select minValueValidator="1" class="form-select" name="bankId" [ngModel]="document.bankId"
+                #bankId="ngModel" [class.is-valid]="bankId.valid && bankId.touched"
+                [class.is-invalid]="bankId.invalid && bankId.touched"
+                required>
+                <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+                <option [ngValue]=b.id *ngFor="let b of banks">{{ b.name }}</option>
+              </select>
+              <ng-container *ngIf="bankId.invalid && bankId.touched">
+                <div class="invalid-feedback" *ngIf="bankId.errors?.['required'] || bankId.errors?.['min']">
+                  {{ 'Labels.FieldRequired' | translate }}
+                </div>
+              </ng-container>
+            </div>
+      
+            <div class="row" >
+              <div class="col-4">
+                <div class="mb-3">
+                  <label class="form-label" for="bankComission">{{ 'DocumentPayTypeDetails.BankComission' | translate }}</label>
+                  <input type="number" class="form-control" name="bankComission" [ngModel]="document.bankComission"
+                    placeholder="{{ 'DocumentPayTypeDetails.BankComissionPlaceholder' | translate }}"
+                    [class.is-valid]="bankComission.valid && bankComission.touched"
+                    [class.is-invalid]="bankComission.invalid && bankComission.touched" #bankComission="ngModel">
+                </div>
+              </div>
+      
+              <div class="col-4">
+                  <div class="mb-3">
+                    <label class="form-label" for="vatWithholding">{{ 'DocumentPayTypeDetails.VATWithholding' | translate }}</label>
+                    <input type="number" class="form-control" name="vatWithholding" [ngModel]="document.vatWithholding"
+                      placeholder="{{ 'DocumentPayTypeDetails.vatWithholdingPlaceholder' | translate }}"
+                      [class.is-valid]="vatWithholding.valid && vatWithholding.touched"
+                      [class.is-invalid]="vatWithholding.invalid && vatWithholding.touched" #vatWithholding="ngModel">
+                  </div>
+              </div>
+    
+      
+              <div class="col-4">
+                <div class="mb-3">
+                  <label class="form-label" for="incomeWithholding">{{ 'DocumentPayTypeDetails.IncomeWithholding' | translate }}</label>
+                  <input type="number" class="form-control" name="incomeWithholding" [ngModel]="document.incomeWithholding"
+                    placeholder="{{ 'DocumentPayTypeDetails.IncomeWithholdingPlaceholder' | translate }}"
+                    [class.is-valid]="incomeWithholding.valid && incomeWithholding.touched"
+                    [class.is-invalid]="incomeWithholding.invalid && incomeWithholding.touched" #incomeWithholding="ngModel">
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          
+      <ng-container *ngIf="showAccounting"  >
+
+        <div class="mb-2">
+          <label class="form-label" for="moduleId">* {{ 'DocumentPayTypeDetails.Module' | translate }}</label>
+          <select minValueValidator="1" class="form-select" name="moduleId" (ngModelChange)="moduleChange($event)" [ngModel]="document.moduleId"
+            #moduleId="ngModel" [class.is-valid]="moduleId.valid && moduleId.touched" 
+            [class.is-invalid]="moduleId.invalid && moduleId.touched" required [disabled]="disabledFields">
+            <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+            <option [ngValue]=m.id *ngFor="let m of modules">{{ m.name }}</option>
+          </select>
+          <ng-container *ngIf="moduleId.invalid && moduleId.touched">
+            <div class="invalid-feedback" *ngIf="moduleId.errors?.['required'] || moduleId.errors?.['min']">
+              {{ 'Labels.FieldRequired' | translate }}
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label" for="templateId">* {{ 'DocumentPayTypeDetails.Template' | translate }}</label>
+          <select minValueValidator="1" class="form-select" name="templateId" [ngModel]="document.templateId"
+            #templateId="ngModel" [class.is-valid]="templateId.valid && templateId.touched"
+            [class.is-invalid]="templateId.invalid && templateId.touched" required [disabled]="disabledFields">
+            <option [ngValue]=0>{{ 'Labels.Select' | translate }}</option>
+            <option [ngValue]=t.id *ngFor="let t of templates">{{ t.name }}</option>
+          </select>
+          <ng-container *ngIf="templateId.invalid && templateId.touched">
+            <div class="invalid-feedback" *ngIf="templateId.errors?.['required'] || templateId.errors?.['min']">
+              {{ 'Labels.FieldRequired' | translate }}
+            </div>
+          </ng-container>
+        </div>
+
+      </ng-container>
+        
+        <div class="mb-3">
+          <label class="form-label" for="status">{{ 'Labels.Status' | translate }}</label>
+          <select class="form-select" name="status" [ngModel]="document.status" #status="ngModel"
+            [ngModelOptions]="{ updateOn: 'change' }" [class.is-valid]="status.valid && status.touched"
+            [class.is-invalid]="status.invalid && status.touched" required>
+            <option [ngValue]=null>{{ 'Labels.Select' | translate }}</option>
+            <option [ngValue]=1>{{ 'Status.Draft' | translate }}</option>
+            <option [ngValue]=2>{{ 'Status.Active' | translate }}</option>
+            <option [ngValue]=3>{{ 'Status.Inactive' | translate }}</option>
+          </select>
+          <ng-container *ngIf="status.invalid && status.touched">
+            <div class="invalid-feedback" *ngIf="status.errors?.['required']">
+              {{ 'Labels.FieldRequired' | translate }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+</form>

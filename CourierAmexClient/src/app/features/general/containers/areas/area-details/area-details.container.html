@@ -1,0 +1,13 @@
+<div class="area-details"
+  *ngIf="{ entity: entity$ | async, countries: countries$ | async, states: states$ | async, zones: zones$ | async } as data">
+  <ng-container *ngIf="data.entity && data.countries">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'AreaDetails.Title' | translate }} <small>{{ 'AreaDetails.SubTitle' | translate
+        }}</small>
+    </h1>
+
+    <area-form [entity]="data.entity" [countries]="data.countries" [states]="data.states ?? []" [zones]="data.zones ?? []" (onSave)="save($event)"
+      (onGoBack)="goBack()" (onLoadStates)="onLoadStates($event)" (onLoadZones)="onLoadZones($event)"></area-form>
+  </ng-container>
+</div>

@@ -1,0 +1,11 @@
+<div class="login-cover">
+  <div class="login-cover-img" [ngStyle]="{ 'background-image': 'url(' + this.bg + ')' }"></div>
+  <div class="login-cover-bg"></div>
+</div>
+
+<div class="login-bg-list clearfix">
+  <div class="login-bg-list-item" *ngFor="let list of bgList" [ngClass]="{ 'active': list.active }">
+    <a href="javascript:;" class="login-bg-list-link" (click)="changeBg(list)"
+      [ngStyle]="{ 'background-image': 'url(' + list.bg + ')' }"></a>
+  </div>
+</div>

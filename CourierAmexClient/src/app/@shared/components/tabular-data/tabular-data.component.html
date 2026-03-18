@@ -1,0 +1,57 @@
+<div class="large-table-fake-top-scroll-container" (scroll)="onFakeScroll($event)" #fakeContainer>
+    <div #fakeChild>&nbsp;</div>
+</div>
+<div class="table-responsive large-table-container" (scroll)="onContentScroll($event)" #widgetsContent>
+    <table class="table table-hover text-nowrap" aria-label="Client Categories Table" #tableContainer>
+        <thead>
+            <tr>
+                <ng-container *ngFor="let column of columns;">
+                    <th scope="col" class="pt-0 pb-2 border-bottom" [ngClass]="column.cssClass" [hidden]="column.hidden">
+                        <ng-container *ngIf="column.sortable">
+                            <span (click)="sortBy(column.field)" class="pointer">
+                                {{column.label}}
+                                <ng-container *ngIf="state?.sortColumn === column.field">
+                                    <i class="fa-solid" [class.fa-arrow-down-a-z]="state?.sortDirection === 'ASC'"
+                                        [class.fa-arrow-up-z-a]="state?.sortDirection === 'DESC'"></i>
+                                </ng-container>
+                            </span>
+                        </ng-container>
+                        <ng-container *ngIf="!column.sortable">
+                            {{column.label}}
+                        </ng-container>
+                    </th>
+                </ng-container>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let row of dataSource;">
+                <tr [class.pointer]="state?.selectable" (click)="onSelect(row)" [class.selected]="selectedItem?.id === row.id">
+                    <ng-container *ngFor="let column of columns;">
+                        <td [ngClass]="column.cssClass" class="text-truncate" style="max-width: 150px;" [hidden]="column.hidden">
+                            <ng-container
+                                *ngTemplateOutlet="column.contentTemplate || defaultCell;context:getContext(row,column)">
+                            </ng-container>
+                        </td>
+                    </ng-container>
+                </tr>
+            </ng-container>
+            <ng-container *ngIf="dataSource?.length === 0">
+                <tr>
+                    <td class="fst-italic text-gray" [colSpan]="columns.length">{{emptyLabel}}</td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+
+</div>
+
+<ng-template #defaultCell let-params="params">
+    <ng-container [ngSwitch]="params.colum.type || 'text'">
+        <ng-container *ngSwitchCase="'date'">{{params.value | date:'MM/dd/yyyy hh:mm a'}}</ng-container>
+        <ng-container *ngSwitchCase="'number'">{{params.value | number}}</ng-container>
+        <ng-container *ngSwitchCase="'2decimals'">{{params.value | number:'1.2-2'}}</ng-container>
+        <ng-container *ngSwitchCase="'4decimals'">{{params.value | number:'1.4-4'}}</ng-container>
+        <ng-container *ngSwitchCase="'currency'">{{params.value | currency}}</ng-container>
+        <ng-container *ngSwitchDefault>{{params.value}}</ng-container>
+    </ng-container>
+</ng-template>

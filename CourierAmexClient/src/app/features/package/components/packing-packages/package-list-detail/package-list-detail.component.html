@@ -1,0 +1,53 @@
+<div class="row">
+  <!-- Package List -->
+  <div class="col-12 col-md-9">
+    <div class="flex-wrap">
+      <label class="form-label" for="totalPackages">Search Package</label>
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="fa fa-search fa-lg text-success-900"></i>
+        </span>
+        <input [(ngModel)]="searchPackage" placeholder="Search Package" type="number" id="totalPackages"
+          class="form-control" (keyup.enter)="onSearchPackageEnter()">
+      </div>
+    </div>
+    <app-entity-list [title]="'PackageDetails.PackageSearch' | translate" [state]="state" [columns]="columns"
+      [hasPagination]="false" [pagination]="pagination" [activeSearch]="false" [showHeader]="false"
+      [rows]="packageList">
+    </app-entity-list>
+    <ng-template #actionTemplate let-params="params">
+      <input type="checkbox" class="form-check-input me-2" [id]="'factura-' + params.row.id"
+        [(ngModel)]="params.row.selected" (change)="onCheckboxChange(params.row)">
+    </ng-template>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="d-flex flex-column gap-2">
+      <div class="mb-3 d-flex align-items-center">
+        <label class="form-label me-2" for="totalPackages" style="width: 150px;">Total Packages</label>
+        <input [(ngModel)]="totalPackages" type="text" id="totalPackages" class="form-control" disabled>
+      </div>
+
+      <div class="mb-3 d-flex align-items-center">
+        <label class="form-label me-2" for="totalWeight" style="width: 150px;">Total Weight</label>
+        <input [(ngModel)]="totalWeight" type="text" id="totalWeight" class="form-control" disabled>
+      </div>
+
+      <div class="mb-3 d-flex align-items-center">
+        <label class="form-label me-2" for="totalVolume" style="width: 150px;">Total Volume</label>
+        <input [(ngModel)]="totalVolume" type="text" id="totalVolume" class="form-control" disabled>
+      </div>
+    </div>
+    <div class="d-flex flex-column align-items-center">
+      <button type="button" class="btn btn-primary btn-sm text-decoration-none w-50" (click)="open()">
+        Unpack package
+      </button>
+      <button type="button" class="btn btn-primary btn-sm text-decoration-none mt-2 w-50" (click)="closeSection()">
+        Close
+      </button>
+      <button type="button" class="btn btn-primary btn-sm text-decoration-none mt-2 w-50" (click)="finishPackaging()">
+        Finish packaging
+      </button>
+    </div>
+  </div>
+</div>

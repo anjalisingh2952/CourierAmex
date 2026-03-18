@@ -1,0 +1,186 @@
+<div class="package-details" *ngIf="entity">
+    <ng-template #LOADER>
+        <!-- <ngx-skeleton-loader /> -->
+    </ng-template>
+    <div class="container mt-4">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Customer Name</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.customerName }}</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Customer Account</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.customerCode }}</div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Courier Name</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.courierName }}</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Courier Number</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.trackingNumber }}</div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Customer Balance</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.customerBalance   ? entity.customerBalance : 0}}</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Commodity</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.commodityId }}</div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Origin</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.origin }}</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Weight</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.weight }}</div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Package Type</label>
+                <div *ngIf="!isLoading; else LOADER">{{  entity.packageType === 0 ? 'Air' : 'Maritime'  }}</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Customer Company</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.companyName  ? entity.companyName : ""}}</div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Zone</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.zone  ? entity.zone : ""}}</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Description</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.description  ? entity.description : ""}}</div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Manifest Number</label>
+                <div *ngIf="!isLoading; else LOADER"><a [routerLink]="['/manifest/details']" 
+                    [queryParams]="{ id: entity.manifestNumber }"> {{ entity.manifestNumber  ? entity.manifestNumber : ""}}</a></div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Invoice Number</label>
+                <div *ngIf="!isLoading; else LOADER"><a [routerLink]="['/invoice/invoice-history']" >{{ entity.invoiceNumber   ? entity.invoiceNumber : ""}} </a></div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Roadmap Number</label>
+                <div *ngIf="!isLoading; else LOADER"><a [routerLink]="['/package/details']" 
+                    [queryParams]="{ id: entity.roadmapNumber }"> {{ entity.roadmapNumber   ? entity.roadmapNumber : "" }}</a></div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Bag</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.bags  ? entity.bags : 0}}</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">DUA Number </label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.dua  ? entity.dua : "null"}}</div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Width</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.width }}</div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Height</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.height }}</div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Long</label>
+                <div *ngIf="!isLoading; else LOADER">{{ entity.long }}</div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <input type="checkbox" class="form-check-input ms-2" disabled [ngModel]="entity.hasInvoice"
+                name="hasInvoice"  />
+            <label style="margin-left: 5px;" class="form-check-label fw-bold" for="hasInvoice">
+                Has Invoice? (F4)
+            </label>
+        </div>
+        <br>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <i class="fa fa-circle-info fa-lg fa-fw me-1"></i> {{ 'PackageDetails.ExtraInfo' |
+                        translate }}
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">
+                            {{ 'PackageDetails.Number' | translate }}
+                        </div>
+                        <div class="col-7 text-end text-red-500 fs-14px fw-bold">
+                            <ng-container *ngIf="!isLoading; else LOADER">
+                                <span *ngIf="(entity.number ?? 0) === 0"> {{ 'Labels.New' | translate }}</span>
+                                <span *ngIf="(entity.number ?? 0) > 0">{{ entity.number }}</span>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">
+                            {{ 'Labels.Country' | translate }}
+                        </div>
+                        <div class="col-7 text-end">
+                            <span *ngIf="!isLoading; else LOADER">{{ additionalInfo?.countryName }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">
+                            {{ 'PackageDetails.Weight' | translate }}
+                        </div>
+                        <div class="col-7 text-end">
+                            <span *ngIf="!isLoading; else LOADER">{{ entity.weightLbs | number:'1.2-2' }}</span>&nbsp;
+                            <span *ngIf="additionalInfo?.weightUnit === 1">{{ 'Labels.Lbs' | translate }}</span>
+                            <span *ngIf="additionalInfo?.weightUnit === 2">{{ 'Labels.Kgs' | translate }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-5 fw-bold">
+                            {{ 'PackageDetails.VolumetricWeight' | translate }}
+                        </div>
+                        <div class="col-7 text-end">
+                            <span *ngIf="!isLoading; else LOADER">{{ entity.volumetricWeight | number:'1.2-2' }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="">
+                <button class="btn btn-primary" (click)="getWebPrintJob(entity.number)">Print Label</button>
+                <button class="btn btn-primary" style="margin-left: 5px;" (click)="callParentClick(entity)">View package Note</button>
+
+            </div>
+        </div>
+    </div>
+</div>

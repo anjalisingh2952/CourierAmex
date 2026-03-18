@@ -1,0 +1,14 @@
+<shared-breadcrumb></shared-breadcrumb>
+
+<h1 class="page-header">{{ 'Payment.PointOfSale' | translate }} <small>{{ 'Payment.PointOfSaleSubTitle' |
+        translate
+        }}</small>
+</h1>
+<app-open-close-point-of-sale-form [pointOfSaleList]="pointOfSaleList" (reFreshPointOfSale)="reFreshPointOfSale($event)" (onSaleStart)="onFormSubmit($event)"></app-open-close-point-of-sale-form>
+<div class="d-flex justify-content-center">
+  <div *ngIf="pointOfSaleList?.length === 0">
+    <label class="btn btn-primary mt-3">
+      {{ 'Payment.NoPointofSale' | translate }}
+    </label>
+  </div>
+</div>

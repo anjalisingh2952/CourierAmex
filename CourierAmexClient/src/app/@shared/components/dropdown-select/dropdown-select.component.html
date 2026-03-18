@@ -1,0 +1,13 @@
+<div class="dropdown me-2" ngbDropdown>
+  <a href="javascript:;" class="btn btn-primary btn-sm dropdown-toggle" ngbDropdownToggle>
+    <span *ngIf="selectedEntity === undefined && label.length === 0">{{ 'Labels.FilterBySelect' | translate }}</span>
+    <span *ngIf="selectedEntity === undefined && label.length > 0">{{ 'Labels.FilterBySelectValue' | translate:{ value: label || '' } }}</span>
+    <span *ngIf="selectedEntity !== undefined">{{ 'Labels.FilterBy' | translate:{ value: selectedEntity[display] || '' }
+      }} </span>
+    <i *ngIf="selectedEntity !== undefined" class="fa fa-times fa-lg ms-3 text-white" (click)="clearEntity($event)"></i>
+    <b class="ms-3 caret"></b>
+  </a>
+  <div class="dropdown-menu dropdown-menu-start" role="menu" ngbDropdownMenu>
+    <a href="javascript:;" (click)="selectEntity(e)" class="dropdown-item" *ngFor="let e of entities">{{e[display]}}</a>
+  </div>
+</div>

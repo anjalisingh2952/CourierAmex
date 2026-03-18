@@ -1,0 +1,57 @@
+<div class="table-responsive">
+  <table class="table table-hover text-nowrap" aria-label="Role Table">
+    <thead>
+      <tr>
+        <th class="pt-0 pb-2 border-bottom" *ngIf="showCompanies">
+          <span (click)="sortBy('CompanyName')" class="pointer">
+            {{ 'Labels.CompanyName' | translate }}
+            <i class="fa-solid" *ngIf="pagination?.s?.includes('CompanyName')"
+              [class.fa-arrow-down-a-z]="pagination?.s?.includes('ASC')"
+              [class.fa-arrow-up-z-a]="pagination?.s?.includes('DESC')"></i>
+          </span>
+        </th>
+        <th class="pt-0 pb-2 border-bottom">
+          <span (click)="sortBy('Name')" class="pointer">
+            {{ 'Labels.Name' | translate }}
+            <i class="fa-solid" *ngIf="pagination?.s?.includes('Name')"
+              [class.fa-arrow-down-a-z]="pagination?.s?.includes('ASC')"
+              [class.fa-arrow-up-z-a]="pagination?.s?.includes('DESC')"></i>
+          </span>
+        </th>
+        <th class="pt-0 pb-2 border-bottom">
+          <span (click)="sortBy('Status')" class="pointer">
+            {{ 'Labels.Status' | translate }}
+            <i class="fa-solid " *ngIf="pagination?.s?.includes('Status')"
+              [class.fa-arrow-down-a-z]="pagination?.s?.includes('ASC')"
+              [class.fa-arrow-up-z-a]="pagination?.s?.includes('DESC')"></i>
+          </span>
+        </th>
+        <th class="pt-0 pb-2 border-bottom text-end">
+          {{ 'Labels.Actions' | translate }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of roles; trackBy: trackById">
+        <td *ngIf="showCompanies"><span class="pointer" (click)="editItem(item)">{{item.companyName}}</span></td>
+        <td><span class="pointer" (click)="editItem(item)">{{item.name}}</span></td>
+        <td>
+          <ng-container [ngSwitch]="item.status">
+            <span *ngSwitchCase="1" class="badge bg-dark">{{ 'Labels.Draft' | translate }}</span>
+            <span *ngSwitchCase="2" class="badge bg-green text-white">{{ 'Labels.Active' | translate }}</span>
+            <span *ngSwitchCase="3" class="badge bg-yellow text-dark">{{ 'Labels.Inactive' | translate }}</span>
+          </ng-container>
+        </td>
+        <td class="text-end">
+          <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"
+            (click)="editItem(item)"></i>
+          <i class="fa fa-trash text-danger fs-15px me-2 pointer" *ngIf="hasDelete" ngbTooltip="{{ 'Tooltips.Delete' | translate }}"
+            (click)="deleteItem(item)"></i>
+        </td>
+      </tr>
+      <tr *ngIf="roles.length === 0">
+        <td class="fst-italic text-gray" colspan="4">{{ 'Roles.NoRoles' | translate }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

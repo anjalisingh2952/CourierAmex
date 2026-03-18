@@ -1,0 +1,13 @@
+<div class="input-group" *ngIf="!isLocked">
+  <span class="input-group-text pointer" (click)="openDialog()"><i
+      class="fa fa-search fa-lg text-success-900"></i></span>
+  <input type="text" id="inputCustomer" [(ngModel)]="customer" class="form-control" placeholder="{{ 'Labels.SearchCustomerPlaceholder' | translate }}"
+    [ngbTypeahead]="searchCustomer" [resultFormatter]="customerResultFormatter" #customerTypeHead
+    [inputFormatter]="customerInputFormatter" (selectItem)="onSelectCustomer($event)">
+  <button *ngIf="isCustomerSelected" (click)="clearCustomer()" class="btn btn-white" type="button"><i
+      class="fa fa-times fa-lg text-success-900"></i></button>
+</div> 
+
+<input type="text" id="inputCustomer" [(ngModel)]="customer" class="form-control" placeholder="{{ 'Labels.SearchCustomerPlaceholder' | translate }}"
+[ngbTypeahead]="searchCustomer" [resultFormatter]="customerResultFormatter"
+[inputFormatter]="customerInputFormatter" (selectItem)="onSelectCustomer($event)" *ngIf="isLocked" readonly="readonly" disabled>

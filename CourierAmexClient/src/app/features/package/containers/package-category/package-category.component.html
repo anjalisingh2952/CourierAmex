@@ -1,0 +1,39 @@
+<div class="package-details" *ngIf="{ 
+  entity: entity$ | async, 
+  companies: companies$ | async,
+  manifests: manifests$ | async,
+  packages: packages$ | async
+  } as data">
+  <ng-container *ngIf="data.entity && data.companies">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'PackageCategory.Title' | translate }} <small>{{ 'PackageCategory.SubTitle' |
+        translate
+        }}</small>
+    </h1> 
+
+    <app-package-category-form [entity]="data.entity" [companies]="data.companies"
+      [manifests]="data.manifests || []"
+      (onCompanyChange)="onCompanyChange($event)" 
+      (onManifestChange)="onManifestChange($event)">
+    </app-package-category-form>
+
+    <div class="panel panel-inverse">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <i class="fa-solid fa-boxes-packing fa-lg fa-fw me-1"></i> {{ 'PackageCategory.SubTitle' |
+          translate }}
+        </h4>
+      </div>
+      <div class="panel-body">
+        <app-package-category-list 
+        [packagesList]="data.packages || []"
+        (onSave)="save($event)"
+        [entity]="data.entity">
+        </app-package-category-list>
+      </div>
+    </div>
+
+    
+  </ng-container>
+</div>

@@ -1,0 +1,65 @@
+<ng-container *ngIf="entities$ | async as countries">
+  <app-entity-list
+    [title]="'Locations.Title' | translate"
+    [subTitle]="'Locations.SubTitle' | translate"
+    [addLabel]="'Labels.New' | translate"
+    [filterTemplate]="filterTemplate"
+    [hasAdd]="hasAdd"
+    [state]="state"
+    [pagination]="pagination"
+    [columns]="columns"
+    [rows]="countries"
+    (stateChange)="onStateChange($event)"
+    (add)="addNew()">
+  </app-entity-list>
+</ng-container>
+
+<ng-template #filterTemplate>
+  <ng-container *ngIf="companies$ | async as companies">
+    <shared-dropdown [entities]="companies" (onSelectEntity)="selectEntity($event)" *ngIf="showCompanies"></shared-dropdown>
+  </ng-container>
+</ng-template>
+
+<ng-template #actionTemplate let-params="params">
+  <i class="fa fa-eye text-primary fs-15px me-2 pointer" ngbTooltip="{{ 'Tooltips.View' | translate }}"
+    (click)="editEntity(params.row)"></i>
+  <i class="fa fa-trash text-danger fs-15px me-2 pointer" *ngIf="hasDelete"
+    ngbTooltip="{{ 'Tooltips.Delete' | translate }}" (click)="deleteEntity(params.row)"></i>
+</ng-template>
+
+<ng-template #statusTemplate let-params="params">
+  <ng-container [ngSwitch]="params.row.status">
+    <span *ngSwitchCase="1" class="badge bg-dark">{{ 'Labels.Draft' | translate }}</span>
+    <span *ngSwitchCase="2" class="badge bg-green text-white">{{ 'Labels.Active' | translate }}</span>
+    <span *ngSwitchCase="3" class="badge bg-yellow text-dark">{{ 'Labels.Inactive' | translate }}</span>
+  </ng-container>
+</ng-template>
+
+<!-- <div class="location-list" *ngIf="countries$ | async as countries">
+  <shared-breadcrumb></shared-breadcrumb>
+
+  <h1 class="page-header">{{ 'Locations.Title' | translate }} <small>{{ 'Locations.SubTitle' | translate }}</small></h1>
+
+  <div class="mb-3 d-md-flex fw-bold" *ngIf="hasAdd">
+    <div class="mt-md-0 mt-2" *ngIf="hasAdd">
+      <button type="button" class="btn btn-link btn-sm text-decoration-none text-dark" (click)="addNew()">
+        <i class="fa fa-plus fa-lg me-1 text-dark"></i>
+        {{ 'Labels.New' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <shared-keyword-search [criteria]="pagination.c ?? ''" (onSearch)="onKeywordSearch($event)"></shared-keyword-search>
+
+  <shared-pagination [Pagination]="pagination" (onPaginationChange)="onPagerChange($event)">
+    <shared-dropdown [entities]="countries" (onSelectEntity)="selectCountry($event)"></shared-dropdown>
+  </shared-pagination>
+
+  <div class="card border-0 p-3 mb-3" *ngIf="entities$ | async as entities">
+    <location-table [entities]="entities" [pagination]="pagination" (onSortBy)="sortBy($event)"
+      (onEdit)="editEntity($event)" (onDelete)="deleteEntity($event)"></location-table>
+  </div>
+
+  <shared-pagination [type]="'Footer'" [Pagination]="pagination"
+    (onPaginationChange)="onPagerChange($event)"></shared-pagination>
+</div> -->

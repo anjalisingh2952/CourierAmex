@@ -1,0 +1,14 @@
+<div class="shipping-way-type-details" *ngIf="{ 
+  entity: entity$ | async
+  } as data">
+  <ng-container *ngIf="data.entity">
+    <shared-breadcrumb></shared-breadcrumb>
+
+    <h1 class="page-header">{{ 'ShippingWayTypeDetails.Title' | translate }} 
+      <small>{{ 'ShippingWayTypeDetails.SubTitle' | translate }}</small>
+    </h1>
+
+    <shipping-way-type-form [entity]="data.entity" (onSave)="save($event)"
+      (onGoBack)="goBack()"></shipping-way-type-form>
+  </ng-container>
+</div>

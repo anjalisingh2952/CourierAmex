@@ -1,0 +1,29 @@
+<div class="panel panel-inverse">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <i class="fa fa-boxes fa-lg fa-fw me-1"></i> {{ 'PackageScanning.PendingPackages' |
+            translate }}
+        </h4>
+        <button type="button" class="btn-close-white btn-close" aria-label="Close" (click)="dismissModal()"></button>
+
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="mb-12">
+                    <ng-container *ngIf="pendingPackages$ | async as entities">
+                        <app-entity-list [showHeader]="false" [state]="state"
+                            [pagination]="pagination" [columns]="columns" [rows]="entities"
+                            [hasPagination]="true" [activeSearch]="false"
+                            (stateChange)="onStateChange($event)">
+                        </app-entity-list>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="pb-3 text-center">
+            <button type="button" class="btn btn-secondary" (click)="dismissModal()"><i
+                class="fa-solid fa-ban pe-2"></i>Close</button>
+          </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,183 @@
+<div class="package-details pre-study">
+    <ng-container>
+        <shared-breadcrumb></shared-breadcrumb>
+        <h1 class="page-header">{{ 'HasInvoiceMaintenance.Title' | translate }} <small>{{
+                'HasInvoiceMaintenance.SubTitle' |
+                translate
+                }}</small>
+        </h1>
+    </ng-container>
+
+    <div class="manifest-packages">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <i class="fa fa-circle-info fa-lg fa-fw me-1"></i> Package List
+                    <span class="badge bg-primary ms-1">{{packageList.length}}</span>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="row mb-4">
+                    <div class="col-12 ">
+                        <div class="mb-12" *ngIf="!isGatewayUser">
+                            <ng-container *ngIf="companies$ | async as entities">
+                                <label class="form-label" for="companyId">* {{ 'HasInvoiceMaintenance.Company' |
+                                    translate }}</label>
+                                <select #CompanyInputFromval="ngModel" [(ngModel)]="selectedCompany"
+                                    minValueValidator="1" class="form-select" name="companyId"
+                                    [ngClass]="{ 'is-invalid': CompanyInputFromval.invalid && CompanyInputFromval.touched }"
+                                    required>
+                                    <option [ngValue]=0 disabled selected>{{ 'HasInvoiceMaintenance.Select' |
+                                        translate }}
+                                    </option>
+                                    <option [ngValue]=c.id *ngFor="let c of entities">{{ c.name }}</option>
+                                </select>
+                                <div class="invalid-feedback"
+                                    *ngIf="CompanyInputFromval.invalid && CompanyInputFromval.touched">
+                                    {{ 'Labels.FieldRequired' | translate }}
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="col-12 ">
+                        <div class="mb-12">
+                            <ng-container *ngIf="companies$ | async as entities">
+                                <label class="form-label" for="PackageID">{{ 'Labels.Search' |
+                                    translate }}</label>
+                                <input type="text" [(ngModel)]="filterBy"
+                                    [placeholder]="'HasInvoiceMaintenance.SearchFilter' | translate"
+                                    class="form-control" name="filterBy" pInputText (input)="onGlobalFilter($event)">
+
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="float:left" *ngIf="!loading">
+
+                    <p-table [loading]="loading" [scrollable]="true" scrollHeight="450px"
+                        styleClass="cl1 primeng-table p-datatable-sm small-table" #dt [value]="packageList"
+                        [(selection)]="selectedPackageId" dataKey="id" [rowHover]="true" [rows]="10"
+                        [showCurrentPageReport]="true" [paginator]="false"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [filterDelay]="0" [globalFilterFields]="['customerCode','packageNumber']"
+                        selectionMode="single">
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="customerCode" style="width: 10rem">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Has Invoice
+                                    </div>
+                                </th>
+                                <th pSortableColumn="packageId">
+                                    <div class="flex justify-content-between align-items-center">
+                                        Customer Account
+                                    </div>
+                                </th>
+
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Customer Name
+                                    </div>
+                                </th>
+                                <th >
+                                    <div class="flex justify-content-between align-items-center">
+                                        Package Number
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Description
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Weight
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="flex justify-content-between align-items-center">
+                                        Price
+                                    </div>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-packagelist let-i="rowIndex">
+                            <tr class="p-selectable-row row-{{i}}" [ngClass]="{ 'selectedRow': selectedRow === i }"
+                                (click)="onRowClick(packagelist,i)">
+
+                                <td>
+                                    <span class="p-column-title">Store</span>
+                                    <span class="ml-1 vertical-align-middle">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <button
+                                                    (click)="UpdatePackageInvoiceStatus(packagelist.id,1)"
+                                                    title=" {{ 'HasInvoiceMaintenance.HasInvoice' |
+                                                translate
+                                                }}" [ngClass]="{
+                                                    'btn': true,
+                                                    'btn-primary': packagelist.hasInvoice == 1
+                                                   
+                                                  }" type="submit" class="btn"> {{ 'Buttons.Yes' |
+                                                    translate
+                                                    }}</button>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <button
+                                                    (click)="UpdatePackageInvoiceStatus(packagelist.id,2)"
+                                                    title=" {{ 'HasInvoiceMaintenance.NoInvoice' |
+                                                translate
+                                                }}" [ngClass]="{
+                                                    'btn': true,
+                                                    'btn-primary': packagelist.hasInvoice == 2
+                                                    
+                                                  }" type="submit" class="btn"> {{ 'Buttons.No' |
+                                                    translate
+                                                    }}</button>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="p-column-title">User</span>
+                                    {{ packagelist.customerAccount }}
+                                </td>
+                                <td>
+                                    <span class="p-column-title">customer Name</span>
+                                    <span class="ml-1 vertical-align-middle">{{ packagelist.customerName }}</span>
+                                </td>
+                                <td>
+                                    <span class="p-column-title">package Number</span>
+                                    <span class="ml-1 vertical-align-middle">{{ packagelist.packageNumber
+                                        }}</span>
+                                </td>
+                                <td class="wrap-text">
+                                    <span class="p-column-title">description</span>
+                                    <span class="ml-1 vertical-align-middle ">{{ packagelist.description }}</span>
+                                </td>
+                                <td>
+                                    <span class="p-column-title">weight</span>
+                                    <span class="ml-1 vertical-align-middle">{{ packagelist.weight }}</span>
+                                </td>
+                                <td>
+                                    <span class="p-column-title">price</span>
+                                    <span class="ml-1 vertical-align-middle">{{ packagelist.price| currency }}</span>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No package found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

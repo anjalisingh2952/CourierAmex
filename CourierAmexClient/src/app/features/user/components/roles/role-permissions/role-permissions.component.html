@@ -1,0 +1,65 @@
+<div class="role-permissions" *ngIf="rolePermissions">
+  <div class="table-responsive">
+    <table class="table table-hover text-nowrap" aria-label="Permissions Table">
+      <thead>
+        <tr>
+          <th class="w-50 pt-0 pb-2 border-bottom" scope="row">{{ 'Labels.Permission' | translate }}</th>
+          <th class="pt-0 pb-2 border-bottom text-center" scope="row">
+            {{ 'Labels.ViewPermission' | translate }}
+            <!-- <br>
+            <input type="checkbox" class="form-check-input" [ngModel]="selectAllView" name="selectAllView"
+              (ngModelChange)="checkAll($event, 'view')" /> -->
+          </th>
+          <th class="pt-0 pb-2 border-bottom text-center" scope="row">
+            {{ 'Labels.AddPermission' | translate }}
+            <!-- <br>
+            <input type="checkbox" class="form-check-input" [ngModel]="selectAllAdd" name="selectAllAdd"
+              (ngModelChange)="checkAll($event, 'add')" /> -->
+          </th>
+          <th class="pt-0 pb-2 border-bottom text-center" scope="row">
+            {{ 'Labels.UpdatePermission' | translate }}
+            <!-- <br>
+            <input type="checkbox" class="form-check-input" [ngModel]="selectAllEdit" name="selectAllEdit"
+              (ngModelChange)="checkAll($event, 'update')" /> -->
+          </th>
+          <th class="pt-0 pb-2 border-bottom text-center" scope="row">
+            {{ 'Labels.DeletePermission' | translate }}
+            <!-- <br>
+            <input type="checkbox" class="form-check-input" [ngModel]="selectAllDelete" name="selectAllDelete"
+              (ngModelChange)="checkAll($event, 'delete')" /> -->
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let perm of rolePermissions; index as idx" ngModelGroup="rolePermissions"
+          #group="ngModelGroup">
+          <tr ngModelGroup="{{idx}}">
+            <td>
+              <input type="hidden" [ngModel]="perm.id" name="id" />
+              <input type="hidden" [ngModel]="perm.parent" name="parent" />
+              <input type="hidden" [ngModel]="perm.name" name="name" />
+              {{ perm.parent }} - {{ perm.name }}
+            </td>
+            <td class="text-center">
+              <input type="checkbox" class="form-check-input" [ngModel]="perm.view" name="view"
+                (ngModelChange)="check(perm, 'view')" />
+            </td>
+            <td class="text-center">
+              <input type="checkbox" class="form-check-input" [ngModel]="perm.add" name="add"
+                (ngModelChange)="check(perm, 'add')" />
+            </td>
+            <td class="text-center">
+              <input type="checkbox" class="form-check-input" [ngModel]="perm.update" name="update"
+                (ngModelChange)="check(perm, 'update')" />
+            </td>
+            <td class="text-center">
+              <input type="checkbox" class="form-check-input" [ngModel]="perm.delete" name="delete"
+                (ngModelChange)="check(perm, 'delete')" />
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+</div>

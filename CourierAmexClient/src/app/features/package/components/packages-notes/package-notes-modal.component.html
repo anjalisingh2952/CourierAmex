@@ -1,0 +1,247 @@
+<div class="modal-header">
+  <h5 class="modal-title">
+    {{ openMode === "Editing" ? "Edit Package Note" : "New Package Note" }}
+  </h5>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="onCancel()"
+  ></button>
+</div>
+<div class="modal-body">
+  <form
+    class="app-package-note-modal"
+    (ngSubmit)="onSave(form)"
+    #form="ngForm"
+    *ngIf="noteData"
+    autocomplete="off"
+  >
+  <div class="row" *ngIf="false">
+    <label class="form-label">*companyId</label>
+    <input
+      name="companyId"
+      id="companyId"
+      class="form-control"
+      type="text"
+      [(ngModel)]="companyId"
+      disabled required
+    />
+  </div>
+    <div class="modal-content p-4">
+      <div class="row mb-3">
+        <!-- Columna Izquierda -->
+        <div class="col-md-6">
+          <div class="row" *ngIf="openMode === 'New'">
+            <div class="mb-2">
+              <label class="form-label">* Customer</label>
+              <shared-search-customer [companyId]="companyId" 
+                (executeAction)="onSearchCustomer($event)"
+              ></shared-search-customer>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label for="codigo" class="form-label" [hidden]="openMode === 'New'"
+              >* Customer</label
+            >
+            <input
+              [hidden]="openMode === 'New'"
+              type="text"
+              id="customerCode"
+              [(ngModel)]="noteData.codigo"
+              [class.is-valid]="codigo.valid && codigo.touched"
+              [class.is-invalid]="codigo.invalid && codigo.touched"
+              #codigo="ngModel"
+              maxlength="200"
+              minlength="5"
+              [disabled]="openMode === 'Editing'"
+              name="codigo"
+              class="form-control"
+              [required]="selectionVencimiento === 'vencimiento'"
+            />
+            <ng-container *ngIf="codigo.invalid && codigo.touched">
+              <div class="invalid-feedback" *ngIf="codigo.errors?.['required']">
+                {{ "Labels.FieldRequired" | translate }}
+              </div>
+              <div
+                class="invalid-feedback"
+                *ngIf="codigo.errors?.['minlength']"
+              >
+                {{ "Labels.FieldMinLength" | translate : { min: 5 } }}
+              </div>
+            </ng-container>
+          </div>
+          <!-- Nombre del cliente -->
+          <div class="mb-2" [hidden]="openMode === 'New'">
+            <label for="nombreCliente" class="form-label">Customer Name</label>
+            <input
+              [hidden]="openMode === 'New'"
+              type="text"
+              id="nombreCliente"
+              [ngModel]="noteData.compannia || noteData.nombreCompleto" (ngModelChange)="noteData.compannia || (noteData.nombreCompleto = $event)"
+              readonly
+              disabled
+              name="nombreCliente"
+              class="form-control"
+              readonly
+            />
+          </div>
+          <!-- [ngModel]="noteData.createdAt ? (noteData.createdAt | date: 'yyyy-MM-dd') : (today | date: 'yyyy-MM-dd')" -->
+          <div class="mb-3">
+            <label for="createdAt" class="form-label">Created At</label>
+            <input
+              type="date"
+              id="createdAt"
+              disabled
+              [ngModel]="
+                noteData.createdAt
+                  ? (noteData.createdAt | date : 'yyyy-MM-dd')
+                  : (today | date : 'yyyy-MM-dd')
+              "
+              (ngModelChange)="updateCreatedAtDate($event)"
+              name="createdAt"
+              class="form-control"
+            />
+          </div>
+          <!-- Radio buttons -->
+          <div class="mb-2 d-flex align-items-center">
+            <label class="me-2">Select :</label>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="numeroCourier"
+                name="selection"
+                value="courier"
+                (ngModelChange)="onSelectionChange('courier')"
+                [(ngModel)]="selectionVencimiento"
+                [disabled]="openMode === 'Editing'"
+                [required]="selectionVencimiento === 'courier'"
+                [checked]="selectionVencimiento === 'courier'"
+              />
+              <label class="form-check-label" for="numeroCourier"
+                >Courier Number</label
+              >
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="vencimiento"
+                name="selection"
+                value="vencimiento"
+                (ngModelChange)="onSelectionChange('vencimiento')"
+                [(ngModel)]="selectionVencimiento"
+                [disabled]="openMode === 'Editing'"
+                [required]="selectionVencimiento === 'vencimiento'"
+                [checked]="selectionVencimiento === 'vencimiento'"
+              />
+              <label class="form-check-label" for="vencimiento">Due Date</label>
+            </div>
+          </div>
+          <!-- Courier y Due Date -->
+          <div class="d-flex justify-content-between">
+            <div
+              class="me-2"
+              style="flex: 1"
+              *ngIf="selectionVencimiento === 'courier'"
+            >
+              <label for="courier" class="form-label">Courier</label>
+              <input
+                type="text"
+                id="courier"
+                [disabled]="openMode === 'Editing'"
+                [required]="
+                  openMode === 'New' && selectionVencimiento === 'courier'
+                "
+                [class.is-valid]="courier.valid && courier.touched"
+                [class.is-invalid]="courier.invalid && courier.touched"
+                #courier="ngModel"
+                maxlength="200"
+                minlength="7"
+                [(ngModel)]="noteData.courier"
+                name="courier"
+                class="form-control"
+              />
+              <ng-container *ngIf="courier.invalid && courier.touched">
+                <div
+                  class="invalid-feedback"
+                  *ngIf="courier.errors?.['required']"
+                >
+                  {{ "Labels.FieldRequired" | translate }}
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="courier.errors?.['minlength']"
+                >
+                  {{ "Labels.FieldMinLength" | translate : { min: 7 } }}
+                </div>
+              </ng-container>
+            </div>
+            <div style="flex: 1" *ngIf="selectionVencimiento === 'vencimiento'">
+              <label for="dueDate" class="form-label">Due Date</label>
+              <input
+                type="date"
+                id="dueDate"
+                [ngModel]="
+                  noteData.dueDate
+                    ? (noteData.dueDate | date : 'yyyy-MM-dd')
+                    : (today | date : 'yyyy-MM-dd')
+                "
+                (ngModelChange)="updateDueDate($event)"
+                [disabled]="openMode === 'Editing'"
+                name="dueDate"
+                class="form-control"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- Columna derecha con campo Message -->
+        <div class="col-md-6">
+          <label for="message" class="form-label">Message</label>
+          <textarea
+            id="message"
+            class="form-control"
+            [(ngModel)]="noteData.message"
+            name="message"
+            rows="6"
+            style="height: 100%"
+            [disabled]="openMode === 'Editing'"
+            [class.is-valid]="message.valid && message.touched"
+            [class.is-invalid]="message.invalid && message.touched"
+            maxlength="1000"
+            minlength="15"
+            #message="ngModel"
+            required
+          >
+          <ng-container *ngIf="message.invalid && message.touched">
+              <div class="invalid-feedback" *ngIf="message.errors?.['required']">
+                {{ "Labels.FieldRequired" | translate }}
+              </div>
+              <div class="invalid-feedback" *ngIf="message.errors?.['minlength']">
+                {{ "Labels.FieldMinLength" | translate : { min: 15 } }}
+              </div>
+          </ng-container>
+        </div>
+
+        <br/>
+      </div>
+      <div class="row mb-3" *ngIf="showSincronized">
+        <div class="col-12 d-flex justify-content-end">
+          <label for="sincronizad" class="form-label">Sincronized</label>
+          <textarea id="sincronizad" [(ngModel)]="noteData.sincronized" name="sincronizad" class="form-control"></textarea
+          >
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">
+        {{ "Labels.GoBack" | translate }}
+      </button>
+      <button *ngIf="openMode === 'New'" type="submit" class="btn btn-primary">
+        {{ "Labels.SaveChanges" | translate }}
+      </button>
+    </div>
+  </form>
+</div>

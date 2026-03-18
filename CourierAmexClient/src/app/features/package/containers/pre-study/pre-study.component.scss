@@ -1,0 +1,40 @@
+
+
+// .custom-tab-view ::ng-deep .p-tabview-nav {
+//     background-color: #f4f4f9;      /* Custom background for tab headers */
+//     font-size: 0.85rem;             /* Smaller text size */
+//     padding: 4px;                   /* Reduced padding */
+//   }
+  
+  .custom-tab-view ::ng-deep .p-tabview-nav{
+    padding: 1px !important;
+    margin: 0px !important;            /* Space between tabs */
+    margin-bottom: 10px !important;
+    border-radius: 5px;
+  }
+  .custom-tab-view ::ng-deep .p-tabview-nav a {
+    text-decoration: none;
+    border-width: 0 0 3px 0;
+    color: #2d353c;
+
+    /* Space between tabs */
+  }
+//   .custom-tab-view ::ng-deep .p-tabview-title {
+//     padding: 4px 8px;               /* Compact header padding */
+//     color: #333;                    /* Tab text color */
+//     font-weight: 500;               /* Medium font weight */
+//   }
+  
+  .custom-tab-view ::ng-deep .p-tabview-nav li.p-highlight {
+    background-color: #fff;      /* Active tab color */
+  }
+  .custom-tab-view ::ng-deep .p-tabview-panels {
+   padding: 0px;
+  }
+  
+//   .custom-tab-view ::ng-deep .p-tabview-content {
+//     padding: 10px;                  /* Reduced content padding */
+//     background-color: #fafafa;      /* Light background */
+//     border: 1px solid #ddd;         /* Border for content */
+//     border-radius: 4px;
+//   }
